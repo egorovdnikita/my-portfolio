@@ -205,7 +205,7 @@ a {
 }
 
 .muted {
-  color: var(--text); /* в макете второстепенные тексты полного цвета */
+  color: var(--text-muted);
   font-size: 14px;
   font-weight: 500;
 }
@@ -348,7 +348,7 @@ a {
 .contrib-months {
   height: 15px;
   margin-bottom: 6px;
-  color: var(--text);
+  color: var(--text-50);
   font-size: 12px;
   line-height: 15px;
 }
@@ -1095,7 +1095,7 @@ a {
   --lh: 1.15;
 }
 .case-lead {
-  color: var(--text);
+  color: var(--text-60);
   font-size: 18px;
   --lh: 1.4;
 }
@@ -1118,13 +1118,13 @@ a {
 .case-meta-value { font-size: 16px; font-weight: 700; }
 
 .case-label {
-  color: var(--text);
+  color: var(--text-muted);
   font-size: 14px;
   --lh: 1.4;
   white-space: nowrap;
 }
 .case-small {
-  color: var(--text);
+  color: var(--text-50);
   font-size: 14px;
   --lh: 1.4;
 }
@@ -1167,7 +1167,7 @@ a {
   list-style: none;
   font-size: 16px;
   --lh: 1.4;
-  color: var(--text);
+  color: var(--text-80);
 }
 .case-bullets li { display: flex; gap: 12px; }
 .case-dash { color: var(--accent); white-space: nowrap; }
@@ -1178,7 +1178,7 @@ a {
   --lh: 1.15;
 }
 .case-text {
-  color: var(--text);
+  color: var(--text-70);
   font-size: 17px;
   --lh: 1.4;
 }
@@ -1223,10 +1223,10 @@ a {
 }
 .case-tr > * { flex: 1 0 0; min-width: 1px; }
 /* Колонки: название — основной цвет, «до» — серый, «после» — акцент */
-.case-tr > :nth-child(2) { color: var(--text); }
+.case-tr > :nth-child(2) { color: var(--text-50); }
 .case-tr > :nth-child(3) { color: var(--accent); }
 .case-tr > :first-child { color: var(--text); font-weight: 700; }
-.case-tr.case-th > * { color: var(--text); font-size: 14px; font-weight: 500; }
+.case-tr.case-th > * { color: var(--text-muted); font-size: 14px; font-weight: 500; }
 
 .case-steps {
   display: flex;
