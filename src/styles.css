@@ -47,6 +47,7 @@
   --accent-tint: #ddf4ff;
   --surface-hover: #fafafa;
   --cell-empty: rgba(0, 0, 0, 0.06);
+  --placeholder: rgba(128, 128, 128, 0.55);
   --shimmer: rgba(255, 255, 255, 0.45);
   --nav-bg: rgba(255, 255, 255, 0.5);
   --nav-bg-hover: rgba(250, 250, 250, 0.7);
@@ -98,6 +99,7 @@
   --accent-tint: #0b3448;
   --surface-hover: #222222;
   --cell-empty: rgba(255, 255, 255, 0.1);
+  --placeholder: rgba(128, 128, 128, 0.55);
   --shimmer: rgba(255, 255, 255, 0.22);
   --nav-bg: rgba(26, 26, 26, 0.5);
   --nav-bg-hover: rgba(34, 34, 34, 0.7);
@@ -1228,35 +1230,23 @@ a {
 .case-tr > :first-child { color: var(--text); font-weight: 700; }
 .case-tr.case-th > * { color: var(--text-muted); font-size: 14px; font-weight: 500; }
 
-.case-steps {
+.case-steps { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; --lh: 1.4; }
+/* Карточка шага: место под картинку сверху, ниже заголовок и текст */
+.case-step {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding: 16px;
+  gap: 10px;
+  padding: 20px;
   border-radius: 24px;
   background: var(--fill-2);
 }
-.case-step { display: flex; gap: 16px; padding: 8px 0; }
-.case-num {
-  flex-shrink: 0;
-  align-self: flex-start;
-  padding: 4px 8px;
-  border-radius: 10px;
-  background: var(--accent-soft);
-  color: var(--accent);
-  font-size: 14px;
-  font-weight: 700;
-  --lh: 1.4;
-}
 .case-step-text {
-  flex: 1 0 0;
-  min-width: 1px;
   display: flex;
   flex-direction: column;
   gap: 4px;
-  --lh: 1.4;
 }
 .case-step-title { font-size: 16px; font-weight: 700; }
+.case-steps--lg .case-small { font-size: 16px; }
 
 .case-columns { display: flex; flex-wrap: wrap; gap: 8px; --lh: 1.4; }
 /* Четыре карточки — сеткой 2×2, как в макете */
@@ -1272,6 +1262,22 @@ a {
   background: var(--fill-2);
 }
 .case-col-title { font-size: 18px; font-weight: 700; }
+
+/* Места под картинки и иконки — пунктир, как заглушки в макете */
+.case-cutout {
+  flex-shrink: 0;
+  height: 96px;
+  border: 1px dashed var(--placeholder);
+  border-radius: 16px;
+}
+.case-cutout--round { width: 32px; height: 32px; border-radius: 999px; }
+.case-icon-slot {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border: 1px dashed var(--placeholder);
+  border-radius: 8px;
+}
 
 @media (prefers-reduced-motion: reduce) {
   .case-column,
@@ -1437,6 +1443,7 @@ a {
   .case-stat,
   .case-col { flex: 1 1 calc(50% - 4px); }
   .case-stat-value { font-size: 32px; }
+  .case-steps { grid-template-columns: minmax(0, 1fr); }
   .case-table { padding: 4px 12px; }
   .case-tr { gap: 8px; font-size: 13px; }
   .case-image { height: 220px !important; padding: 0 16px; text-align: center; }

@@ -73,12 +73,13 @@ export function CasePage({ study, zoom, closing, onClose }: Props) {
   );
 }
 
+/** Заголовок блока: подпись, линия и справа либо пояснение, либо место под иконку (как в макете) */
 function Header({ label, num }: { label: string; num?: string }) {
   return (
     <div className="case-header">
       <span className="case-label">{label}</span>
       <span className="case-line" aria-hidden />
-      {num && <span className="case-label">{num}</span>}
+      {num ? <span className="case-label">{num}</span> : <span className="case-icon-slot" aria-hidden />}
     </div>
   );
 }
@@ -138,17 +139,15 @@ function Block({ block }: { block: CaseBlock }) {
       );
     case 'steps':
       return (
-        <div className="case-steps">
-          {block.items.map((step, i) => (
-            <Fragment key={step.title}>
-              {i > 0 && <span className="case-hr" aria-hidden />}
-              <div className="case-step">
-                <div className="case-step-text">
-                  <span className="case-step-title">{step.title}</span>
-                  <span className="case-small">{step.text}</span>
-                </div>
+        <div className={`case-steps${block.size === 'lg' ? ' case-steps--lg' : ''}`}>
+          {block.items.map((step) => (
+            <div key={step.title} className="case-step">
+              <span className="case-cutout" aria-hidden />
+              <div className="case-step-text">
+                <span className="case-step-title">{step.title}</span>
+                <span className="case-small">{step.text}</span>
               </div>
-            </Fragment>
+            </div>
           ))}
         </div>
       );
@@ -157,6 +156,7 @@ function Block({ block }: { block: CaseBlock }) {
         <div className="case-columns">
           {block.items.map((col) => (
             <div key={col.title} className="case-col">
+              <span className={`case-cutout${block.items.length < 4 ? ' case-cutout--round' : ''}`} aria-hidden />
               <span className="case-col-title">{col.title}</span>
               <span className="case-small">{col.text}</span>
             </div>

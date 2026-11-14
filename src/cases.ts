@@ -6,7 +6,8 @@ export type CaseBlock =
   | { type: 'table'; head: [string, string, string]; rows: [string, string, string][] }
   | { type: 'quote'; text: string }
   | { type: 'image'; caption: string; height: number }
-  | { type: 'steps'; items: { title: string; text: string }[] }
+  /** Карточки 2×2; lg — текст 16px вместо 14 */
+  | { type: 'steps'; items: { title: string; text: string }[]; size?: 'lg' }
   | { type: 'columns'; items: { title: string; text: string }[] };
 
 export type CaseSection = { label: string; title: string; blocks: CaseBlock[] };
@@ -204,6 +205,7 @@ export const cases: CaseStudy[] = [
         blocks: [
           {
             type: 'steps',
+            size: 'lg',
             items: [
               {
                 title: 'Найти перевод',
