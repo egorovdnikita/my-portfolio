@@ -42,6 +42,9 @@
   --accent-soft-9: rgba(0, 160, 240, 0.09);
   --accent-tint: #ddf4ff;
   --surface-hover: #fafafa;
+  --nav-bg: rgba(255, 255, 255, 0.72);
+  --nav-bg-hover: rgba(250, 250, 250, 0.86);
+  --nav-blur: blur(20px) saturate(180%);
   --segment-active: #ffffff;
   --photo-frame: #ffffff;
   --avatar-bg: #ffffff;
@@ -82,6 +85,8 @@
   --accent-soft-9: rgba(0, 160, 240, 0.18);
   --accent-tint: #0b3448;
   --surface-hover: #222222;
+  --nav-bg: rgba(26, 26, 26, 0.72);
+  --nav-bg-hover: rgba(34, 34, 34, 0.86);
   --segment-active: #2e2e2e;
   --photo-frame: #1a1a1a;
   --avatar-bg: #2a2a2a;
@@ -593,9 +598,11 @@ a {
   pointer-events: auto;
   display: flex;
   align-items: center;
-  background: var(--surface);
+  background: var(--nav-bg);
+  -webkit-backdrop-filter: var(--nav-blur);
+  backdrop-filter: var(--nav-blur);
   border-radius: 24px;
-  filter: drop-shadow(0 0 16px var(--shadow-panel));
+  box-shadow: 0 0 16px var(--shadow-panel);
 }
 
 .panel--crumbs {
@@ -904,7 +911,9 @@ a {
   animation: case-in 0.32s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .case-close {
-  filter: drop-shadow(0 0 16px var(--shadow-panel));
+  box-shadow: 0 0 16px var(--shadow-panel);
+  -webkit-backdrop-filter: var(--nav-blur);
+  backdrop-filter: var(--nav-blur);
   position: fixed;
   top: 16px;
   left: calc(50% + var(--case-w) / 2 + 16px); /* 16px от правого края колонки */
@@ -915,11 +924,11 @@ a {
   width: 64px;
   height: 64px;
   border-radius: 999px;
-  background: var(--surface);
+  background: var(--nav-bg);
   transition: background-color 0.15s ease;
   animation: fade-in 0.2s ease;
 }
-.case-close:hover { background: var(--surface-hover); }
+.case-close:hover { background: var(--nav-bg-hover); }
 .case.is-closing .case-column {
   animation: case-out 0.2s ease-in forwards;
 }
