@@ -34,6 +34,7 @@ const DOT_EDGE = 1.2;
 
 type Drag =
   | { kind: 'pan'; id: number; sx: number; sy: number; cam: Camera; moved: boolean }
+  | { kind: 'pinch'; id: number; dist: number; mx: number; my: number; cam: Camera; moved: boolean }
   | { kind: 'node'; id: number; node: NodeId; sx: number; sy: number; start: Vec; moved: boolean };
 
 export function Canvas({ camera, setCamera, offsets, setOffset, tool, spaceHeld, onInteract, nodes }: Props) {
@@ -41,6 +42,8 @@ export function Canvas({ camera, setCamera, offsets, setOffset, tool, spaceHeld,
   const nodeRefs = useRef<Partial<Record<NodeId, HTMLDivElement>>>({});
   const [sizes, setSizes] = useState<Partial<Record<NodeId, Size>>>({});
   const [drag, setDrag] = useState<Drag | null>(null);
+  // Все пальцы/курсоры на холсте: два пальца — щипок для масштаба
+  const pointers = useRef(new Map<number, { x: number; y: number }>());
 
   // Актуальные значения для обработчиков, которые вешаются один раз
   const camRef = useRef(camera);
@@ -87,13 +90,41 @@ export function Canvas({ camera, setCamera, offsets, setOffset, tool, spaceHeld,
       }
     };
     el.addEventListener('wheel', onWheel, { passive: false });
-    return () => el.removeEventListener('wheel', onWheel);
+    // Safari на iPhone иначе масштабирует всю страницу вместо холста
+    const stopGesture = (e: Event) => e.preventDefault();
+    el.addEventListener('gesturestart', stopGesture);
+    el.addEventListener('gesturechange', stopGesture);
+    return () => {
+      el.removeEventListener('wheel', onWheel);
+      el.removeEventListener('gesturestart', stopGesture);
+      el.removeEventListener('gesturechange', stopGesture);
+    };
   }, []);
 
   const panMode = tool === 'hand' || spaceHeld;
 
+  const localPoint = (x: number, y: number) => {
+    const r = viewportRef.current!.getBoundingClientRect();
+    return { x: x - r.left, y: y - r.top };
+  };
+
+  const startPinch = () => {
+    const [a, b] = [...pointers.current.values()];
+    const m = localPoint((a.x + b.x) / 2, (a.y + b.y) / 2);
+    setDrag({ kind: 'pinch', id: -1, dist: Math.hypot(a.x - b.x, a.y - b.y) || 1, mx: m.x, my: m.y, cam: camera, moved: true });
+  };
+
   const onPointerDown = (e: React.PointerEvent) => {
     if (e.button !== 0 && e.button !== 1) return;
+    if (e.pointerType === 'touch') {
+      pointers.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (pointers.current.size === 2) {
+        interactRef.current();
+        e.currentTarget.setPointerCapture(e.pointerId);
+        startPinch();
+        return;
+      }
+    }
     const target = e.target as HTMLElement;
     if (e.button === 0 && !spaceHeld && target.closest(INTERACTIVE)) return;
     const nodeEl = target.closest<HTMLElement>('[data-node]');
@@ -108,6 +139,17 @@ export function Canvas({ camera, setCamera, offsets, setOffset, tool, spaceHeld,
   };
 
   const onPointerMove = (e: React.PointerEvent) => {
+    if (pointers.current.has(e.pointerId)) pointers.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (drag?.kind === 'pinch') {
+      if (pointers.current.size < 2) return;
+      const [a, b] = [...pointers.current.values()];
+      const m = localPoint((a.x + b.x) / 2, (a.y + b.y) / 2);
+      const dist = Math.hypot(a.x - b.x, a.y - b.y);
+      // Точка холста под пальцами остаётся под пальцами: масштаб вокруг середины + сдвиг вслед за ней
+      const zoomed = zoomAt(drag.cam, drag.cam.z * (dist / drag.dist), drag.mx, drag.my);
+      setCamera({ ...zoomed, x: zoomed.x + (m.x - drag.mx), y: zoomed.y + (m.y - drag.my) });
+      return;
+    }
     if (!drag || drag.id !== e.pointerId) return;
     const dx = e.clientX - drag.sx;
     const dy = e.clientY - drag.sy;
@@ -121,6 +163,13 @@ export function Canvas({ camera, setCamera, offsets, setOffset, tool, spaceHeld,
   };
 
   const endDrag = (e: React.PointerEvent) => {
+    pointers.current.delete(e.pointerId);
+    if (drag?.kind === 'pinch') {
+      // Один палец остался — продолжаем двигать холст им
+      const rest = [...pointers.current.entries()][0];
+      setDrag(rest ? { kind: 'pan', id: rest[0], sx: rest[1].x, sy: rest[1].y, cam: camera, moved: true } : null);
+      return;
+    }
     if (drag && drag.id === e.pointerId) setDrag(null);
   };
 

@@ -88,11 +88,18 @@ export function VibeCard() {
   );
 }
 
-export function HeroCard() {
+const HERO_PHOTO = {
+  canvas: profile.photo,
+  feed: profile.photoFeed,
+  mobile: profile.photoMobile,
+};
+
+/** Карточка «обо мне». Кадрирование фото своё для холста, ленты и телефона — как в макетах. */
+export function HeroCard({ variant = 'canvas' }: { variant?: 'canvas' | 'feed' | 'mobile' }) {
   return (
-    <div className="hero">
+    <div className={`hero hero--${variant}`}>
       <div className="hero-photo">
-        <Img src={profile.photo} className="hero-photo-img" />
+        <Img src={HERO_PHOTO[variant]} className="hero-photo-img" />
       </div>
       <section className="card card--hero">
         <div className="hero-text">

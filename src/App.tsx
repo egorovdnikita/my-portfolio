@@ -2,9 +2,13 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Canvas, type Tool } from './components/Canvas';
 import { CasePage } from './components/CasePage';
 import { ShareButton } from './components/ShareButton';
+import { Avatars } from './components/Avatars';
+import { usePresence } from './presence';
+import { useIsMobile } from './useMedia';
+import { MobileShare } from './components/MobileShare';
 import { ExperienceCard, HeroCard, Icon, ProjectCard, VibeCard } from './components/Cards';
-import { fitCamera, zoomAt, NODES, type Camera, type NodeId, type Vec } from './canvas/layout';
-import { headerAvatars, icons, profile, projects } from './content';
+import { initialCamera, zoomAt, NODES, type Camera, type NodeId, type Vec } from './canvas/layout';
+import { icons, profile, projects } from './content';
 import { findCase } from './cases';
 
 type View = 'canvas' | 'feed';
@@ -13,7 +17,7 @@ const ZERO_OFFSETS = Object.fromEntries(Object.keys(NODES).map((id) => [id, { x:
 const ZOOM_PRESETS = [0.25, 0.5, 0.75, 1, 1.5, 2];
 const ZOOM_STEP = 1.25;
 
-const CASE_ZOOM_PRESETS = [0.5, 0.75, 1, 1.25, 1.5];
+const PAGE_ZOOM_PRESETS = [0.5, 0.75, 1, 1.25, 1.5];
 const CASE_CLOSE_MS = 200;
 
 // Кейс открывается по адресу #/case/<id>: ссылку можно скопировать и отправить
@@ -32,14 +36,18 @@ export default function App() {
   const [spaceHeld, setSpaceHeld] = useState(false);
   const [camera, setCamera] = useState<Camera>(() => {
     const { w, h } = viewportSize();
-    return fitCamera(w, h);
+    return initialCamera(w, h);
   });
   const [offsets, setOffsets] = useState<Record<NodeId, Vec>>(ZERO_OFFSETS);
   const [zoomMenu, setZoomMenu] = useState(false);
   const [caseId, setCaseId] = useState<string | null>(caseFromHash);
   const [caseClosing, setCaseClosing] = useState(false);
-  const [caseZoom, setCaseZoom] = useState(1);
+  // Масштаб страницы для ленты и кейса (на холсте масштаб — это камера)
+  const [pageZoom, setPageZoom] = useState(1);
+  const [shareOpen, setShareOpen] = useState(false);
   const study = findCase(caseId);
+  const presence = usePresence();
+  const isMobile = useIsMobile();
 
   // Пока пользователь не трогал холст, при изменении окна кадр подстраивается
   const touched = useRef(false);
@@ -91,7 +99,7 @@ export default function App() {
   const openCase = useCallback((id: string) => {
     setZoomMenu(false);
     setCaseClosing(false);
-    setCaseZoom(1);
+    setPageZoom(1);
     if (caseFromHash() !== id) window.history.pushState(null, '', `#/case/${id}`);
     setCaseId(id);
   }, []);
@@ -122,7 +130,7 @@ export default function App() {
     const onResize = () => {
       if (touched.current) return;
       const { w, h } = viewportSize();
-      setCamera(fitCamera(w, h));
+      setCamera(initialCamera(w, h));
     };
     window.addEventListener('resize', onResize);
     return () => window.removeEventListener('resize', onResize);
@@ -130,24 +138,30 @@ export default function App() {
 
   const zoomTo = useCallback(
     (z: number) => {
-      // В кейсе масштаб меняет размер страницы кейса, на холсте — камеру
-      if (caseId) {
-        setCaseZoom(Math.min(2, Math.max(0.5, Math.round(z * 100) / 100)));
+      // В кейсе и ленте масштаб меняет размер страницы, на холсте — камеру
+      if (caseId || view === 'feed') {
+        setPageZoom(Math.min(2, Math.max(0.5, Math.round(z * 100) / 100)));
         return;
       }
       touched.current = true;
       const { w, h } = viewportSize();
       animate(zoomAt(camera, z, w / 2, h / 2), undefined, 220);
     },
-    [animate, camera, caseId],
+    [animate, camera, caseId, view],
   );
-  const zoomValue = caseId ? caseZoom : camera.z;
-  const zoomPresets = caseId ? CASE_ZOOM_PRESETS : ZOOM_PRESETS;
+  const pageMode = Boolean(caseId) || view === 'feed';
+  const zoomValue = pageMode ? pageZoom : camera.z;
+  const zoomPresets = pageMode ? PAGE_ZOOM_PRESETS : ZOOM_PRESETS;
+  const switchView = (next: View) => {
+    setView(next);
+    setPageZoom(1);
+    setZoomMenu(false);
+  };
 
   const reset = useCallback(() => {
     const { w, h } = viewportSize();
     touched.current = false;
-    animate(fitCamera(w, h), ZERO_OFFSETS);
+    animate(initialCamera(w, h), ZERO_OFFSETS);
   }, [animate]);
 
   // Клавиши как в Figma: V — стрелка, H — рука, пробел — временная рука, +/− — масштаб, Esc — закрыть
@@ -189,7 +203,7 @@ export default function App() {
   const nodes: Record<NodeId, React.ReactNode> = {
     exp: <ExperienceCard />,
     vibe: <VibeCard />,
-    hero: <HeroCard />,
+    hero: <HeroCard variant={view === 'canvas' ? 'canvas' : isMobile ? 'mobile' : 'feed'} />,
     p1: <ProjectCard project={projects[0]} onOpenCase={openCase} />,
     p2: <ProjectCard project={projects[1]} onOpenCase={openCase} />,
     p3: <ProjectCard project={projects[2]} onOpenCase={openCase} />,
@@ -198,7 +212,7 @@ export default function App() {
   const caseOpen = Boolean(study) && !caseClosing;
 
   return (
-    <div className={`app app--${view}${caseOpen ? ' has-case' : ''}`}>
+    <div className={`app app--${view}${caseOpen ? ' has-case' : ''}${caseOpen || view === 'feed' ? ' has-page' : ''}`}>
       {view === 'canvas' ? (
         <Canvas
           camera={camera}
@@ -212,16 +226,34 @@ export default function App() {
         />
       ) : (
         <main className="feed">
-          <div className="feed-col feed-col--side">
-            {nodes.exp}
-            {nodes.vibe}
-          </div>
-          <div className="feed-col">{nodes.hero}</div>
-          <div className="feed-col feed-col--projects">
-            {nodes.p1}
-            {nodes.p2}
-            {nodes.p3}
-            {nodes.p4}
+          <div className="feed-column" style={{ zoom: pageZoom }}>
+            {nodes.hero}
+            {isMobile ? (
+              <>
+                {nodes.exp}
+                {nodes.vibe}
+                {nodes.p1}
+                {nodes.p2}
+                {nodes.p3}
+                {nodes.p4}
+                <p className="legal legal--feed">
+                  {profile.footerHandle} | {profile.footerNote}
+                </p>
+              </>
+            ) : (
+              <div className="feed-grid">
+                <div className="feed-col">
+                  {nodes.exp}
+                  {nodes.p1}
+                  {nodes.p3}
+                </div>
+                <div className="feed-col">
+                  {nodes.vibe}
+                  {nodes.p2}
+                  {nodes.p4}
+                </div>
+              </div>
+            )}
           </div>
         </main>
       )}
@@ -236,30 +268,32 @@ export default function App() {
               Портфолио
             </button>
           ) : (
-            <span className="crumb">Портфолио</span>
+            <span className="crumb crumb--page">Портфолио</span>
+          )}
+          {isMobile && (
+            <button
+              type="button"
+              className="btn btn--primary share-icon-btn"
+              aria-label="Поделиться"
+              aria-expanded={shareOpen}
+              onClick={() => setShareOpen((v) => !v)}
+            >
+              <Icon src={icons.link} className="icon--white" />
+            </button>
           )}
         </div>
-        <div className="panel panel--share">
-          <div className="avatars">
-            {headerAvatars.map((a, i) => (
-              <span
-                key={a.name}
-                className={`avatar${i > 0 ? ' avatar--ring' : ''}`}
-                data-tooltip={a.name}
-                aria-label={a.name}
-                tabIndex={0}
-              >
-                <img src={a.src} alt="" draggable={false} />
-              </span>
-            ))}
+        {!isMobile && (
+          <div className="panel panel--share">
+            <Avatars self={presence.self} others={presence.others} />
+            <ShareButton />
           </div>
-          <ShareButton />
-        </div>
+        )}
       </header>
+      {isMobile && <MobileShare open={shareOpen} onClose={() => setShareOpen(false)} presence={presence} />}
 
       <footer className="bottombar">
         <div className="bottombar-side">
-          {(view === 'canvas' || study) && (
+          {!isMobile && (
             <div className="panel panel--tools zoom">
               <button type="button" className="tool-btn" aria-label="Приблизить" onClick={() => zoomTo(zoomValue * ZOOM_STEP)}>
                 <Icon src={icons.zoomIn} className="icon--strong" />
@@ -330,7 +364,7 @@ export default function App() {
                 className={`segment-btn${view === 'canvas' ? ' is-active' : ''}`}
                 aria-label="Холст"
                 aria-pressed={view === 'canvas'}
-                onClick={() => setView('canvas')}
+                onClick={() => switchView('canvas')}
               >
                 <Icon src={icons.canvas} className={view === 'canvas' ? 'icon--strong' : 'icon--subtle'} />
               </button>
@@ -339,7 +373,7 @@ export default function App() {
                 className={`segment-btn${view === 'feed' ? ' is-active' : ''}`}
                 aria-label="Лента"
                 aria-pressed={view === 'feed'}
-                onClick={() => setView('feed')}
+                onClick={() => switchView('feed')}
               >
                 <Icon src={icons.rows} className={view === 'feed' ? 'icon--strong' : 'icon--subtle'} />
               </button>
@@ -348,12 +382,12 @@ export default function App() {
         </div>
 
         <div className="bottombar-side bottombar-side--right">
-          <p className="legal">{profile.footerHandle} | Policy | Cookies</p>
+          <p className="legal">{profile.footerHandle} | {profile.footerNote}</p>
         </div>
       </footer>
 
       {study && (
-        <CasePage study={study} zoom={caseZoom} closing={caseClosing} onClose={closeCase} onOpenCase={openCase} />
+        <CasePage study={study} zoom={pageZoom} closing={caseClosing} onClose={closeCase} onOpenCase={openCase} />
       )}
     </div>
   );

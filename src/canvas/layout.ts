@@ -12,10 +12,10 @@ export const NODES: Record<NodeId, { x: number; y: number; ax: number }> = {
   hero: { x: 960.5, y: 540, ax: 0.5 },
   p1: { x: 1619, y: 327, ax: 0.5 },
   p2: { x: 1872, y: 802, ax: 1 },
-  p3: { x: 1885, y: 420, ax: 0 },
-  // В макете три слота под кейсы, кейсов четыре: четвёртый стоит справа от второго,
-  // с тем же смещением, что у третьего относительно первого
-  p4: { x: 1913, y: 895, ax: 0 },
+  // Все кейсы связаны с главной карточкой веером, линии не проходят под другими карточками.
+  // 1win и Wink стоят как в макете, Базис — выше 1win, Лицей — ниже Wink, с тем же шагом 475px
+  p3: { x: 1422, y: -148, ax: 0 },
+  p4: { x: 1394, y: 1277, ax: 0 },
 };
 
 export type Edge = {
@@ -34,8 +34,8 @@ export const EDGES: Edge[] = [
   { from: 'hero', to: 'vibe', side: 'left', dot: true },
   { from: 'hero', to: 'p1', side: 'right', dot: true },
   { from: 'hero', to: 'p2', side: 'right', dot: true },
-  { from: 'p1', to: 'p3', side: 'right', alignToTarget: true },
-  { from: 'p2', to: 'p4', side: 'right', alignToTarget: true },
+  { from: 'hero', to: 'p3', side: 'right', dot: true },
+  { from: 'hero', to: 'p4', side: 'right', dot: true },
 ];
 
 export type Vec = { x: number; y: number };
@@ -58,6 +58,24 @@ export function nodeRect(id: NodeId, size: Size, offset: Vec): Rect {
 export function fitCamera(vw: number, vh: number): Camera {
   const z = Math.min(1, vw / WORLD.width, vh / WORLD.height);
   return { x: vw / 2 - (WORLD.width / 2) * z, y: vh / 2 - (WORLD.height / 2) * z, z };
+}
+
+export const MOBILE_MAX = 767;
+const HERO_SIZE = { w: 693, h: 298 }; // главная карточка в макете
+const MOBILE_TOP = 96; // под шапкой
+const MOBILE_BOTTOM = 96; // над нижней панелью
+
+/** На телефоне стартовый кадр — карточка «обо мне» во всю ширину экрана с отступами 16px. */
+export function heroCamera(vw: number, vh: number): Camera {
+  const hero = NODES.hero;
+  const z = clampZoom((vw - 32) / HERO_SIZE.w);
+  const cy = MOBILE_TOP + (vh - MOBILE_TOP - MOBILE_BOTTOM) / 2;
+  return { x: vw / 2 - hero.x * z, y: cy - hero.y * z, z };
+}
+
+/** Стартовый кадр: на телефоне — фокус на главной карточке, на десктопе — весь макет. */
+export function initialCamera(vw: number, vh: number): Camera {
+  return vw <= MOBILE_MAX ? heroCamera(vw, vh) : fitCamera(vw, vh);
 }
 
 /** Масштабирование вокруг точки экрана (курсора или центра окна). */

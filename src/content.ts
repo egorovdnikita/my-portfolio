@@ -11,9 +11,13 @@ export const profile = {
     'Я продуктовый дизайнер с опытом 5+ лет. Работал с B2C-продуктами на 10+ млн пользователей, сложными B2B-интерфейсами и AI-инструментами. Веду задачи полным циклом, от исследований до контроля реализации.',
   tags: ['B2B', 'B2C', 'Web', 'Mobile'],
   photo: asset('photo.jpg'),
+  photoFeed: asset('photo-feed.jpg'),
+  photoMobile: asset('photo-mobile.jpg'),
   cvUrl: 'https://clck.ru/3THQuC',
   telegramUrl: 'https://t.me/egorov_d_nikita',
   footerHandle: '@egorov.d.nikita',
+  footerNote: 'Все права защищены',
+  ownerLogin: 'egorov.d.nikita',
 };
 
 export const experience = {
@@ -100,6 +104,7 @@ export const icons = {
   download: asset('ic-download.svg'),
   telegram: asset('ic-telegram.svg'),
   close: asset('ic-close.svg'),
+  user: asset('ic-user.svg'),
   zoomIn: asset('ic-zoom-in.svg'),
   zoomOut: asset('ic-zoom-out.svg'),
   move: asset('ic-move.svg'),

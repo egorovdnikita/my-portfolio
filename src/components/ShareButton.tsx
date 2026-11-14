@@ -10,7 +10,7 @@ const HOLD_MS = 2200; // как у референса: «Скопировано!
  * Кнопка «Поделиться»: копирует ссылку. Подписи сменяют друг друга лентой
  * (старая уходит вверх и гаснет, новая въезжает снизу), ширина кнопки меняется плавно.
  */
-export function ShareButton() {
+export function ShareButton({ block = false }: { block?: boolean }) {
   const [copied, setCopied] = useState(false);
   const [widths, setWidths] = useState<{ rest: number; copied: number } | null>(null);
   const restRef = useRef<HTMLSpanElement>(null);
@@ -43,11 +43,11 @@ export function ShareButton() {
   return (
     <button
       type="button"
-      className={`btn btn--primary btn--share${copied ? ' is-copied' : ''}`}
+      className={`btn btn--primary btn--share${block ? ' btn--share-block' : ''}${copied ? ' is-copied' : ''}`}
       aria-label="Поделиться ссылкой"
       onClick={share}
     >
-      <Icon src={icons.link} className="icon--white" />
+      {!block && <Icon src={icons.link} className="icon--white" />}
       <span className="share-label" style={widths ? { width: copied ? widths.copied : widths.rest } : undefined}>
         <span ref={restRef} className="share-text share-text--rest" aria-hidden={copied}>
           {LABEL}

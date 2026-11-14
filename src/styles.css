@@ -404,27 +404,61 @@ a {
   fill: var(--edge);
 }
 
-/* ---------- Лента ---------- */
+/* ---------- Лента (кадр «Портфолио», вид «лента») ---------- */
 
 .feed {
   position: fixed;
   inset: 0;
-  overflow: auto;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 16px;
-  padding: 112px 16px;
+  overflow-y: auto;
+  scrollbar-gutter: stable both-edges;
+  padding: 16px 16px 96px;
   background-color: var(--bg);
   background-image: radial-gradient(circle, var(--dot) 1px, transparent 1.2px);
   background-size: 17.25px 17.25px;
   background-attachment: local;
 }
-.feed-col {
+.feed-column {
+  --feed-w: 920px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 8px;
+  width: var(--feed-w);
+  max-width: 100%;
+  margin: 0 auto;
+}
+@media (max-width: 1799px) {
+  .feed-column { --feed-w: 800px; }
+}
+.feed-grid { display: flex; gap: 8px; align-items: flex-start; }
+.feed-col {
+  flex: 1 0 0;
+  min-width: 1px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.feed .card { width: 100%; }
+
+/* Главная карточка в ленте: фото 236px слева, текст тянется на всю ширину */
+.hero--feed .hero-photo { width: 236px; }
+.hero--feed .card--hero { flex: 1 0 0; min-width: 1px; }
+.hero--feed .hero-text { width: 100%; }
+.hero--feed .hero-about { width: auto; min-width: 0; }
+.hero--feed .hero-actions { width: 100%; }
+
+/* Главная карточка на телефоне: фото сверху во всю ширину */
+.hero--mobile { flex-direction: column; }
+.hero--mobile .hero-photo { width: 100%; height: 190px; }
+.hero--mobile .card--hero { width: 100%; }
+.hero--mobile .hero-text { width: 100%; }
+.hero--mobile .hero-role { white-space: normal; }
+.hero--mobile .hero-about { width: auto; min-width: 0; }
+.hero--mobile .hero-actions { width: 100%; }
+
+.legal--feed {
+  padding: 16px 0 0;
+  text-align: center;
+  font-size: 14px;
 }
 
 /* ---------- Верхняя и нижняя панели ---------- */
@@ -454,6 +488,7 @@ a {
   align-items: center;
   background: var(--surface);
   border-radius: 24px;
+  filter: drop-shadow(0 0 16px rgba(0, 0, 0, 0.06));
 }
 
 .panel--crumbs {
@@ -488,8 +523,31 @@ a {
   border-radius: 999px;
   object-fit: cover;
 }
-.avatar:first-child { margin-right: -8px; }
+.avatar:not(:last-child) { margin-right: -8px; }
 .avatar--ring { border: 2px solid #fff; }
+/* Вы: серый кружок с иконкой пользователя */
+.avatar--visitor {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+}
+.avatar-user-icon {
+  width: 24px;
+  height: 24px;
+  background-color: var(--icon-muted);
+  opacity: 0.32;
+}
+/* «+N»: сколько ещё людей на сайте */
+.avatar--more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ddf4ff;
+  color: var(--accent);
+  font-size: 16px;
+  font-weight: 700;
+}
 .avatar:hover,
 .avatar:focus-visible { z-index: 2; }
 
@@ -738,6 +796,7 @@ a {
   animation: case-in 0.32s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .case-close {
+  filter: drop-shadow(0 0 16px rgba(0, 0, 0, 0.06));
   position: fixed;
   top: 16px;
   left: calc(50% + var(--case-w) / 2 + 16px); /* 16px от правого края колонки */
@@ -1020,19 +1079,13 @@ a {
 
 /* На узких десктопах (MacBook Air 1440) крестик кейса упирается в панель «Поделиться»:
    в кейсе остаётся только кнопка-иконка, как в мобильном макете. «Скопировано!» — подсказкой под кнопкой */
-@media (max-width: 1543px) {
-  .has-case .avatars { display: none; }
-  /* «Портфолио» обрезается до «Портф…», как в мобильном макете, чтобы плашка не заходила на колонку */
-  .has-case .crumb--link {
-    max-width: 52px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .has-case .panel--share { padding: 4px; }
-  .has-case .btn--share { width: 56px; padding: 0; gap: 0; position: relative; }
-  .has-case .btn--share .share-label { display: none; }
-  .has-case .btn--share::after {
+@media (max-width: 1639px) {
+  .has-page .avatars { display: none; }
+
+  .has-page .panel--share { padding: 4px; }
+  .has-page .btn--share { width: 56px; padding: 0; gap: 0; position: relative; }
+  .has-page .btn--share .share-label { display: none; }
+  .has-page .btn--share::after {
     content: 'Скопировано!';
     position: absolute;
     top: calc(100% + 12px);
@@ -1052,5 +1105,136 @@ a {
     transform: translateY(-3px);
     transition: opacity 0.14s ease, transform 0.14s ease;
   }
-  .has-case .btn--share.is-copied::after { opacity: 1; transform: none; }
+  .has-page .btn--share.is-copied::after { opacity: 1; transform: none; }
+}
+
+/* «Портфолио» обрезается до «Портф…», как в мобильном макете, чтобы плашка не заходила на колонку 800px */
+@media (min-width: 768px) and (max-width: 1499px) {
+  .has-page .crumb--link,
+  .has-page .crumb--page {
+    max-width: 52px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+/* ---------- Телефон (кадры 375px) ---------- */
+
+.share-icon-btn { display: none; }
+
+.mshare {
+  position: fixed;
+  top: 96px;
+  left: 8px;
+  right: 8px;
+  z-index: 12;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px;
+  border-radius: 32px;
+  background: var(--surface);
+  filter: drop-shadow(0 0 16px rgba(0, 0, 0, 0.06));
+  transform-origin: 50% 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px) scale(0.98);
+  transition: opacity 0.12s ease-in, transform 0.12s ease-in, visibility 0s 0.12s;
+}
+.mshare.is-open {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition: opacity 0.18s ease-out, transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), visibility 0s;
+}
+.mshare-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px;
+}
+.mshare-row { display: flex; align-items: center; gap: 10px; }
+.mshare-row--between { justify-content: space-between; }
+.mshare-owner-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 999px;
+  background: rgba(0, 160, 240, 0.09);
+  color: var(--accent);
+  font-size: 16px;
+  font-weight: 700;
+}
+.btn--share-block {
+  width: 100%;
+  padding: 0 24px;
+  font-size: 16px;
+}
+
+@media (max-width: 767px) {
+  /* Шапка — одна панель на всю ширину, справа кнопка «Поделиться» */
+  .topbar { padding: 16px; }
+  .panel--crumbs {
+    width: 100%;
+    padding: 0 4px 0 24px;
+  }
+  .panel--crumbs > .crumb:last-of-type,
+  .panel--crumbs > .crumb--link {
+    flex: 1 0 0;
+    min-width: 1px;
+    max-width: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: left;
+  }
+  .share-icon-btn {
+    display: flex;
+    flex-shrink: 0;
+    width: 56px;
+    height: 56px;
+    padding: 0;
+  }
+
+  /* Внизу только инструменты и переключатель вида, по центру */
+  .bottombar { justify-content: center; }
+  .bottombar-side { display: none; }
+
+  /* Лента в одну колонку. Полоса прокрутки на телефоне поверх контента — место под неё не нужно */
+  .feed,
+  .case-scroll { scrollbar-gutter: auto; }
+  .feed { padding: 112px 8px 112px; }
+  .feed-column { --feed-w: 100%; }
+
+  /* Кейс: колонка во всю ширину, крестик внизу по центру */
+  .case { --case-w: 100%; }
+  .case-scroll { padding: 112px 8px 112px; }
+  .case-close {
+    top: auto;
+    bottom: 16px;
+    left: calc(50% - 32px);
+  }
+  .case-cover { height: 220px; }
+  .case-intro { padding: 16px 12px 12px; }
+  .case-title { font-size: 28px; }
+  .case-lead { font-size: 16px; }
+  .case-panel { padding: 16px; }
+  .case-h2 { font-size: 24px; }
+  .case-text { font-size: 15px; }
+  .case-meta,
+  .case-stats,
+  .case-columns { flex-wrap: wrap; }
+  .case-meta-item,
+  .case-stat,
+  .case-col { flex: 1 1 calc(50% - 4px); }
+  .case-stat-value { font-size: 32px; }
+  .case-table { padding: 4px 12px; }
+  .case-tr { gap: 8px; font-size: 13px; }
+  .case-image { height: 220px !important; padding: 0 16px; text-align: center; }
+  .case-next-row { flex-wrap: wrap; padding: 12px; }
+  .case-next-btn { width: 100%; }
 }
