@@ -735,7 +735,7 @@ a {
 .case-close {
   position: fixed;
   top: 16px;
-  left: calc(50% + 496px); /* в макете крестик на x=1456 при ширине 1920 */
+  left: calc(50% + 450px + 16px); /* 16px от правого края колонки (900px) */
   z-index: 11;
   display: flex;
   align-items: center;
