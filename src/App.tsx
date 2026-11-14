@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Canvas, type Tool } from './components/Canvas';
 import { CaseModal } from './components/CaseModal';
+import { ShareButton } from './components/ShareButton';
 import { ExperienceCard, HeroCard, Icon, ProjectCard, VibeCard } from './components/Cards';
 import { fitCamera, zoomAt, NODES, type Camera, type NodeId, type Vec } from './canvas/layout';
 import { headerAvatars, icons, profile, projects, type Project } from './content';
@@ -25,7 +26,6 @@ export default function App() {
   });
   const [offsets, setOffsets] = useState<Record<NodeId, Vec>>(ZERO_OFFSETS);
   const [zoomMenu, setZoomMenu] = useState(false);
-  const [copied, setCopied] = useState(false);
   const [openCase, setOpenCase] = useState<Project | null>(null);
 
   // Пока пользователь не трогал холст, при изменении окна кадр подстраивается
@@ -60,6 +60,16 @@ export default function App() {
     },
     [camera, offsets, stopAnimation],
   );
+
+  // Меню масштаба закрывается кликом в любом месте вне панели масштаба
+  useEffect(() => {
+    if (!zoomMenu) return;
+    const onDown = (e: PointerEvent) => {
+      if (!(e.target as HTMLElement).closest('.zoom')) setZoomMenu(false);
+    };
+    document.addEventListener('pointerdown', onDown, true);
+    return () => document.removeEventListener('pointerdown', onDown, true);
+  }, [zoomMenu]);
 
   useEffect(() => {
     const onResize = () => {
@@ -120,16 +130,6 @@ export default function App() {
     };
   }, [camera.z, openCase, view, zoomTo]);
 
-  const share = async () => {
-    try {
-      await navigator.clipboard.writeText(window.location.href);
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 2000);
-    } catch {
-      window.prompt('Скопируйте ссылку', window.location.href);
-    }
-  };
-
   const setOffset = useCallback((id: NodeId, v: Vec) => setOffsets((prev) => ({ ...prev, [id]: v })), []);
 
   const nodes: Record<NodeId, React.ReactNode> = {
@@ -179,14 +179,19 @@ export default function App() {
         </div>
         <div className="panel panel--share">
           <div className="avatars">
-            {headerAvatars.map((src, i) => (
-              <img key={src} src={src} alt="" className={`avatar${i > 0 ? ' avatar--ring' : ''}`} draggable={false} />
+            {headerAvatars.map((a, i) => (
+              <span
+                key={a.name}
+                className={`avatar${i > 0 ? ' avatar--ring' : ''}`}
+                data-tooltip={a.name}
+                aria-label={a.name}
+                tabIndex={0}
+              >
+                <img src={a.src} alt="" draggable={false} />
+              </span>
             ))}
           </div>
-          <button type="button" className="btn btn--primary btn--share" onClick={share}>
-            <Icon src={icons.link} className="icon--white" />
-            {copied ? 'Скопировано!' : 'Поделиться'}
-          </button>
+          <ShareButton />
         </div>
       </header>
 
@@ -205,15 +210,12 @@ export default function App() {
                 onClick={() => setZoomMenu((v) => !v)}
               >
                 {Math.round(camera.z * 100)}%
-                <Icon src={icons.chevronDown} className="icon--muted" />
+                <Icon src={icons.chevronDown} className="icon--muted zoom-chevron" />
               </button>
               <button type="button" className="tool-btn" aria-label="Отдалить" onClick={() => zoomTo(camera.z / ZOOM_STEP)}>
                 <Icon src={icons.zoomOut} className="icon--strong" />
               </button>
-              {zoomMenu && (
-                <>
-                  <div className="menu-backdrop" onClick={() => setZoomMenu(false)} />
-                  <div className="menu" role="menu">
+              <div className={`menu${zoomMenu ? ' is-open' : ''}`} role="menu" aria-hidden={!zoomMenu}>
                     {ZOOM_PRESETS.map((z) => (
                       <button
                         key={z}
@@ -228,9 +230,7 @@ export default function App() {
                         {z * 100}%
                       </button>
                     ))}
-                  </div>
-                </>
-              )}
+              </div>
             </div>
           )}
         </div>

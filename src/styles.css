@@ -474,20 +474,104 @@ a {
 }
 .avatars { display: flex; align-items: center; }
 .avatar {
+  position: relative;
   display: block;
   width: 40px;
   height: 40px;
   border-radius: 999px;
-  object-fit: cover;
   background: #fff;
+  outline: none;
+}
+.avatar img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 999px;
+  object-fit: cover;
 }
 .avatar:first-child { margin-right: -8px; }
 .avatar--ring { border: 2px solid #fff; }
+.avatar:hover,
+.avatar:focus-visible { z-index: 2; }
+
+/* Подсказка с названием (значения сняты с референса) */
+.avatar::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  z-index: 4;
+  padding: 5px 8px;
+  border-radius: 6px;
+  background: rgba(24, 24, 22, 0.9);
+  box-shadow: 0 4px 14px rgba(24, 24, 22, 0.16);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 15px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, -3px);
+  transition: opacity 0.14s ease, transform 0.14s ease;
+}
+.avatar:hover::after,
+.avatar:focus-visible::after {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
 .btn--share {
   gap: 8px;
   padding: 0 24px;
   font-size: 16px;
   text-transform: uppercase;
+}
+
+/* Смена подписи лентой: старая уходит вверх, новая въезжает снизу (как у референса) */
+.share-label {
+  position: relative;
+  display: block;
+  height: 20px;
+  overflow: hidden;
+  transition: width 0.24s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.share-text {
+  display: block;
+  width: max-content;
+  line-height: 20px;
+}
+.share-text--copied {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.share-text--rest {
+  transition: transform 0.26s cubic-bezier(0.22, 1, 0.36, 1) 0.06s, opacity 0s 0.06s;
+}
+.is-copied .share-text--rest {
+  opacity: 0;
+  transform: translateY(-7px);
+  transition: transform 0.18s ease-in, opacity 0.18s ease-in;
+}
+.share-text--copied {
+  opacity: 0;
+  transform: translateY(7px);
+  transition: transform 0.18s ease-in, opacity 0.18s ease-in;
+}
+.is-copied .share-text--copied {
+  opacity: 1;
+  transform: none;
+  transition: transform 0.26s cubic-bezier(0.22, 1, 0.36, 1) 0.06s, opacity 0s 0.06s;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
 }
 
 .bottombar-side {
@@ -558,11 +642,6 @@ a {
 }
 
 /* Меню масштаба */
-.menu-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-}
 .menu {
   position: absolute;
   left: 0;
@@ -575,6 +654,29 @@ a {
   border-radius: 24px;
   background: var(--surface);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  transform-origin: 50% 100%;
+  /* Закрытие: быстро гаснет и опускается */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(6px) scale(0.97);
+  transition: opacity 0.12s ease-in, transform 0.12s ease-in, visibility 0s 0.12s;
+}
+.menu.is-open {
+  /* Открытие: всплывает от кнопки */
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition: opacity 0.18s ease-out, transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), visibility 0s;
+}
+.zoom-chevron { transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1); }
+[aria-expanded='true'] > .zoom-chevron { transform: rotate(180deg); }
+
+@media (prefers-reduced-motion: reduce) {
+  .menu,
+  .menu.is-open,
+  .share-label,
+  .share-text,
+  .avatar::after { transition-duration: 0s !important; transition-delay: 0s !important; }
 }
 .menu-item {
   height: 40px;
