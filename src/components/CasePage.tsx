@@ -11,7 +11,7 @@ type Props = {
   onOpenCase: (id: string) => void;
 };
 
-/** Страница кейса поверх холста: колонка 960px по центру, своя прокрутка, крестик справа. */
+/** Страница кейса поверх холста: колонка 900px по центру, своя прокрутка, крестик справа. */
 export function CasePage({ study, zoom, closing, onClose, onOpenCase }: Props) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
