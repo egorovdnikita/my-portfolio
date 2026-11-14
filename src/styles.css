@@ -1189,8 +1189,8 @@ a {
   border-radius: 24px;
   background: var(--accent-soft);
   color: var(--accent);
-  font-size: 20px;
-  font-weight: 700;
+  font-size: 17px;
+  font-weight: 500;
   --lh: 1.4;
 }
 .case-image {
