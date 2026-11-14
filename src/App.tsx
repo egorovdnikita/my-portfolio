@@ -348,7 +348,6 @@ export default function App() {
                 onClick={() => setZoomMenu((v) => !v)}
               >
                 {Math.round(zoomValue * 100)}%
-                <Icon src={icons.chevronDown} className="icon--muted zoom-chevron" />
               </button>
               <button type="button" className="tool-btn" aria-label="Отдалить" onClick={() => zoomTo(zoomValue / ZOOM_STEP)}>
                 <Icon src={icons.zoomOut} className="icon--strong" />

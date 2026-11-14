@@ -96,7 +96,6 @@ export const projects: Project[] = [
 
 export const icons = {
   chevronRight: asset('ic-chevron-right.svg'),
-  chevronDown: asset('ic-chevron-down.svg'),
   link: asset('ic-link.svg'),
   external: asset('ic-external.svg'),
   download: asset('ic-download.svg'),

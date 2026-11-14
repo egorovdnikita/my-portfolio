@@ -97,6 +97,34 @@ const dayLabel = (date: Date) => `${date.getUTCDate()} ${MONTHS_OF[date.getUTCMo
 type Tip = { i: number; x: number; y: number };
 
 /** Исходный клип Triangle / Thinking из локального пака AgentPulse. */
+// Боты пака Agent Pals: у каждого свой облик, клип один и тот же — «Thinking»
+const AGENT_PALS = [
+  'Arch', 'Briefcase', 'Cat', 'Circle', 'Cloud', 'Clover', 'Drop', 'Flame', 'Flower',
+  'Ghost', 'Heart', 'Hexagon', 'Oval', 'Pill', 'Scallop', 'Square', 'Star', 'Triangle',
+];
+const LAST_BOT_KEY = 'agent-pal';
+
+/** Случайный бот при каждой загрузке, но не тот, что был в прошлый раз. Выбор один на загрузку страницы */
+let chosenBot: string | null = null;
+function pickBot() {
+  if (chosenBot) return chosenBot;
+  let last: string | null = null;
+  try {
+    last = localStorage.getItem(LAST_BOT_KEY);
+  } catch {
+    /* приватный режим — просто без запоминания */
+  }
+  const pool = AGENT_PALS.filter((b) => b !== last);
+  const bot = pool[Math.floor(Math.random() * pool.length)];
+  chosenBot = bot;
+  try {
+    localStorage.setItem(LAST_BOT_KEY, bot);
+  } catch {
+    /* ignore */
+  }
+  return bot;
+}
+
 function AgentPulseLogo() {
   const container = useRef<HTMLSpanElement>(null);
   useEffect(() => {
@@ -107,7 +135,7 @@ function AgentPulseLogo() {
       renderer: 'svg',
       loop: true,
       autoplay: !reducedMotion.matches,
-      path: `${import.meta.env.BASE_URL}assets/agent-pulse-triangle-thinking.json`,
+      path: `${import.meta.env.BASE_URL}assets/agent-pals/${pickBot()}.json`,
     });
     const onMotionChange = () => reducedMotion.matches ? animation.goToAndStop(0, true) : animation.play();
     reducedMotion.addEventListener('change', onMotionChange);
