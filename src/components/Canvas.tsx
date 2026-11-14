@@ -2,6 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 're
 import {
   EDGES,
   NODES,
+  nodePos,
   edgeGeometry,
   nodeRect,
   zoomAt,
@@ -22,6 +23,8 @@ type Props = {
   spaceHeld: boolean;
   onInteract: () => void;
   nodes: Record<NodeId, ReactNode>;
+  /** Телефон: вертикальная главная карточка, боковые придвинуты */
+  compact: boolean;
 };
 
 const INTERACTIVE = 'a, button, input, select, textarea, [role="menu"]';
@@ -37,7 +40,7 @@ type Drag =
   | { kind: 'pinch'; id: number; dist: number; mx: number; my: number; cam: Camera; moved: boolean }
   | { kind: 'node'; id: number; node: NodeId; sx: number; sy: number; start: Vec; moved: boolean };
 
-export function Canvas({ camera, setCamera, offsets, setOffset, tool, spaceHeld, onInteract, nodes }: Props) {
+export function Canvas({ camera, setCamera, offsets, setOffset, tool, spaceHeld, onInteract, nodes, compact }: Props) {
   const viewportRef = useRef<HTMLDivElement>(null);
   const nodeRefs = useRef<Partial<Record<NodeId, HTMLDivElement>>>({});
   const [sizes, setSizes] = useState<Partial<Record<NodeId, Size>>>({});
@@ -176,7 +179,7 @@ export function Canvas({ camera, setCamera, offsets, setOffset, tool, spaceHeld,
   const rects = (Object.keys(NODES) as NodeId[]).reduce(
     (acc, id) => {
       const s = sizes[id];
-      if (s) acc[id] = nodeRect(id, s, offsets[id]);
+      if (s) acc[id] = nodeRect(id, s, offsets[id], compact);
       return acc;
     },
     {} as Partial<Record<NodeId, ReturnType<typeof nodeRect>>>,
@@ -227,7 +230,7 @@ export function Canvas({ camera, setCamera, offsets, setOffset, tool, spaceHeld,
           })}
         </svg>
         {(Object.keys(NODES) as NodeId[]).map((id) => {
-          const n = NODES[id];
+          const n = nodePos(id, compact);
           const o = offsets[id];
           return (
             <div

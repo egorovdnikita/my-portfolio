@@ -260,6 +260,7 @@ export default function App() {
           spaceHeld={spaceHeld}
           onInteract={onInteract}
           nodes={nodes}
+          compact={isMobile}
         />
       ) : (
         <main className="feed">

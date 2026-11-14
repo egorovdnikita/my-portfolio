@@ -47,8 +47,20 @@ export const MIN_ZOOM = 0.1;
 export const MAX_ZOOM = 4;
 export const clampZoom = (z: number) => Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, z));
 
-export function nodeRect(id: NodeId, size: Size, offset: Vec): Rect {
+// На телефоне главная карточка вертикальная и уже десктопной (359 вместо 693px):
+// боковые карточки придвигаются на разницу, чтобы зазоры остались как на десктопе
+const COMPACT_SHIFT = (693 - 359) / 2;
+const LEFT_SIDE: NodeId[] = ['exp', 'vibe'];
+
+export function nodePos(id: NodeId, compact = false) {
   const n = NODES[id];
+  if (!compact || id === 'hero') return n;
+  const dx = LEFT_SIDE.includes(id) ? COMPACT_SHIFT : -COMPACT_SHIFT;
+  return { ...n, x: n.x + dx };
+}
+
+export function nodeRect(id: NodeId, size: Size, offset: Vec, compact = false): Rect {
+  const n = nodePos(id, compact);
   const left = n.x - n.ax * size.w + offset.x;
   const top = n.y - size.h / 2 + offset.y;
   return { left, top, right: left + size.w, bottom: top + size.h, cy: top + size.h / 2 };
@@ -74,7 +86,8 @@ export function initialCamera(vw: number, vh: number, hero?: Size): Camera {
   if (vw <= MOBILE_MAX) {
     const size = hero ?? { w: 359, h: 640 };
     const avail = vh - TOP_UI - BOTTOM_UI;
-    const z = clampZoom(Math.min((vw - 16) / size.w, avail / size.h, 1));
+    // Чуть дальше, чем во всю ширину: по бокам видны соседние карточки
+    const z = clampZoom(Math.min((vw - 16) / size.w, avail / size.h, 1) * 0.85);
     const cy = TOP_UI + avail / 2;
     return { x: vw / 2 - h.x * z, y: cy - h.y * z, z };
   }
