@@ -1,4 +1,5 @@
 import { experience, icons, profile, vibecoding, type Project } from '../content';
+import { useState } from 'react';
 import contributions from '../data/contributions.json';
 
 /** Иконка-маска: цвет задаётся через CSS (как Master Icon в макете). */
@@ -68,7 +69,8 @@ const calendar = (() => {
   const weeks = Math.ceil((today - start) / DAY_MS / 7 + 1 / 7);
   const cells = Array.from({ length: weeks * 7 }, (_, i) => {
     const [count, level] = contributions.days[i] ?? [0, 0];
-    return { week: Math.floor(i / 7), count, level, future: start + i * DAY_MS > today };
+    const date = new Date(start + i * DAY_MS);
+    return { week: Math.floor(i / 7), count, level, date, future: date.getTime() > today };
   });
   const months: { label: string; col: number }[] = [];
   for (let w = 0; w < weeks; w++) {
@@ -80,8 +82,31 @@ const calendar = (() => {
   return { weeks, cells, months };
 })();
 const formatCount = (n: number) => `${n.toLocaleString('en-US')} contributions`;
+// 1 коммит, 2 коммита, 5 коммитов, 21 коммит
+const commitsWord = (n: number) => {
+  const d = n % 10;
+  const dd = n % 100;
+  if (d === 1 && dd !== 11) return 'коммит';
+  if (d >= 2 && d <= 4 && (dd < 12 || dd > 14)) return 'коммита';
+  return 'коммитов';
+};
+const MONTHS_OF = ['янв.', 'февр.', 'марта', 'апр.', 'мая', 'июня', 'июля', 'авг.', 'сент.', 'окт.', 'нояб.', 'дек.'];
+const dayLabel = (date: Date) => `${date.getUTCDate()} ${MONTHS_OF[date.getUTCMonth()]}`;
+
+type Tip = { i: number; x: number; y: number };
 
 export function VibeCard() {
+  // Подсказка над клеткой: число коммитов и дата. Координаты — внутри .contrib, поэтому работают и на холсте с масштабом
+  const [tip, setTip] = useState<Tip | null>(null);
+  const onOver = (e: React.PointerEvent) => {
+    const el = (e.target as HTMLElement).closest<HTMLElement>('[data-i]');
+    if (!el) return setTip(null);
+    const i = Number(el.dataset.i);
+    if (calendar.cells[i].future) return setTip(null);
+    setTip({ i, x: el.offsetLeft + el.offsetWidth / 2, y: el.offsetTop });
+  };
+  const tipCell = tip && calendar.cells[tip.i];
+
   return (
     <section className="card card--vibe">
       <div className="vibe-top">
@@ -103,16 +128,22 @@ export function VibeCard() {
               </span>
             ))}
           </div>
-          <div className="contrib-grid" aria-hidden>
+          <div className="contrib-grid" aria-hidden onPointerOver={onOver} onPointerLeave={() => setTip(null)}>
             {calendar.cells.map((c, i) => (
               <span
                 key={i}
-                className={`contrib-cell${c.future ? ' is-future' : ''}`}
+                data-i={i}
+                className={`contrib-cell${c.future ? ' is-future' : ''}${tip?.i === i ? ' is-hover' : ''}`}
                 data-level={c.level}
                 style={{ '--col': c.week } as React.CSSProperties}
               />
             ))}
           </div>
+          {tipCell && (
+            <span className="contrib-tip" style={{ left: tip.x, top: tip.y }} aria-hidden>
+              {tipCell.count ? `${tipCell.count} ${commitsWord(tipCell.count)}` : 'Нет коммитов'} · {dayLabel(tipCell.date)}
+            </span>
+          )}
         </div>
         <div className="tools">
           {vibecoding.tools.map((tool) => (

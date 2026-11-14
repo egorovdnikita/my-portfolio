@@ -320,7 +320,7 @@ a {
   width: 100%;
 }
 /* Календарь вкладов GitHub (по референсу: зазор 2px, уровни 30/55/78/100% цвета) */
-.contrib { display: flex; flex-direction: column; }
+.contrib { position: relative; display: flex; flex-direction: column; }
 .contrib-months,
 .contrib-grid {
   display: grid;
@@ -361,12 +361,32 @@ a {
   opacity: 0;
   animation: contrib-shimmer 3.2s ease-in-out calc(var(--col) * 60ms) infinite;
 }
+.contrib-cell[data-level='0']::after { display: none; } /* светятся только клетки с активностью */
 @keyframes contrib-shimmer {
   0%, 16%, 100% { opacity: 0; }
   7% { opacity: 1; }
 }
 @media (prefers-reduced-motion: reduce) {
   .contrib-cell::after { animation: none; }
+}
+.contrib-grid { cursor: default; }
+.contrib-cell.is-hover { filter: brightness(1.15); }
+/* Подсказка — как у аватарок в шапке */
+.contrib-tip {
+  position: absolute;
+  z-index: 4;
+  padding: 5px 8px;
+  border-radius: 6px;
+  background: var(--tooltip-bg);
+  box-shadow: 0 4px 14px var(--tooltip-shadow);
+  color: var(--tooltip-text);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 15px;
+  white-space: nowrap;
+  pointer-events: none;
+  transform: translate(-50%, calc(-100% - 6px));
+  animation: fade-in 0.14s ease;
 }
 .tools {
   display: flex;
