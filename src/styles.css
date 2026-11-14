@@ -22,6 +22,8 @@
   --text-muted: rgba(0, 0, 0, 0.4);
   --accent: #00a0f0;
   --accent-hover: #0092db;
+  /* Внутреннее свечение синих кнопок — как в макете Figma (Inner shadow 0 0 8px #fff) */
+  --accent-glow: #ffffff;
   --accent-soft: rgba(0, 160, 240, 0.08);
   --fill-2: rgba(0, 0, 0, 0.02);
   --fill-4: rgba(0, 0, 0, 0.04);
@@ -69,6 +71,7 @@
   --text-muted: rgba(255, 255, 255, 0.4);
   --accent: #00a0f0;
   --accent-hover: #1aaaf2;
+  --accent-glow: #ffffff;
   --accent-soft: rgba(0, 160, 240, 0.16);
   --fill-2: rgba(255, 255, 255, 0.03);
   --fill-4: rgba(255, 255, 255, 0.06);
@@ -222,7 +225,7 @@ a {
 }
 .btn--secondary { background: var(--fill-4); color: var(--text); }
 .btn--secondary:hover { background: var(--fill-6); }
-.btn--primary { background: var(--accent); color: var(--on-accent); }
+.btn--primary { background: var(--accent); color: var(--on-accent); box-shadow: inset 0 0 8px var(--accent-glow); }
 .btn--primary:hover { background: var(--accent-hover); }
 .btn--block { width: 100%; }
 .btn[aria-disabled='true'] { cursor: default; }
@@ -842,7 +845,7 @@ a {
 }
 .tool-btn:hover { background: var(--fill-4); }
 .tool-btn.is-active,
-.tool-btn.is-active:hover { background: var(--accent); }
+.tool-btn.is-active:hover { background: var(--accent); box-shadow: inset 0 0 8px var(--accent-glow); }
 .zoom-value {
   width: auto;
   gap: 8px;
