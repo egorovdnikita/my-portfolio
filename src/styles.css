@@ -1437,10 +1437,11 @@ a {
   .case-panel { padding: 16px; }
   .case-h2 { font-size: 24px; }
   .case-text { font-size: 15px; }
-  /* Мета и карточки — сверху вниз, по одной в строке */
-  .case-meta,
+  /* Мета под описанием — по две в ряд */
+  .case-meta { flex-wrap: wrap; }
+  .case-meta-item { flex: 1 1 calc(50% - 4px); }
+  /* Карточки секций — сверху вниз, по одной в строке */
   .case-columns { flex-direction: column; }
-  .case-meta-item,
   .case-col,
   .case-columns:has(> :nth-child(4)) > .case-col { flex: 0 0 auto; }
   .case-stats { flex-wrap: wrap; }
