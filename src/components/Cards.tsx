@@ -187,19 +187,38 @@ function LinkButton({
 
 export function ProjectCard({ project, onOpenCase }: { project: Project; onOpenCase: (caseId: string) => void }) {
   const { action } = project;
+  const tags = (
+    <div className="tag-list">
+      {project.tags.map((t) => (
+        <Tag key={t}>{t}</Tag>
+      ))}
+    </div>
+  );
   return (
-    <section className="card card--project">
-      <div className="project-cover">
-        <div className="tag-list project-tags">
-          {project.tags.map((t) => (
-            <Tag key={t}>{t}</Tag>
-          ))}
+    <section className={`card card--project${project.logo ? ' card--project-compact' : ''}`}>
+      {project.logo ? (
+        // Компактная карточка: логотип, название и теги в строку, ниже описание
+        <div className="project-text project-text--compact">
+          <div className="project-head">
+            <img src={project.logo} alt="" width={63} height={63} className="project-logo" draggable={false} />
+            <div className="project-title">
+              <h2>{project.title}</h2>
+              {tags}
+            </div>
+          </div>
+          <p className="muted">{project.description}</p>
         </div>
-      </div>
-      <div className="project-text">
-        <h2>{project.title}</h2>
-        <p className="muted">{project.description}</p>
-      </div>
+      ) : (
+        <>
+          <div className="project-cover">
+            <div className="project-tags">{tags}</div>
+          </div>
+          <div className="project-text">
+            <h2>{project.title}</h2>
+            <p className="muted">{project.description}</p>
+          </div>
+        </>
+      )}
       {action.kind === 'case' ? (
         <a
           className="btn btn--secondary btn--block"

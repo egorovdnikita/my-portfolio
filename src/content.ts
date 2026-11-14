@@ -52,6 +52,8 @@ export type Project = {
   title: string;
   description: string;
   tags: string[];
+  /** Логотип 63px — компактная карточка без обложки (Базис, Лицей) */
+  logo?: string;
   // «Подробнее» открывает кейс на сайте, «Смотреть на Behance» ведёт на внешнюю страницу
   action: { kind: 'case'; caseId: string } | { kind: 'link'; url: string; label: string };
 };
@@ -80,6 +82,7 @@ export const projects: Project[] = [
     description:
       'Корпоративный сайт разработчика платформ виртуализации: структура для B2B-аудитории и подача сложного продукта',
     tags: ['B2B', 'Web', 'Корпоративный сайт'],
+    logo: asset('logo-basis.svg'),
     action: { kind: 'link', url: BEHANCE.basis, label: 'СМОТРЕТЬ НА BEHANCE' },
   },
   {
@@ -87,6 +90,7 @@ export const projects: Project[] = [
     title: 'Ростелеком Лицей',
     description: 'Раздел «Экзамены» образовательной платформы: подготовка школьников к ОГЭ и ЕГЭ в одном сценарии',
     tags: ['EdTech', 'B2C', 'Web'],
+    logo: asset('logo-lyceum.svg'),
     action: { kind: 'link', url: BEHANCE.lyceum, label: 'СМОТРЕТЬ НА BEHANCE' },
   },
 ];

@@ -384,6 +384,23 @@ a {
   font-size: 24px;
   font-weight: 700;
 }
+/* Компактная карточка кейса (Базис, Лицей): ширина 400px, без обложки */
+.card--project-compact { width: 400px; }
+.project-text--compact { gap: 16px; }
+.project-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+}
+.project-logo { display: block; flex-shrink: 0; }
+.project-title {
+  flex: 1 0 0;
+  min-width: 1px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
 
 /* ---------- Холст ---------- */
 
