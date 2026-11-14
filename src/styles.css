@@ -1127,13 +1127,13 @@ a {
 
 /* На узких десктопах (MacBook Air 1440) крестик кейса упирается в панель «Поделиться»:
    в кейсе остаётся только кнопка-иконка, как в мобильном макете. «Скопировано!» — подсказкой под кнопкой */
-@media (max-width: 1639px) {
-  .has-page .avatars { display: none; }
+@media (min-width: 768px) and (max-width: 1639px) {
+  .has-page .panel--share .avatars { display: none; }
 
   .has-page .panel--share { padding: 4px; }
-  .has-page .btn--share { width: 56px; padding: 0; gap: 0; position: relative; }
-  .has-page .btn--share .share-label { display: none; }
-  .has-page .btn--share::after {
+  .has-page .panel--share .btn--share { width: 56px; padding: 0; gap: 0; position: relative; }
+  .has-page .panel--share .btn--share .share-label { display: none; }
+  .has-page .panel--share .btn--share::after {
     content: 'Скопировано!';
     position: absolute;
     top: calc(100% + 12px);
@@ -1153,7 +1153,7 @@ a {
     transform: translateY(-3px);
     transition: opacity 0.14s ease, transform 0.14s ease;
   }
-  .has-page .btn--share.is-copied::after { opacity: 1; transform: none; }
+  .has-page .panel--share .btn--share.is-copied::after { opacity: 1; transform: none; }
 }
 
 /* «Портфолио» обрезается до «Портф…», как в мобильном макете, чтобы плашка не заходила на колонку 800px */
