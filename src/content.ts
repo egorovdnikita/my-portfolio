@@ -59,16 +59,15 @@ export type Project = {
 export const projects: Project[] = [
   {
     id: 'p1',
-    title: '1win · Дизайн-система',
-    description:
-      'Одна DS на 3 бренда и 16+ стран: Variables, Slots, Appearance Modes и RTL. Новый бренд — через токены, итерации ×2',
+    title: 'Дизайн-система для трёх брендов',
+    description: 'Как общие компоненты и токены брендов помогают собрать один сценарий в разных темах.',
     tags: ['Design System', 'White-Label', 'RTL', 'Storybook'],
     action: { kind: 'case', caseId: '1win' },
   },
   {
     id: 'p2',
-    title: '1win · Продукты',
-    description: 'Касса, кошелёк, лобби казино и B2B-панель для партнёров — три iGaming-бренда для 16+ стран',
+    title: 'Касса и история операций',
+    description: 'Как показать условия перевода и помочь пользователю проверить его статус.',
     tags: ['iGaming', 'B2C', 'B2B', 'Payments'],
     action: { kind: 'case', caseId: '1win-product' },
   },

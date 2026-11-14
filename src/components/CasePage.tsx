@@ -32,7 +32,6 @@ export function CasePage({ study, zoom, closing, onClose }: Props) {
               </div>
             </div>
             <div className="case-intro">
-              <p className="case-eyebrow">{study.eyebrow}</p>
               <h1 className="case-title">{study.title}</h1>
               <p className="case-lead">{study.lead}</p>
             </div>
@@ -44,23 +43,6 @@ export function CasePage({ study, zoom, closing, onClose }: Props) {
                 </div>
               ))}
             </div>
-          </section>
-
-          <section className="case-card case-panel">
-            <Header label="Результат в цифрах" />
-            <div className="case-stats">
-              {study.stats.map((s) => (
-                <div key={s.value + s.caption} className="case-stat">
-                  <span className="case-stat-value">{s.value}</span>
-                  <span className="case-small">{s.caption}</span>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          <section className="case-card case-panel">
-            <Header label="Моя роль" num="TL;DR" />
-            <Bullets items={study.role} />
           </section>
 
           {study.sections.map((section) => (
