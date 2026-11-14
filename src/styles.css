@@ -321,7 +321,7 @@ a {
   padding: 16px;
   width: 100%;
 }
-/* Календарь вкладов GitHub (по референсу: зазор 2px, скругление 2px, уровни 30/55/78/100% цвета) */
+/* Календарь вкладов GitHub (по референсу: зазор 2px, уровни 30/55/78/100% цвета) */
 .contrib { display: flex; flex-direction: column; }
 .contrib-months,
 .contrib-grid {
@@ -345,7 +345,7 @@ a {
   --heat: var(--green);
   position: relative;
   aspect-ratio: 1;
-  border-radius: 2px;
+  border-radius: 3px;
   background: var(--cell-empty);
   outline: 1px solid var(--cell-line);
   outline-offset: -1px;
