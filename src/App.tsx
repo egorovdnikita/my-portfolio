@@ -5,6 +5,7 @@ import { ShareButton } from './components/ShareButton';
 import { Avatars } from './components/Avatars';
 import { usePresence } from './presence';
 import { useIsMobile } from './useMedia';
+import { useTheme } from './theme';
 import { MobileShare } from './components/MobileShare';
 import { ExperienceCard, HeroCard, Icon, ProjectCard, VibeCard } from './components/Cards';
 import { initialCamera, zoomAt, NODES, type Camera, type NodeId, type Vec } from './canvas/layout';
@@ -48,6 +49,9 @@ export default function App() {
   const study = findCase(caseId);
   const presence = usePresence();
   const isMobile = useIsMobile();
+  const { theme, toggle: toggleTheme } = useTheme();
+  const themeLabel = theme === 'dark' ? 'Светлая тема' : 'Тёмная тема';
+  const themeIcon = theme === 'dark' ? icons.sun : icons.moon;
 
   // Пока пользователь не трогал холст, при изменении окна кадр подстраивается
   const touched = useRef(false);
@@ -365,6 +369,13 @@ export default function App() {
                       </button>
                     ))}
               </div>
+            </div>
+          )}
+          {!isMobile && (
+            <div className="panel panel--tools">
+              <button type="button" className="tool-btn" aria-label={themeLabel} title={themeLabel} onClick={toggleTheme}>
+                <Icon src={themeIcon} className="icon--strong" />
+              </button>
             </div>
           )}
         </div>

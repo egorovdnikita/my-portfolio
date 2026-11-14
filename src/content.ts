@@ -116,4 +116,6 @@ export const icons = {
   reset: asset('ic-reset.svg'),
   canvas: asset('ic-canvas.svg'),
   rows: asset('ic-rows.svg'),
+  sun: asset('ic-sun.svg'),
+  moon: asset('ic-moon.svg'),
 };

@@ -33,6 +33,65 @@
   --green: #3dd51e;
   --dot: rgba(0, 0, 0, 0.08);
   --edge: rgba(0, 160, 240, 0.55);
+  --on-accent: #ffffff;
+  --text-30: rgba(0, 0, 0, 0.3);
+  --text-50: rgba(0, 0, 0, 0.5);
+  --text-60: rgba(0, 0, 0, 0.6);
+  --text-70: rgba(0, 0, 0, 0.7);
+  --text-80: rgba(0, 0, 0, 0.8);
+  --accent-soft-9: rgba(0, 160, 240, 0.09);
+  --accent-tint: #ddf4ff;
+  --surface-hover: #fafafa;
+  --segment-active: #ffffff;
+  --photo-frame: #ffffff;
+  --avatar-bg: #ffffff;
+  --logo-edge: #ffffff;
+  --shadow-panel: rgba(0, 0, 0, 0.06);
+  --shadow-lift: rgba(0, 0, 0, 0.08);
+  --tooltip-bg: rgba(24, 24, 22, 0.9);
+  --tooltip-shadow: rgba(24, 24, 22, 0.16);
+  --tooltip-text: #ffffff;
+  color-scheme: light;
+}
+
+/* Тёмная тема: тема ставится атрибутом data-theme на <html> (скрипт в index.html и useTheme) */
+:root[data-theme='dark'] {
+  --bg: #0f0f0f;
+  --surface: #1a1a1a;
+  --text: #ffffff;
+  --text-muted: rgba(255, 255, 255, 0.4);
+  --accent: #00a0f0;
+  --accent-hover: #1aaaf2;
+  --accent-soft: rgba(0, 160, 240, 0.16);
+  --fill-2: rgba(255, 255, 255, 0.03);
+  --fill-4: rgba(255, 255, 255, 0.06);
+  --fill-6: rgba(255, 255, 255, 0.08);
+  --fill-8: rgba(255, 255, 255, 0.12);
+  --icon-strong: #f5f5f5;
+  --icon-muted: #a3a3a3;
+  --icon-subtle: #737373;
+  --green: #3dd51e;
+  --dot: rgba(255, 255, 255, 0.12);
+  --edge: rgba(0, 160, 240, 0.7);
+  --on-accent: #ffffff;
+  --text-30: rgba(255, 255, 255, 0.3);
+  --text-50: rgba(255, 255, 255, 0.5);
+  --text-60: rgba(255, 255, 255, 0.6);
+  --text-70: rgba(255, 255, 255, 0.7);
+  --text-80: rgba(255, 255, 255, 0.8);
+  --accent-soft-9: rgba(0, 160, 240, 0.18);
+  --accent-tint: #0b3448;
+  --surface-hover: #222222;
+  --segment-active: #2e2e2e;
+  --photo-frame: #1a1a1a;
+  --avatar-bg: #2a2a2a;
+  --logo-edge: rgba(255, 255, 255, 0.24);
+  --shadow-panel: rgba(0, 0, 0, 0.4);
+  --shadow-lift: rgba(0, 0, 0, 0.5);
+  --tooltip-bg: rgba(64, 64, 62, 0.96);
+  --tooltip-shadow: rgba(0, 0, 0, 0.4);
+  --tooltip-text: #ffffff;
+  color-scheme: dark;
 }
 
 *,
@@ -100,7 +159,7 @@ a {
 .icon--strong { background-color: var(--icon-strong); }
 .icon--muted { background-color: var(--icon-muted); }
 .icon--subtle { background-color: var(--icon-subtle); }
-.icon--white { background-color: #fff; }
+.icon--white { background-color: var(--on-accent); }
 
 /* ---------- Общие элементы ---------- */
 
@@ -151,7 +210,7 @@ a {
 }
 .btn--secondary { background: var(--fill-4); color: var(--text); }
 .btn--secondary:hover { background: var(--fill-6); }
-.btn--primary { background: var(--accent); color: #fff; }
+.btn--primary { background: var(--accent); color: var(--on-accent); }
 .btn--primary:hover { background: var(--accent-hover); }
 .btn--block { width: 100%; }
 .btn[aria-disabled='true'] { cursor: default; }
@@ -175,7 +234,7 @@ a {
   inset: 0;
   padding: 1px;
   border-radius: inherit;
-  background: linear-gradient(135deg, #fff 0%, rgba(255, 255, 255, 0) 35%, rgba(255, 255, 255, 0) 65%, #fff 100%);
+  background: linear-gradient(135deg, var(--logo-edge) 0%, transparent 35%, transparent 65%, var(--logo-edge) 100%);
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
   mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
@@ -306,10 +365,10 @@ a {
 .hero-photo {
   width: 196px;
   flex-shrink: 0;
-  border: 4px solid #fff;
+  border: 4px solid var(--photo-frame);
   border-radius: 32px;
   overflow: hidden;
-  background: #fff;
+  background: var(--photo-frame);
 }
 .hero-photo-img {
   display: block;
@@ -426,7 +485,7 @@ a {
   transition: filter 0.15s ease;
 }
 .node.is-lifted {
-  filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.08));
+  filter: drop-shadow(0 12px 24px var(--shadow-lift));
   z-index: 1;
 }
 .viewport.is-dragging a,
@@ -536,7 +595,7 @@ a {
   align-items: center;
   background: var(--surface);
   border-radius: 24px;
-  filter: drop-shadow(0 0 16px rgba(0, 0, 0, 0.06));
+  filter: drop-shadow(0 0 16px var(--shadow-panel));
 }
 
 .panel--crumbs {
@@ -561,7 +620,7 @@ a {
   width: 40px;
   height: 40px;
   border-radius: 999px;
-  background: #fff;
+  background: var(--avatar-bg);
   outline: none;
 }
 .avatar img {
@@ -572,7 +631,7 @@ a {
   object-fit: cover;
 }
 .avatar:not(:last-child) { margin-right: -8px; }
-.avatar--ring { border: 2px solid #fff; }
+.avatar--ring { border: 2px solid var(--surface); }
 /* Вы: серый кружок с иконкой пользователя */
 .avatar--visitor {
   display: flex;
@@ -591,7 +650,7 @@ a {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #ddf4ff;
+  background: var(--accent-tint);
   color: var(--accent);
   font-size: 16px;
   font-weight: 700;
@@ -608,9 +667,9 @@ a {
   z-index: 4;
   padding: 5px 8px;
   border-radius: 6px;
-  background: rgba(24, 24, 22, 0.9);
-  box-shadow: 0 4px 14px rgba(24, 24, 22, 0.16);
-  color: #fff;
+  background: var(--tooltip-bg);
+  box-shadow: 0 4px 14px var(--tooltip-shadow);
+  color: var(--tooltip-text);
   font-size: 12px;
   font-weight: 500;
   line-height: 15px;
@@ -683,6 +742,7 @@ a {
   flex: 1 0 0;
   min-width: 1px;
   display: flex;
+  gap: 4px;
 }
 .bottombar-side--right {
   justify-content: flex-end;
@@ -735,7 +795,7 @@ a {
   border-radius: 16px;
   transition: background-color 0.15s ease;
 }
-.segment-btn.is-active { background: #fff; }
+.segment-btn.is-active { background: var(--segment-active); }
 
 .legal {
   font-size: 14px;
@@ -758,7 +818,7 @@ a {
   padding: 8px;
   border-radius: 24px;
   background: var(--surface);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 24px var(--shadow-lift);
   transform-origin: 50% 100%;
   /* Закрытие: быстро гаснет и опускается */
   opacity: 0;
@@ -844,7 +904,7 @@ a {
   animation: case-in 0.32s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .case-close {
-  filter: drop-shadow(0 0 16px rgba(0, 0, 0, 0.06));
+  filter: drop-shadow(0 0 16px var(--shadow-panel));
   position: fixed;
   top: 16px;
   left: calc(50% + var(--case-w) / 2 + 16px); /* 16px от правого края колонки */
@@ -859,7 +919,7 @@ a {
   transition: background-color 0.15s ease;
   animation: fade-in 0.2s ease;
 }
-.case-close:hover { background: #fafafa; }
+.case-close:hover { background: var(--surface-hover); }
 .case.is-closing .case-column {
   animation: case-out 0.2s ease-in forwards;
 }
@@ -922,7 +982,7 @@ a {
   line-height: 1.15;
 }
 .case-lead {
-  color: rgba(0, 0, 0, 0.6);
+  color: var(--text-60);
   font-size: 18px;
   line-height: 1.4;
 }
@@ -951,7 +1011,7 @@ a {
   white-space: nowrap;
 }
 .case-small {
-  color: rgba(0, 0, 0, 0.5);
+  color: var(--text-50);
   font-size: 14px;
   line-height: 1.4;
 }
@@ -994,7 +1054,7 @@ a {
   list-style: none;
   font-size: 16px;
   line-height: 1.4;
-  color: rgba(0, 0, 0, 0.8);
+  color: var(--text-80);
 }
 .case-bullets li { display: flex; gap: 12px; }
 .case-dash { color: var(--accent); white-space: nowrap; }
@@ -1005,7 +1065,7 @@ a {
   line-height: 1.15;
 }
 .case-text {
-  color: rgba(0, 0, 0, 0.7);
+  color: var(--text-70);
   font-size: 17px;
   line-height: 1.4;
 }
@@ -1023,7 +1083,7 @@ a {
   justify-content: center;
   border-radius: 24px;
   background: var(--fill-2);
-  color: rgba(0, 0, 0, 0.3);
+  color: var(--text-30);
   font-size: 14px;
   line-height: 1.4;
 }
@@ -1047,7 +1107,7 @@ a {
   font-size: 15px;
   line-height: 1.4;
 }
-.case-tr > * { flex: 1 0 0; min-width: 1px; color: rgba(0, 0, 0, 0.7); }
+.case-tr > * { flex: 1 0 0; min-width: 1px; color: var(--text-70); }
 .case-tr > :first-child { color: var(--text); font-weight: 700; }
 .case-th > *,
 .case-th > :first-child { color: var(--text-muted); font-size: 14px; font-weight: 500; }
@@ -1140,9 +1200,9 @@ a {
     right: 0;
     padding: 5px 8px;
     border-radius: 6px;
-    background: rgba(24, 24, 22, 0.9);
-    box-shadow: 0 4px 14px rgba(24, 24, 22, 0.16);
-    color: #fff;
+    background: var(--tooltip-bg);
+    box-shadow: 0 4px 14px var(--tooltip-shadow);
+    color: var(--tooltip-text);
     font-size: 12px;
     font-weight: 500;
     line-height: 15px;
@@ -1183,7 +1243,7 @@ a {
   padding: 8px;
   border-radius: 32px;
   background: var(--surface);
-  filter: drop-shadow(0 0 16px rgba(0, 0, 0, 0.06));
+  filter: drop-shadow(0 0 16px var(--shadow-panel));
   transform-origin: 50% 0;
   opacity: 0;
   visibility: hidden;
@@ -1212,7 +1272,7 @@ a {
   height: 40px;
   flex-shrink: 0;
   border-radius: 999px;
-  background: rgba(0, 160, 240, 0.09);
+  background: var(--accent-soft-9);
   color: var(--accent);
   font-size: 16px;
   font-weight: 700;
