@@ -1258,7 +1258,9 @@ a {
 }
 .case-step-title { font-size: 16px; font-weight: 700; }
 
-.case-columns { display: flex; gap: 8px; --lh: 1.4; }
+.case-columns { display: flex; flex-wrap: wrap; gap: 8px; --lh: 1.4; }
+/* Четыре карточки — сеткой 2×2, как в макете */
+.case-columns:has(> :nth-child(4)) > .case-col { flex: 1 0 calc(50% - 4px); }
 .case-col {
   flex: 1 0 0;
   min-width: 1px;

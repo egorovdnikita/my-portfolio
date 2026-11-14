@@ -46,9 +46,16 @@ export function CasePage({ study, zoom, closing, onClose }: Props) {
             </div>
           </section>
 
+          {study.role && (
+            <section className="case-card case-panel">
+              <Header label={study.role.label} num={study.role.note} />
+              <Bullets items={study.role.items} />
+            </section>
+          )}
+
           {study.sections.map((section) => (
-            <section key={section.num} className="case-card case-panel case-section">
-              <Header label={section.label} num={section.num} />
+            <section key={section.label} className="case-card case-panel case-section">
+              <Header label={section.label} />
               <h2 className="case-h2">{section.title}</h2>
               {section.blocks.map((block, i) => (
                 <Block key={i} block={block} />
@@ -136,7 +143,6 @@ function Block({ block }: { block: CaseBlock }) {
             <Fragment key={step.title}>
               {i > 0 && <span className="case-hr" aria-hidden />}
               <div className="case-step">
-                <span className="case-num">{String(i + 1).padStart(2, '0')}</span>
                 <div className="case-step-text">
                   <span className="case-step-title">{step.title}</span>
                   <span className="case-small">{step.text}</span>
