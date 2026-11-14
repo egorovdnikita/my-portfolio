@@ -1436,12 +1436,14 @@ a {
   .case-panel { padding: 16px; }
   .case-h2 { font-size: 24px; }
   .case-text { font-size: 15px; }
+  /* Мета и карточки — сверху вниз, по одной в строке */
   .case-meta,
-  .case-stats,
-  .case-columns { flex-wrap: wrap; }
+  .case-columns { flex-direction: column; }
   .case-meta-item,
-  .case-stat,
-  .case-col { flex: 1 1 calc(50% - 4px); }
+  .case-col,
+  .case-columns:has(> :nth-child(4)) > .case-col { flex: 0 0 auto; }
+  .case-stats { flex-wrap: wrap; }
+  .case-stat { flex: 1 1 calc(50% - 4px); }
   .case-stat-value { font-size: 32px; }
   .case-steps { grid-template-columns: minmax(0, 1fr); }
   .case-table { padding: 4px 12px; }
