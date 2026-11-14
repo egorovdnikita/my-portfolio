@@ -365,7 +365,6 @@ a {
   user-select: none;
   -webkit-user-select: none;
   background-color: var(--bg);
-  background-image: radial-gradient(circle, var(--dot) 1px, transparent 1.5px);
 }
 .world {
   position: absolute;
@@ -418,7 +417,7 @@ a {
   gap: 16px;
   padding: 112px 16px;
   background-color: var(--bg);
-  background-image: radial-gradient(circle, var(--dot) 1px, transparent 1.5px);
+  background-image: radial-gradient(circle, var(--dot) 1px, transparent 1.2px);
   background-size: 17.25px 17.25px;
   background-attachment: local;
 }

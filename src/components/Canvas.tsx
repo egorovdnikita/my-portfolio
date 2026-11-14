@@ -25,7 +25,12 @@ type Props = {
 };
 
 const INTERACTIVE = 'a, button, input, select, textarea, [role="menu"]';
-const DOT_STEP = 17.25; // шаг точечной сетки в макете
+// Точечная сетка масштабируется вместе с холстом, как у референса:
+// шаг, радиус точки и её мягкий край умножаются на масштаб, поэтому при отдалении
+// точки становятся мельче и бледнее, а не сливаются в серую массу
+const DOT_STEP = 17.25; // шаг сетки в макете при 100%
+const DOT_RADIUS = 1;
+const DOT_EDGE = 1.2;
 
 type Drag =
   | { kind: 'pan'; id: number; sx: number; sy: number; cam: Camera; moved: boolean }
@@ -130,6 +135,7 @@ export function Canvas({ camera, setCamera, offsets, setOffset, tool, spaceHeld,
 
   const cursor = drag?.kind === 'pan' && drag.moved ? 'grabbing' : panMode ? 'grab' : 'default';
   const dotStep = DOT_STEP * camera.z;
+  const dotImage = `radial-gradient(circle, var(--dot) ${DOT_RADIUS * camera.z}px, transparent ${DOT_EDGE * camera.z}px)`;
 
   return (
     <div
@@ -137,6 +143,7 @@ export function Canvas({ camera, setCamera, offsets, setOffset, tool, spaceHeld,
       className={`viewport${drag?.moved ? ' is-dragging' : ''}`}
       style={{
         cursor,
+        backgroundImage: dotImage,
         backgroundSize: `${dotStep}px ${dotStep}px`,
         backgroundPosition: `${camera.x}px ${camera.y}px`,
       }}
