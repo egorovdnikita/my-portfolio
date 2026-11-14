@@ -509,6 +509,14 @@ a {
   stroke: var(--edge);
   stroke-width: 2;
   stroke-dasharray: 5 4;
+  /* Течение: штрихи медленно бегут от главной карточки к своей (путь идёт от точки к стрелке) */
+  animation: edge-flow 1.2s linear infinite;
+}
+@keyframes edge-flow {
+  to { stroke-dashoffset: -9; } /* один период штриха: 5 + 4 */
+}
+@media (prefers-reduced-motion: reduce) {
+  .edge-line { animation: none; }
 }
 .edge-arrow,
 .edge-dot {
