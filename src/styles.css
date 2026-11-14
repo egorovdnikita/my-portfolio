@@ -710,9 +710,14 @@ a {
 }
 
 .case {
+  /* Ширина колонки кейса: 900px на Full HD, 800px на экранах MacBook (1440–1728) */
+  --case-w: 900px;
   position: fixed;
   inset: 0;
   z-index: 5;
+}
+@media (max-width: 1799px) {
+  .case { --case-w: 800px; }
 }
 .case-scroll {
   position: absolute;
@@ -727,7 +732,7 @@ a {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  width: 900px;
+  width: var(--case-w);
   max-width: 100%;
   margin: 0 auto;
   animation: case-in 0.32s cubic-bezier(0.22, 1, 0.36, 1);
@@ -735,7 +740,7 @@ a {
 .case-close {
   position: fixed;
   top: 16px;
-  left: calc(50% + 450px + 16px); /* 16px от правого края колонки (900px) */
+  left: calc(50% + var(--case-w) / 2 + 16px); /* 16px от правого края колонки */
   z-index: 11;
   display: flex;
   align-items: center;
@@ -1011,4 +1016,41 @@ a {
   .case-close,
   .case.is-closing .case-column,
   .case.is-closing .case-close { animation-duration: 0.01s !important; }
+}
+
+/* На узких десктопах (MacBook Air 1440) крестик кейса упирается в панель «Поделиться»:
+   в кейсе остаётся только кнопка-иконка, как в мобильном макете. «Скопировано!» — подсказкой под кнопкой */
+@media (max-width: 1543px) {
+  .has-case .avatars { display: none; }
+  /* «Портфолио» обрезается до «Портф…», как в мобильном макете, чтобы плашка не заходила на колонку */
+  .has-case .crumb--link {
+    max-width: 52px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .has-case .panel--share { padding: 4px; }
+  .has-case .btn--share { width: 56px; padding: 0; gap: 0; position: relative; }
+  .has-case .btn--share .share-label { display: none; }
+  .has-case .btn--share::after {
+    content: 'Скопировано!';
+    position: absolute;
+    top: calc(100% + 12px);
+    right: 0;
+    padding: 5px 8px;
+    border-radius: 6px;
+    background: rgba(24, 24, 22, 0.9);
+    box-shadow: 0 4px 14px rgba(24, 24, 22, 0.16);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 15px;
+    text-transform: none;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(-3px);
+    transition: opacity 0.14s ease, transform 0.14s ease;
+  }
+  .has-case .btn--share.is-copied::after { opacity: 1; transform: none; }
 }

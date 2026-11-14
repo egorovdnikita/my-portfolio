@@ -41,7 +41,12 @@ export function ShareButton() {
   };
 
   return (
-    <button type="button" className={`btn btn--primary btn--share${copied ? ' is-copied' : ''}`} onClick={share}>
+    <button
+      type="button"
+      className={`btn btn--primary btn--share${copied ? ' is-copied' : ''}`}
+      aria-label="Поделиться ссылкой"
+      onClick={share}
+    >
       <Icon src={icons.link} className="icon--white" />
       <span className="share-label" style={widths ? { width: copied ? widths.copied : widths.rest } : undefined}>
         <span ref={restRef} className="share-text share-text--rest" aria-hidden={copied}>
