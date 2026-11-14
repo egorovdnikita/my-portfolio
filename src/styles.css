@@ -42,9 +42,9 @@
   --accent-soft-9: rgba(0, 160, 240, 0.09);
   --accent-tint: #ddf4ff;
   --surface-hover: #fafafa;
-  --nav-bg: rgba(255, 255, 255, 0.72);
-  --nav-bg-hover: rgba(250, 250, 250, 0.86);
-  --nav-blur: blur(20px) saturate(180%);
+  --nav-bg: rgba(255, 255, 255, 0.5);
+  --nav-bg-hover: rgba(250, 250, 250, 0.7);
+  --nav-blur: blur(16px) saturate(180%);
   --segment-active: #ffffff;
   --photo-frame: #ffffff;
   --avatar-bg: #ffffff;
@@ -85,8 +85,8 @@
   --accent-soft-9: rgba(0, 160, 240, 0.18);
   --accent-tint: #0b3448;
   --surface-hover: #222222;
-  --nav-bg: rgba(26, 26, 26, 0.72);
-  --nav-bg-hover: rgba(34, 34, 34, 0.86);
+  --nav-bg: rgba(26, 26, 26, 0.5);
+  --nav-bg-hover: rgba(34, 34, 34, 0.7);
   --segment-active: #2e2e2e;
   --photo-frame: #1a1a1a;
   --avatar-bg: #2a2a2a;
