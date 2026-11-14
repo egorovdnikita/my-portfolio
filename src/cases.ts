@@ -40,8 +40,8 @@ export const cases: CaseStudy[] = [
     meta: [
       { label: 'Роль', value: 'Ведущий дизайнер' },
       { label: 'Команда', value: '16 дизайнеров' },
-      { label: 'Период', value: '2025 — сейчас' },
       { label: 'Масштаб', value: '3 бренда, 16+ стран' },
+      { label: 'Период', value: '2025 — сейчас' },
     ],
     role: {
       label: 'Моя роль',
