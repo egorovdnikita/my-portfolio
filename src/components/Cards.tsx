@@ -39,9 +39,9 @@ export function ExperienceCard() {
   return (
     <section className="card card--exp">
       <div className="card-head">
-        <span className="muted">{experience.title}</span>
+        <span>{experience.title}</span>
         <Divider />
-        <span className="muted">{experience.total}</span>
+        <span>{experience.total}</span>
       </div>
       <div className="rows">
         {experience.items.map((item, i) => (
@@ -50,7 +50,7 @@ export function ExperienceCard() {
             <div className="row">
               <Logo src={item.logo} size={32} />
               <span className="row-title">{item.company}</span>
-              <span className="muted">{item.period}</span>
+              <span>{item.period}</span>
             </div>
           </div>
         ))}
@@ -213,7 +213,7 @@ export function HeroCard({ variant = 'canvas' }: { variant?: 'canvas' | 'feed' |
             <h1>{profile.name}</h1>
             <p className="hero-role">{profile.role}</p>
           </div>
-          <p className="muted hero-about">{profile.about}</p>
+          <p className="hero-about">{profile.about}</p>
           <div className="tag-list">
             {profile.tags.map((t) => (
               <Tag key={t}>{t}</Tag>

@@ -1,21 +1,13 @@
 /* Значения сняты из макета Figma (кадр «Wireframe - 1», 1920×1080). */
 
-@font-face {
-  font-family: 'Iosevka';
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-  src: url('/fonts/Iosevka-Medium.woff2') format('woff2');
-}
-@font-face {
-  font-family: 'Iosevka';
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-  src: url('/fonts/Iosevka-Bold.woff2') format('woff2');
-}
 
 :root {
+  /* Шрифты по макету: жирное — Roboto Flex с настройками осей из Figma, остальное — Inter Display (Inter при opsz 32) */
+  --font-text: 'Inter', system-ui, sans-serif;
+  --font-text-axes: 'opsz' 32;
+  --font-accent: 'Roboto Flex', 'Inter', system-ui, sans-serif;
+  --font-accent-axes: 'wght' 800, 'wdth' 25, 'opsz' 14, 'slnt' 0, 'GRAD' -200, 'XOPQ' 96, 'XTRA' 468, 'YOPQ' 79,
+    'YTAS' 750, 'YTDE' -203, 'YTFI' 738, 'YTLC' 570, 'YTUC' 712;
   --bg: #f5f5f5;
   --surface: #ffffff;
   --text: #000000;
@@ -132,8 +124,10 @@ body,
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: 'Iosevka', ui-monospace, monospace;
+  font-family: var(--font-text);
   font-weight: 500;
+  font-variation-settings: var(--font-text-axes);
+  font-optical-sizing: none;
   font-size: 14px;
   line-height: normal;
   -webkit-font-smoothing: antialiased;
@@ -194,7 +188,8 @@ a {
   background: var(--accent-soft);
   color: var(--accent);
   font-size: 14px;
-  font-weight: 500;
+  /* Теги — Roboto Flex, как в макете */
+  font-weight: 800; font-family: var(--font-accent); font-variation-settings: var(--font-accent-axes);
   white-space: nowrap;
 }
 
@@ -208,6 +203,8 @@ a {
   color: var(--text-muted);
   font-size: 14px;
   font-weight: 500;
+  font-family: var(--font-text);
+  font-variation-settings: var(--font-text-axes);
 }
 
 .dash {
@@ -225,7 +222,7 @@ a {
   padding: 0 16px;
   border-radius: 24px;
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 800; font-family: var(--font-accent); font-variation-settings: var(--font-accent-axes);
   white-space: nowrap;
   transition: background-color 0.15s ease;
   user-select: none;
@@ -309,7 +306,7 @@ a {
   flex: 1 0 0;
   min-width: 1px;
   font-size: 16px;
-  font-weight: 700;
+  font-weight: 800; font-family: var(--font-accent); font-variation-settings: var(--font-accent-axes);
   white-space: nowrap;
 }
 .row--link .icon { transition: background-color 0.15s ease; }
@@ -400,6 +397,8 @@ a {
   color: var(--tooltip-text);
   font-size: 12px;
   font-weight: 500;
+  font-family: var(--font-text);
+  font-variation-settings: var(--font-text-axes);
   line-height: 15px;
   white-space: nowrap;
   pointer-events: none;
@@ -418,7 +417,7 @@ a {
   align-items: center;
   gap: 6px;
   font-size: 16px;
-  font-weight: 700;
+  font-weight: 800; font-family: var(--font-accent); font-variation-settings: var(--font-accent-axes);
   white-space: nowrap;
 }
 .repos {
@@ -470,7 +469,7 @@ a {
 }
 .hero-title h1 {
   font-size: 24px;
-  font-weight: 700;
+  font-weight: 800; font-family: var(--font-accent); font-variation-settings: var(--font-accent-axes);
 }
 .hero-role {
   font-size: 14px;
@@ -517,7 +516,7 @@ a {
 }
 .project-text h2 {
   font-size: 24px;
-  font-weight: 700;
+  font-weight: 800; font-family: var(--font-accent); font-variation-settings: var(--font-accent-axes);
 }
 /* Компактная карточка кейса (Базис, Лицей): ширина 400px, без обложки */
 .card--project-compact { width: 400px; }
@@ -691,7 +690,7 @@ a {
 }
 .crumb {
   font-size: 16px;
-  font-weight: 700;
+  font-weight: 800; font-family: var(--font-accent); font-variation-settings: var(--font-accent-axes);
   white-space: nowrap;
 }
 
@@ -745,7 +744,7 @@ a {
 .avatar--more {
   color: var(--accent);
   font-size: 16px;
-  font-weight: 700;
+  font-weight: 800; font-family: var(--font-accent); font-variation-settings: var(--font-accent-axes);
 }
 .avatar:hover,
 .avatar:focus-visible { z-index: 2; }
@@ -764,6 +763,8 @@ a {
   color: var(--tooltip-text);
   font-size: 12px;
   font-weight: 500;
+  font-family: var(--font-text);
+  font-variation-settings: var(--font-text-axes);
   line-height: 15px;
   white-space: nowrap;
   pointer-events: none;
@@ -866,7 +867,7 @@ a {
   gap: 8px;
   padding: 4px 16px;
   font-size: 16px;
-  font-weight: 700;
+  font-weight: 800; font-family: var(--font-accent); font-variation-settings: var(--font-accent-axes);
   font-variant-numeric: tabular-nums;
 }
 
@@ -893,6 +894,8 @@ a {
 .legal {
   font-size: 14px;
   font-weight: 500;
+  font-family: var(--font-text);
+  font-variation-settings: var(--font-text-axes);
   opacity: 0.32;
   white-space: nowrap;
   text-align: right;
@@ -942,7 +945,7 @@ a {
   border-radius: 16px;
   text-align: left;
   font-size: 16px;
-  font-weight: 700;
+  font-weight: 800; font-family: var(--font-accent); font-variation-settings: var(--font-accent-axes);
 }
 .menu-item:hover { background: var(--fill-4); }
 
@@ -1071,16 +1074,20 @@ a {
 .case-eyebrow {
   color: var(--accent);
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 800; font-family: var(--font-accent); font-variation-settings: var(--font-accent-axes);
   --lh: 1.4;
 }
 .case-title {
-  font-size: 44px;
+  font-size: 64px;
   font-weight: 700;
+  font-family: var(--font-accent);
+  /* В макете заголовок кейса легче остальных акцентов: вес 700, капсом */
+  font-variation-settings: var(--font-accent-axes), 'wght' 700;
+  text-transform: uppercase;
   --lh: 1.15;
 }
 .case-lead {
-  color: var(--text-60);
+  color: var(--text);
   font-size: 18px;
   --lh: 1.4;
 }
@@ -1100,7 +1107,7 @@ a {
   border-radius: 24px;
   background: var(--fill-2);
 }
-.case-meta-value { font-size: 16px; font-weight: 700; }
+.case-meta-value { font-size: 16px; font-weight: 800; font-family: var(--font-accent); font-variation-settings: var(--font-accent-axes); }
 
 .case-label {
   color: var(--text-muted);
@@ -1139,7 +1146,7 @@ a {
 .case-stat-value {
   color: var(--accent);
   font-size: 40px;
-  font-weight: 700;
+  font-weight: 800; font-family: var(--font-accent); font-variation-settings: var(--font-accent-axes);
   --lh: 1.15;
 }
 
@@ -1159,7 +1166,7 @@ a {
 
 .case-h2 {
   font-size: 32px;
-  font-weight: 700;
+  font-weight: 800; font-family: var(--font-accent); font-variation-settings: var(--font-accent-axes);
   --lh: 1.15;
 }
 .case-text {
@@ -1173,7 +1180,7 @@ a {
   background: var(--accent-soft);
   color: var(--accent);
   font-size: 20px;
-  font-weight: 700;
+  font-weight: 800; font-family: var(--font-accent); font-variation-settings: var(--font-accent-axes);
   --lh: 1.4;
 }
 .case-image {
@@ -1210,8 +1217,8 @@ a {
 /* Колонки: название — основной цвет, «до» — серый, «после» — акцент */
 .case-tr > :nth-child(2) { color: var(--text-50); }
 .case-tr > :nth-child(3) { color: var(--accent); }
-.case-tr > :first-child { color: var(--text); font-weight: 700; }
-.case-tr.case-th > * { color: var(--text-muted); font-size: 14px; font-weight: 500; }
+.case-tr > :first-child { color: var(--text); font-weight: 800; font-family: var(--font-accent); font-variation-settings: var(--font-accent-axes); }
+.case-tr.case-th > * { color: var(--text-muted); font-size: 14px; font-weight: 500; font-family: var(--font-text); font-variation-settings: var(--font-text-axes); }
 
 .case-steps {
   display: flex;
@@ -1230,7 +1237,7 @@ a {
   background: var(--accent-soft);
   color: var(--accent);
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 800; font-family: var(--font-accent); font-variation-settings: var(--font-accent-axes);
   --lh: 1.4;
 }
 .case-step-text {
@@ -1241,7 +1248,7 @@ a {
   gap: 4px;
   --lh: 1.4;
 }
-.case-step-title { font-size: 16px; font-weight: 700; }
+.case-step-title { font-size: 16px; font-weight: 800; font-family: var(--font-accent); font-variation-settings: var(--font-accent-axes); }
 
 .case-columns { display: flex; gap: 8px; --lh: 1.4; }
 .case-col {
@@ -1254,7 +1261,7 @@ a {
   border-radius: 24px;
   background: var(--fill-2);
 }
-.case-col-title { font-size: 18px; font-weight: 700; }
+.case-col-title { font-size: 18px; font-weight: 800; font-family: var(--font-accent); font-variation-settings: var(--font-accent-axes); }
 
 @media (prefers-reduced-motion: reduce) {
   .case-column,
@@ -1282,7 +1289,7 @@ a {
     box-shadow: 0 4px 14px var(--tooltip-shadow);
     color: var(--tooltip-text);
     font-size: 12px;
-    font-weight: 500;
+    font-weight: 500; font-family: var(--font-text); font-variation-settings: var(--font-text-axes);
     line-height: 15px;
     text-transform: none;
     white-space: nowrap;
@@ -1353,7 +1360,7 @@ a {
   background: var(--accent-soft-9);
   color: var(--accent);
   font-size: 16px;
-  font-weight: 700;
+  font-weight: 800; font-family: var(--font-accent); font-variation-settings: var(--font-accent-axes);
 }
 .btn--share-block {
   width: 100%;
