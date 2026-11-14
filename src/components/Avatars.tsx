@@ -1,4 +1,4 @@
-import { headerAvatars, icons } from '../content';
+import { icons } from '../content';
 import type { Visitor } from '../presence';
 import { Icon } from './Cards';
 
@@ -11,8 +11,7 @@ const plural = (n: number) => {
 };
 
 /**
- * Аватарки в шапке: Codex и Claude всегда, затем вы (случайное имя в подсказке),
- * затем «+N» — сколько ещё людей сейчас на сайте. Без других посетителей «+N» не показывается.
+ * Аватарки в шапке: вы (случайное имя в подсказке), затем «+N» — сколько ещё людей сейчас на сайте. Без других посетителей «+N» не показывается.
  */
 export function Avatars({ self, others }: { self: Visitor; others: Visitor[] }) {
   const othersLabel =
@@ -25,19 +24,6 @@ export function Avatars({ self, others }: { self: Visitor; others: Visitor[] }) 
 
   return (
     <div className="avatars" aria-label={`Сейчас на сайте: ${others.length + 1}`}>
-      {headerAvatars.map((a) => (
-        <span
-          key={a.name}
-          className="avatar"
-          data-tooltip={a.name}
-          aria-label={a.name}
-          tabIndex={0}
-        >
-          <span className="avatar-face">
-            <img src={a.src} alt="" draggable={false} />
-          </span>
-        </span>
-      ))}
       <span
         className="avatar avatar--visitor"
         data-tooltip={`${self.name} (вы)`}

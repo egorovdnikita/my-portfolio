@@ -94,11 +94,6 @@ export const projects: Project[] = [
   },
 ];
 
-export const headerAvatars = [
-  { name: 'Codex', src: asset('avatar-codex.png') },
-  { name: 'Claude', src: asset('avatar-claude.png') },
-];
-
 export const icons = {
   chevronRight: asset('ic-chevron-right.svg'),
   chevronDown: asset('ic-chevron-down.svg'),
