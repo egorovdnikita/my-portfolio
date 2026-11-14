@@ -257,6 +257,8 @@ a {
 /* Логотипы Базиса и Лицея: обводка 2px, как была в SVG (rect 61×61, rx 19, stroke 2) */
 .logo--63 { width: 63px; height: 63px; border-radius: 20px; }
 .logo--63::after { padding: 2px; }
+/* В SVG заливка начинается в 1px от края: растягиваем её на всю плитку, иначе полупрозрачная обводка выходит двойной */
+.logo--63 img { position: absolute; inset: -1px; width: calc(100% + 2px); height: calc(100% + 2px); }
 
 /* ---------- Карточки ---------- */
 
