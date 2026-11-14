@@ -51,7 +51,10 @@
   --nav-bg: rgba(255, 255, 255, 0.5);
   --nav-bg-hover: rgba(250, 250, 250, 0.7);
   --nav-blur: blur(16px) saturate(180%);
+  /* Обводка стеклянных плашек навигации, 1px внутрь */
+  --nav-border: #ffffff;
   --segment-active: #ffffff;
+  --segment-active-icon: #171717;
   --photo-frame: #ffffff;
   --avatar-bg: #ffffff;
   --logo-edge: #ffffff;
@@ -97,7 +100,9 @@
   --shimmer: rgba(255, 255, 255, 0.22);
   --nav-bg: rgba(26, 26, 26, 0.5);
   --nav-bg-hover: rgba(34, 34, 34, 0.7);
-  --segment-active: #2e2e2e;
+  --nav-border: rgba(255, 255, 255, 0.08);
+  --segment-active: #ffffff; /* активный сегмент белый и в тёмной теме */
+  --segment-active-icon: #171717;
   --photo-frame: #1a1a1a;
   --avatar-bg: #2a2a2a;
   --logo-edge: rgba(255, 255, 255, 0.24);
@@ -671,6 +676,7 @@ a {
   background: var(--nav-bg);
   -webkit-backdrop-filter: var(--nav-blur);
   backdrop-filter: var(--nav-blur);
+  box-shadow: inset 0 0 0 1px var(--nav-border);
   border-radius: 24px;
 }
 
@@ -872,6 +878,7 @@ a {
   transition: background-color 0.15s ease;
 }
 .segment-btn.is-active { background: var(--segment-active); }
+.segment-btn.is-active .icon { background-color: var(--segment-active-icon); }
 
 .legal {
   font-size: 14px;
@@ -983,6 +990,7 @@ a {
   animation: case-in 0.32s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .case-close {
+  box-shadow: inset 0 0 0 1px var(--nav-border);
   -webkit-backdrop-filter: var(--nav-blur);
   backdrop-filter: var(--nav-blur);
   position: fixed;
