@@ -43,7 +43,6 @@
   --accent-tint: #ddf4ff;
   --surface-hover: #fafafa;
   --cell-empty: rgba(0, 0, 0, 0.06);
-  --cell-line: rgba(0, 0, 0, 0.12);
   --shimmer: rgba(255, 255, 255, 0.45);
   --nav-bg: rgba(255, 255, 255, 0.5);
   --nav-bg-hover: rgba(250, 250, 250, 0.7);
@@ -89,7 +88,6 @@
   --accent-tint: #0b3448;
   --surface-hover: #222222;
   --cell-empty: rgba(255, 255, 255, 0.1);
-  --cell-line: rgba(255, 255, 255, 0.08);
   --shimmer: rgba(255, 255, 255, 0.22);
   --nav-bg: rgba(26, 26, 26, 0.5);
   --nav-bg-hover: rgba(34, 34, 34, 0.7);
@@ -347,11 +345,8 @@ a {
   aspect-ratio: 1;
   border-radius: 3px;
   background: var(--cell-empty);
-  outline: 1px solid var(--cell-line);
-  outline-offset: -1px;
   overflow: hidden;
 }
-.contrib-cell[data-level='0'] { outline: none; }
 .contrib-cell[data-level='1'] { background: color-mix(in srgb, var(--heat) 30%, var(--bg)); }
 .contrib-cell[data-level='2'] { background: color-mix(in srgb, var(--heat) 55%, var(--bg)); }
 .contrib-cell[data-level='3'] { background: color-mix(in srgb, var(--heat) 78%, var(--bg)); }
