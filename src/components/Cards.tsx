@@ -250,11 +250,11 @@ export function HeroCard({ variant = 'canvas' }: { variant?: 'canvas' | 'feed' |
         </div>
         <div className="hero-actions">
           <LinkButton href={profile.cvUrl} variant="secondary">
-            СКАЧАТЬ CV
+            Скачать CV
             <Icon src={icons.download} size={24} className="icon--strong" />
           </LinkButton>
           <LinkButton href={profile.telegramUrl} variant="primary">
-            НАПИСАТЬ TG
+            Написать TG
             <img src={icons.telegram} alt="" width={24} height={24} draggable={false} />
           </LinkButton>
         </div>
@@ -334,7 +334,7 @@ export function ProjectCard({ project, onOpenCase }: { project: Project; onOpenC
             onOpenCase(action.caseId);
           }}
         >
-          ПОДРОБНЕЕ
+          Подробнее
         </a>
       ) : (
         <a className="btn btn--secondary btn--block" href={action.url} target="_blank" rel="noreferrer">

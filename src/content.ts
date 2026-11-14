@@ -82,7 +82,7 @@ export const projects: Project[] = [
       'Корпоративный сайт разработчика платформ виртуализации: структура для B2B-аудитории и подача сложного продукта',
     tags: ['B2B', 'Web', 'Корпоративный сайт'],
     logo: asset('logo-basis.svg'),
-    action: { kind: 'link', url: BEHANCE.basis, label: 'СМОТРЕТЬ НА BEHANCE' },
+    action: { kind: 'link', url: BEHANCE.basis, label: 'Смотреть на Behance' },
   },
   {
     id: 'p4',
@@ -90,7 +90,7 @@ export const projects: Project[] = [
     description: 'Раздел «Экзамены» образовательной платформы: подготовка школьников к ОГЭ и ЕГЭ в одном сценарии',
     tags: ['EdTech', 'B2C', 'Web'],
     logo: asset('logo-lyceum.svg'),
-    action: { kind: 'link', url: BEHANCE.lyceum, label: 'СМОТРЕТЬ НА BEHANCE' },
+    action: { kind: 'link', url: BEHANCE.lyceum, label: 'Смотреть на Behance' },
   },
 ];
 
