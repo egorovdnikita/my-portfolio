@@ -251,7 +251,9 @@ export function ProjectCard({ project, onOpenCase }: { project: Project; onOpenC
         // Компактная карточка: логотип, название и теги в строку, ниже описание
         <div className="project-text project-text--compact">
           <div className="project-head">
-            <img src={project.logo} alt="" width={63} height={63} className="project-logo" draggable={false} />
+            <span className="logo logo--63 project-logo">
+              <img src={project.logo} alt="" width={63} height={63} draggable={false} />
+            </span>
             <div className="project-title">
               <h2>{project.title}</h2>
               {tags}

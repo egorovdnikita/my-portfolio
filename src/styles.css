@@ -251,6 +251,9 @@ a {
 }
 .logo--32 { width: 32px; height: 32px; border-radius: 12px; }
 .logo--24 { width: 24px; height: 24px; border-radius: 8px; }
+/* Логотипы Базиса и Лицея: обводка 2px, как была в SVG (rect 61×61, rx 19, stroke 2) */
+.logo--63 { width: 63px; height: 63px; border-radius: 20px; }
+.logo--63::after { padding: 2px; }
 
 /* ---------- Карточки ---------- */
 

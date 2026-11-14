@@ -1,16 +1,7 @@
 <svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="63" height="63" viewBox="0 0 63 63" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g id="BASIS">
 <rect x="1" y="1" width="61" height="61" rx="19" fill="#015AC0"/>
-<rect x="1" y="1" width="61" height="61" rx="19" stroke="url(#paint0_linear_0_8)" stroke-width="2"/>
 <path id="Vector" d="M49 47.25H40.7957L33.1929 35.7987L37.2857 29.622L49 47.25ZM31.5483 21L35.6253 27.1253L22.2044 47.25H14L31.5483 21Z" fill="white"/>
 <path id="Vector_2" d="M40.5151 19.25H33.25L38.2182 10.6384L45.5 10.5L40.5151 19.25Z" fill="white"/>
 </g>
-<defs>
-<linearGradient id="paint0_linear_0_8" x1="-1.31422e-06" y1="-0.000159028" x2="63" y2="62.9998" gradientUnits="userSpaceOnUse">
-<stop stop-color="white"/>
-<stop offset="0.35" stop-color="white" stop-opacity="0"/>
-<stop offset="0.65" stop-color="white" stop-opacity="0"/>
-<stop offset="1" stop-color="white"/>
-</linearGradient>
-</defs>
 </svg>
