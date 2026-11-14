@@ -40,8 +40,7 @@ export const vibecoding = {
     { name: 'Orca', icon: asset('tool-orca.png') },
   ],
   repos: [
-    { name: 'agent-pulse', icon: asset('repo-agent-pulse.png'), url: 'https://github.com/egorovdnikita/agent-pulse' },
-    { name: 'figma-ds-analytics', icon: asset('repo-github.png'), url: 'https://github.com/egorovdnikita/figma-ds-analytics' },
+    { name: 'GitHub: agent-pulse', url: 'https://github.com/egorovdnikita/agent-pulse' },
   ],
 };
 

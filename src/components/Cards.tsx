@@ -1,5 +1,6 @@
 import { experience, icons, profile, vibecoding, type Project } from '../content';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import lottie from 'lottie-web';
 import contributions from '../data/contributions.json';
 
 /** Иконка-маска: цвет задаётся через CSS (как Master Icon в макете). */
@@ -95,6 +96,29 @@ const dayLabel = (date: Date) => `${date.getUTCDate()} ${MONTHS_OF[date.getUTCMo
 
 type Tip = { i: number; x: number; y: number };
 
+/** Исходный клип Triangle / Thinking из локального пака AgentPulse. */
+function AgentPulseLogo() {
+  const container = useRef<HTMLSpanElement>(null);
+  useEffect(() => {
+    if (!container.current) return;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const animation = lottie.loadAnimation({
+      container: container.current,
+      renderer: 'svg',
+      loop: true,
+      autoplay: !reducedMotion.matches,
+      path: `${import.meta.env.BASE_URL}assets/agent-pulse-triangle-thinking.json`,
+    });
+    const onMotionChange = () => reducedMotion.matches ? animation.goToAndStop(0, true) : animation.play();
+    reducedMotion.addEventListener('change', onMotionChange);
+    return () => {
+      reducedMotion.removeEventListener('change', onMotionChange);
+      animation.destroy();
+    };
+  }, []);
+  return <span className="agent-pulse-logo" aria-hidden><span ref={container} className="agent-pulse-animation" /></span>;
+}
+
 export function VibeCard() {
   // Подсказка над клеткой: число коммитов и дата. Координаты — внутри .contrib, поэтому работают и на холсте с масштабом
   const [tip, setTip] = useState<Tip | null>(null);
@@ -159,7 +183,7 @@ export function VibeCard() {
           <div key={repo.name} className="rows-group">
             {i > 0 && <Divider />}
             <a className="row row--link" href={repo.url} target="_blank" rel="noreferrer">
-              <Logo src={repo.icon} size={32} />
+              <AgentPulseLogo />
               <span className="row-title">{repo.name}</span>
               <Icon src={icons.external} size={16} className="icon--subtle" />
             </a>
