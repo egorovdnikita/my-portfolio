@@ -30,11 +30,9 @@ export const experience = {
   ],
 };
 
-// Уровни активности: 0 — нет, 1 — слабая, 2 — средняя, 3 — высокая
+// Календарь вкладов — src/data/contributions.json, обновляется скриптом scripts/fetch-contributions.mjs
 export const vibecoding = {
   title: 'Вайбкодинг',
-  contributions: '1,189 contributions',
-  activity: [0, 0, 3, 0, 0, 3, 3, 1, 3, 1, 1, 0, 0, 1, 0, 3, 3, 3, 2, 1, 1, 1, 1, 3, 3, 3, 3, 0, 1, 0],
   tools: [
     { name: 'Paper', icon: asset('tool-paper.png') },
     { name: 'Codex', icon: asset('avatar-codex.png') },

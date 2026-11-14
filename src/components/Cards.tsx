@@ -1,4 +1,5 @@
 import { experience, icons, profile, vibecoding, type Project } from '../content';
+import contributions from '../data/contributions.json';
 
 /** Иконка-маска: цвет задаётся через CSS (как Master Icon в макете). */
 export function Icon({ src, size = 24, className = '' }: { src: string; size?: number; className?: string }) {
@@ -56,29 +57,29 @@ export function ExperienceCard() {
   );
 }
 
-const ACTIVITY_CLASS = ['bar--0', 'bar--1', 'bar--2', 'bar--3'];
+const MONTHS = ['янв', 'февр', 'март', 'апр', 'май', 'июнь', 'июль', 'авг', 'сент', 'окт', 'нояб', 'дек'];
+const DAY_MS = 86_400_000;
 
-// Псевдослучайное число 0..1 по номеру столбика: у каждого свой темп, но одинаково при каждой загрузке
-const rand = (i: number, salt: number) => {
-  const x = Math.sin(i * 12.9898 + salt * 78.233) * 43758.5453;
-  return x - Math.floor(x);
-};
-// Высота «дышит» вокруг центра: волна по ряду (задержка растёт с номером) + свой темп и амплитуда у каждого
-const LEVEL_RANGE: [number, number][] = [
-  [8, 16],
-  [10, 20],
-  [12, 24],
-  [14, 24],
-];
-const barStyle = (level: number, i: number) => {
-  const [min, max] = LEVEL_RANGE[level];
-  return {
-    '--bar-min': `${min + rand(i, 1) * 3}px`,
-    '--bar-max': `${max - rand(i, 2) * 3}px`,
-    '--bar-dur': `${2.4 + rand(i, 3) * 1.8}s`,
-    '--bar-delay': `${-(i * 0.14 + rand(i, 4) * 0.6)}s`,
-  } as React.CSSProperties;
-};
+// Сетка как у GitHub, но неделя с понедельника (как у референса): столбец — неделя, строка — день.
+// Дни после «сегодня» (на момент сборки) приглушены. Подпись месяца — над неделей, где лежит 1-е число.
+const calendar = (() => {
+  const start = Date.parse(`${contributions.start}T00:00:00Z`);
+  const today = Date.parse(`${contributions.today}T00:00:00Z`);
+  const weeks = Math.ceil((today - start) / DAY_MS / 7 + 1 / 7);
+  const cells = Array.from({ length: weeks * 7 }, (_, i) => {
+    const [count, level] = contributions.days[i] ?? [0, 0];
+    return { week: Math.floor(i / 7), count, level, future: start + i * DAY_MS > today };
+  });
+  const months: { label: string; col: number }[] = [];
+  for (let w = 0; w < weeks; w++) {
+    for (let d = 0; d < 7; d++) {
+      const date = new Date(start + (w * 7 + d) * DAY_MS);
+      if (date.getUTCDate() === 1) months.push({ label: MONTHS[date.getUTCMonth()], col: w + 1 });
+    }
+  }
+  return { weeks, cells, months };
+})();
+const formatCount = (n: number) => `${n.toLocaleString('en-US')} contributions`;
 
 export function VibeCard() {
   return (
@@ -87,12 +88,31 @@ export function VibeCard() {
         <div className="card-head">
           <span className="muted">{vibecoding.title}</span>
           <Divider />
-          <span className="muted">{vibecoding.contributions}</span>
+          <span className="muted">{formatCount(contributions.total)}</span>
         </div>
-        <div className="bars" aria-hidden>
-          {vibecoding.activity.map((level, i) => (
-            <span key={i} className={`bar ${ACTIVITY_CLASS[level]}`} style={barStyle(level, i)} />
-          ))}
+        <div
+          className="contrib"
+          style={{ '--weeks': calendar.weeks } as React.CSSProperties}
+          role="img"
+          aria-label={`Вклады на GitHub за полгода: ${contributions.total}`}
+        >
+          <div className="contrib-months" aria-hidden>
+            {calendar.months.map((m) => (
+              <span key={`${m.label}-${m.col}`} style={{ gridColumn: m.col }}>
+                {m.label}
+              </span>
+            ))}
+          </div>
+          <div className="contrib-grid" aria-hidden>
+            {calendar.cells.map((c, i) => (
+              <span
+                key={i}
+                className={`contrib-cell${c.future ? ' is-future' : ''}`}
+                data-level={c.level}
+                style={{ '--col': c.week } as React.CSSProperties}
+              />
+            ))}
+          </div>
         </div>
         <div className="tools">
           {vibecoding.tools.map((tool) => (

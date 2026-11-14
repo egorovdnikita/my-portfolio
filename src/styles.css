@@ -42,6 +42,9 @@
   --accent-soft-9: rgba(0, 160, 240, 0.09);
   --accent-tint: #ddf4ff;
   --surface-hover: #fafafa;
+  --cell-empty: rgba(0, 0, 0, 0.06);
+  --cell-line: rgba(0, 0, 0, 0.12);
+  --shimmer: rgba(255, 255, 255, 0.45);
   --nav-bg: rgba(255, 255, 255, 0.5);
   --nav-bg-hover: rgba(250, 250, 250, 0.7);
   --nav-blur: blur(16px) saturate(180%);
@@ -85,6 +88,9 @@
   --accent-soft-9: rgba(0, 160, 240, 0.18);
   --accent-tint: #0b3448;
   --surface-hover: #222222;
+  --cell-empty: rgba(255, 255, 255, 0.1);
+  --cell-line: rgba(255, 255, 255, 0.08);
+  --shimmer: rgba(255, 255, 255, 0.22);
   --nav-bg: rgba(26, 26, 26, 0.5);
   --nav-bg-hover: rgba(34, 34, 34, 0.7);
   --segment-active: #2e2e2e;
@@ -315,27 +321,57 @@ a {
   padding: 16px;
   width: 100%;
 }
-.bars {
-  display: flex;
-  align-items: center;
+/* Календарь вкладов GitHub (по референсу: зазор 2px, скругление 2px, уровни 30/55/78/100% цвета) */
+.contrib { display: flex; flex-direction: column; }
+.contrib-months,
+.contrib-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--weeks), minmax(0, 1fr));
   gap: 2px;
-  height: 24px;
 }
-.bar { flex: 1 0 0; min-width: 1px; border-radius: 16px; }
-.bar--0 { height: 16px; background: var(--fill-8); }
-.bar--1 { height: 20px; background: var(--green); opacity: 0.3; }
-.bar--2 { height: 100%; background: var(--green); opacity: 0.8; }
-.bar--3 { height: 100%; background: var(--green); }
-/* Волна: каждый столбик медленно меняет высоту от центра в своём темпе */
-.bars .bar {
-  animation: bar-wave var(--bar-dur, 3s) ease-in-out var(--bar-delay, 0s) infinite alternate;
+.contrib-months {
+  height: 15px;
+  margin-bottom: 6px;
+  color: var(--text-50);
+  font-size: 12px;
+  line-height: 15px;
 }
-@keyframes bar-wave {
-  from { height: var(--bar-min); }
-  to { height: var(--bar-max); }
+.contrib-months span { white-space: nowrap; }
+.contrib-grid {
+  grid-template-rows: repeat(7, auto);
+  grid-auto-flow: column;
+}
+.contrib-cell {
+  --heat: var(--green);
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 2px;
+  background: var(--cell-empty);
+  outline: 1px solid var(--cell-line);
+  outline-offset: -1px;
+  overflow: hidden;
+}
+.contrib-cell[data-level='0'] { outline: none; }
+.contrib-cell[data-level='1'] { background: color-mix(in srgb, var(--heat) 30%, var(--bg)); }
+.contrib-cell[data-level='2'] { background: color-mix(in srgb, var(--heat) 55%, var(--bg)); }
+.contrib-cell[data-level='3'] { background: color-mix(in srgb, var(--heat) 78%, var(--bg)); }
+.contrib-cell[data-level='4'] { background: var(--heat); }
+.contrib-cell.is-future { opacity: 0.28; }
+/* Переливание: светлая волна проходит по столбцам слева направо, затем пауза */
+.contrib-cell::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--shimmer);
+  opacity: 0;
+  animation: contrib-shimmer 3.2s ease-in-out calc(var(--col) * 60ms) infinite;
+}
+@keyframes contrib-shimmer {
+  0%, 16%, 100% { opacity: 0; }
+  7% { opacity: 1; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .bars .bar { animation: none; }
+  .contrib-cell::after { animation: none; }
 }
 .tools {
   display: flex;
