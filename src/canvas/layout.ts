@@ -61,21 +61,25 @@ export function fitCamera(vw: number, vh: number): Camera {
 }
 
 export const MOBILE_MAX = 767;
-const HERO_SIZE = { w: 693, h: 298 }; // главная карточка в макете
-const MOBILE_TOP = 96; // под шапкой
-const MOBILE_BOTTOM = 96; // над нижней панелью
+const TOP_UI = 96; // шапка
+const BOTTOM_UI = 96; // нижняя панель
 
-/** На телефоне стартовый кадр — карточка «обо мне» во всю ширину экрана с отступами 16px. */
-export function heroCamera(vw: number, vh: number): Camera {
-  const hero = NODES.hero;
-  const z = clampZoom((vw - 32) / HERO_SIZE.w);
-  const cy = MOBILE_TOP + (vh - MOBILE_TOP - MOBILE_BOTTOM) / 2;
-  return { x: vw / 2 - hero.x * z, y: cy - hero.y * z, z };
-}
-
-/** Стартовый кадр: на телефоне — фокус на главной карточке, на десктопе — весь макет. */
-export function initialCamera(vw: number, vh: number): Camera {
-  return vw <= MOBILE_MAX ? heroCamera(vw, vh) : fitCamera(vw, vh);
+/**
+ * Стартовый кадр — фокус на карточке «обо мне».
+ * Десктоп: как у референса, ближе обычного — 120% на 1920, меньше на узких экранах.
+ * Телефон: вертикальная карточка целиком между шапкой и нижней панелью (размер карточки измеряется).
+ */
+export function initialCamera(vw: number, vh: number, hero?: Size): Camera {
+  const h = NODES.hero;
+  if (vw <= MOBILE_MAX) {
+    const size = hero ?? { w: 359, h: 640 };
+    const avail = vh - TOP_UI - BOTTOM_UI;
+    const z = clampZoom(Math.min((vw - 16) / size.w, avail / size.h, 1));
+    const cy = TOP_UI + avail / 2;
+    return { x: vw / 2 - h.x * z, y: cy - h.y * z, z };
+  }
+  const z = clampZoom(Math.min(1.2, Math.max(0.6, vw / 1600)));
+  return { x: vw / 2 - h.x * z, y: vh / 2 - h.y * z, z };
 }
 
 /** Масштабирование вокруг точки экрана (курсора или центра окна). */

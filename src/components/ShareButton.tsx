@@ -29,6 +29,16 @@ export function ShareButton({ block = false }: { block?: boolean }) {
   }, []);
 
   const share = async () => {
+    // На телефоне кнопка в панели «Поделиться» открывает системное меню (Telegram, сообщения и т.д.)
+    if (block && typeof navigator.share === 'function') {
+      try {
+        await navigator.share({ title: document.title, url: window.location.href });
+        return;
+      } catch (e) {
+        if ((e as Error).name === 'AbortError') return;
+        // системное меню недоступно — копируем ссылку
+      }
+    }
     try {
       await navigator.clipboard.writeText(window.location.href);
     } catch {

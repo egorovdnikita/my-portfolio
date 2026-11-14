@@ -157,10 +157,29 @@ a {
 .btn[aria-disabled='true'] { cursor: default; }
 
 .logo {
+  position: relative;
   display: block;
   flex-shrink: 0;
+  overflow: hidden;
+}
+.logo img {
+  display: block;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  border: 1px solid #fff;
+}
+/* Обводка 1px внутрь: белая в левом верхнем и правом нижнем углу, прозрачная к середине (как в макете) */
+.logo::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, #fff 0%, rgba(255, 255, 255, 0) 35%, rgba(255, 255, 255, 0) 65%, #fff 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  pointer-events: none;
 }
 .logo--32 { width: 32px; height: 32px; border-radius: 12px; }
 .logo--24 { width: 24px; height: 24px; border-radius: 8px; }
@@ -409,6 +428,7 @@ a {
 .feed {
   position: fixed;
   inset: 0;
+  overflow-x: hidden; /* карточки прилетают с холста из-за краёв экрана */
   overflow-y: auto;
   scrollbar-gutter: stable both-edges;
   padding: 16px 16px 96px;
@@ -1238,3 +1258,6 @@ a {
   .case-next-row { flex-wrap: wrap; padding: 12px; }
   .case-next-btn { width: 100%; }
 }
+
+/* На мобильном холсте главная карточка вертикальная, как в мобильной ленте (ширина колонки 375 − 2×8) */
+.node .hero--mobile { width: 359px; }

@@ -23,6 +23,15 @@ function Img({ src, className }: { src: string; className: string }) {
   return <img src={src} alt="" className={className} draggable={false} />;
 }
 
+/** Логотип 24/32px с градиентной обводкой, как в макете. */
+function Logo({ src, size }: { src: string; size: 24 | 32 }) {
+  return (
+    <span className={`logo logo--${size}`}>
+      <img src={src} alt="" draggable={false} />
+    </span>
+  );
+}
+
 export function ExperienceCard() {
   return (
     <section className="card card--exp">
@@ -36,7 +45,7 @@ export function ExperienceCard() {
           <div key={item.company} className="rows-group">
             {i > 0 && <Divider />}
             <div className="row">
-              <Img src={item.logo} className="logo logo--32" />
+              <Logo src={item.logo} size={32} />
               <span className="row-title">{item.company}</span>
               <span className="muted">{item.period}</span>
             </div>
@@ -66,7 +75,7 @@ export function VibeCard() {
         <div className="tools">
           {vibecoding.tools.map((tool) => (
             <span key={tool.name} className="tool">
-              <Img src={tool.icon} className="logo logo--24" />
+              <Logo src={tool.icon} size={24} />
               {tool.name}
             </span>
           ))}
@@ -77,7 +86,7 @@ export function VibeCard() {
           <div key={repo.name} className="rows-group">
             {i > 0 && <Divider />}
             <a className="row row--link" href={repo.url} target="_blank" rel="noreferrer">
-              <Img src={repo.icon} className="logo logo--32" />
+              <Logo src={repo.icon} size={32} />
               <span className="row-title">{repo.name}</span>
               <Icon src={icons.external} size={16} className="icon--subtle" />
             </a>

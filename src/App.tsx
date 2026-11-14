@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Canvas, type Tool } from './components/Canvas';
 import { CasePage } from './components/CasePage';
 import { ShareButton } from './components/ShareButton';
@@ -129,8 +129,7 @@ export default function App() {
   useEffect(() => {
     const onResize = () => {
       if (touched.current) return;
-      const { w, h } = viewportSize();
-      setCamera(initialCamera(w, h));
+      setCamera(focusHero());
     };
     window.addEventListener('resize', onResize);
     return () => window.removeEventListener('resize', onResize);
@@ -152,17 +151,54 @@ export default function App() {
   const pageMode = Boolean(caseId) || view === 'feed';
   const zoomValue = pageMode ? pageZoom : camera.z;
   const zoomPresets = pageMode ? PAGE_ZOOM_PRESETS : ZOOM_PRESETS;
+  // Переключение холст ⇄ лента: карточки плавно переезжают со старых мест на новые (FLIP)
+  const flipFrom = useRef<Map<string, DOMRect> | null>(null);
   const switchView = (next: View) => {
+    if (next === view) return;
+    const rects = new Map<string, DOMRect>();
+    document.querySelectorAll<HTMLElement>('[data-flip]').forEach((el) => rects.set(el.dataset.flip!, el.getBoundingClientRect()));
+    flipFrom.current = rects;
     setView(next);
     setPageZoom(1);
     setZoomMenu(false);
   };
+  useLayoutEffect(() => {
+    const from = flipFrom.current;
+    if (!from) return;
+    flipFrom.current = null;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    document.querySelectorAll<HTMLElement>('[data-flip]').forEach((el) => {
+      const o = from.get(el.dataset.flip!);
+      const n = el.getBoundingClientRect();
+      if (!o || !n.width || !el.offsetWidth) return;
+      // Внутри холста элемент масштабирован камерой: сдвиг переводим в его собственные координаты
+      const k = n.width / el.offsetWidth;
+      const tx = (o.left - n.left) / k;
+      const ty = (o.top - n.top) / k;
+      el.animate(
+        [
+          { transformOrigin: '0 0', transform: `translate(${tx}px, ${ty}px) scale(${o.width / n.width}, ${o.height / n.height})` },
+          { transformOrigin: '0 0', transform: 'none' },
+        ],
+        { duration: 560, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' },
+      );
+    });
+  }, [view]);
+
+  // На телефоне стартовый кадр зависит от высоты вертикальной карточки — меряем её после отрисовки
+  const focusHero = useCallback(() => {
+    const { w, h } = viewportSize();
+    const el = document.querySelector<HTMLElement>('[data-node="hero"]');
+    return initialCamera(w, h, el ? { w: el.offsetWidth, h: el.offsetHeight } : undefined);
+  }, []);
+  useLayoutEffect(() => {
+    if (view === 'canvas' && !touched.current) setCamera(focusHero());
+  }, [focusHero, isMobile, view]);
 
   const reset = useCallback(() => {
-    const { w, h } = viewportSize();
     touched.current = false;
-    animate(initialCamera(w, h), ZERO_OFFSETS);
-  }, [animate]);
+    animate(focusHero(), ZERO_OFFSETS);
+  }, [animate, focusHero]);
 
   // Клавиши как в Figma: V — стрелка, H — рука, пробел — временная рука, +/− — масштаб, Esc — закрыть
   useEffect(() => {
@@ -203,12 +239,13 @@ export default function App() {
   const nodes: Record<NodeId, React.ReactNode> = {
     exp: <ExperienceCard />,
     vibe: <VibeCard />,
-    hero: <HeroCard variant={view === 'canvas' ? 'canvas' : isMobile ? 'mobile' : 'feed'} />,
+    hero: <HeroCard variant={isMobile ? 'mobile' : view === 'canvas' ? 'canvas' : 'feed'} />,
     p1: <ProjectCard project={projects[0]} onOpenCase={openCase} />,
     p2: <ProjectCard project={projects[1]} onOpenCase={openCase} />,
     p3: <ProjectCard project={projects[2]} onOpenCase={openCase} />,
     p4: <ProjectCard project={projects[3]} onOpenCase={openCase} />,
   };
+  const flip = (id: NodeId) => <div data-flip={id}>{nodes[id]}</div>;
   const caseOpen = Boolean(study) && !caseClosing;
 
   return (
@@ -227,15 +264,15 @@ export default function App() {
       ) : (
         <main className="feed">
           <div className="feed-column" style={{ zoom: pageZoom }}>
-            {nodes.hero}
+            {flip('hero')}
             {isMobile ? (
               <>
-                {nodes.exp}
-                {nodes.vibe}
-                {nodes.p1}
-                {nodes.p2}
-                {nodes.p3}
-                {nodes.p4}
+                {flip('exp')}
+                {flip('vibe')}
+                {flip('p1')}
+                {flip('p2')}
+                {flip('p3')}
+                {flip('p4')}
                 <p className="legal legal--feed">
                   {profile.footerHandle} | {profile.footerNote}
                 </p>
@@ -243,14 +280,14 @@ export default function App() {
             ) : (
               <div className="feed-grid">
                 <div className="feed-col">
-                  {nodes.exp}
-                  {nodes.p1}
-                  {nodes.p3}
+                  {flip('exp')}
+                  {flip('p1')}
+                  {flip('p3')}
                 </div>
                 <div className="feed-col">
-                  {nodes.vibe}
-                  {nodes.p2}
-                  {nodes.p4}
+                  {flip('vibe')}
+                  {flip('p2')}
+                  {flip('p4')}
                 </div>
               </div>
             )}

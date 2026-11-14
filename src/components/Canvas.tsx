@@ -244,7 +244,7 @@ export function Canvas({ camera, setCamera, offsets, setOffset, tool, spaceHeld,
                 cursor: panMode ? undefined : 'move',
               }}
             >
-              {nodes[id]}
+              <div data-flip={id}>{nodes[id]}</div>
             </div>
           );
         })}
