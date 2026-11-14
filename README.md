@@ -15,6 +15,6 @@ npm run dev
 - Колесо / трекпад — прокрутка, Ctrl/⌘ + колесо или щипок — масштаб, ⌘ + / ⌘ − / ⌘ 0.
 - ↻ возвращает карточки и камеру на места.
 
-Тексты и ссылки — в `src/content.ts`. Шрифты — Roboto Flex и Inter Display (Inter с осью opsz), подключаются с Google Fonts; настройки осей — токены `--font-*` в `src/styles.css`.
+Тексты и ссылки — в `src/content.ts`. Шрифт Iosevka (SIL OFL 1.1), урезан до латиницы и кириллицы.
 
 Публикация: GitHub Actions собирает сайт и выкладывает на GitHub Pages при пуше в `main`.
