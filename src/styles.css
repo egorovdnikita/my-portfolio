@@ -134,7 +134,9 @@ body,
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: 'Iosevka', ui-monospace, monospace;
+  /* Тест: Inter с межбуквенным −4%. Откат — вернуть 'Iosevka', ui-monospace, monospace и убрать letter-spacing */
+  font-family: 'Inter', system-ui, sans-serif;
+  letter-spacing: -0.04em;
   font-weight: 500;
   font-size: 14px;
   line-height: normal;
