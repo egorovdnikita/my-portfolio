@@ -51,6 +51,8 @@ export type Project = {
   tags: string[];
   /** Логотип 63px — компактная карточка без обложки (Базис, Лицей) */
   logo?: string;
+  /** Обложка карточки — картинка из макета */
+  cover?: string;
   // «Подробнее» открывает кейс на сайте, «Смотреть на Behance» ведёт на внешнюю страницу
   action: { kind: 'case'; caseId: string } | { kind: 'link'; url: string; label: string };
 };
@@ -62,6 +64,7 @@ export const projects: Project[] = [
     title: 'Дизайн-система для трёх брендов',
     description: 'Как общие компоненты и токены брендов помогают собрать один сценарий в разных темах.',
     tags: ['Design System', 'White-Label', 'RTL', 'Storybook'],
+    cover: asset('cover-card-ds.jpg'),
     action: { kind: 'case', caseId: '1win' },
   },
   {
@@ -69,6 +72,7 @@ export const projects: Project[] = [
     title: 'Касса и история операций',
     description: 'Как показать условия перевода и помочь пользователю проверить его статус.',
     tags: ['iGaming', 'B2C', 'B2B', 'Payments'],
+    cover: asset('cover-card-product.jpg'),
     action: { kind: 'case', caseId: '1win-product' },
   },
   {

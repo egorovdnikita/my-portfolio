@@ -288,6 +288,7 @@ export function ProjectCard({ project, onOpenCase }: { project: Project; onOpenC
       ) : (
         <>
           <div className="project-cover">
+            {project.cover && <img className="project-cover-img" src={project.cover} alt="" draggable={false} />}
             <div className="project-tags">{tags}</div>
           </div>
           <div className="project-text">

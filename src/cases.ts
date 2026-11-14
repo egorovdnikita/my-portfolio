@@ -14,6 +14,8 @@ export type CaseSection = { label: string; num: string; title: string; blocks: C
 export type CaseStudy = {
   id: string;
   tags: string[];
+  /** Обложка в шапке кейса — картинка из макета */
+  cover?: string;
   title: string;
   lead: string;
   meta: { label: string; value: string }[];
@@ -28,6 +30,7 @@ export const BEHANCE = {
 export const cases: CaseStudy[] = [
   {
     id: '1win',
+    cover: `${import.meta.env.BASE_URL}assets/cover-case-ds.jpg`,
     tags: ['Design System', 'White-Label', 'Variables', 'Slots', 'RTL', 'Storybook', 'DesignOps'],
     title: 'Как общая библиотека помогает собрать кассу для трёх брендов',
     lead: 'Первый перевод через кассу начинается с простого выбора: каким способом отправить деньги? Для команды за этим вопросом стояла другая задача. Как сохранить знакомый путь в трёх продуктах, если оформление, языки и способы оплаты различаются?',
@@ -189,6 +192,7 @@ export const cases: CaseStudy[] = [
   },
   {
     id: '1win-product',
+    cover: `${import.meta.env.BASE_URL}assets/cover-case-product.jpg`,
     tags: ['iGaming', 'B2C', 'B2B', 'Payments', 'Casino', 'Локализация', 'Web'],
     title: 'Как касса объясняет условия перевода и его статус',
     lead: 'Человек отправляет деньги, возвращается в кассу, а баланс ещё не изменился. Повторить перевод или подождать? С этого момента начинается история. Чтобы ответить на вопрос, нужно вернуться на шаг назад и посмотреть, что касса объясняет до отправки денег.',

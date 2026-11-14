@@ -25,6 +25,7 @@ export function CasePage({ study, zoom, closing, onClose }: Props) {
         <article key={study.id} className="case-column" style={{ zoom }}>
           <section className="case-card case-hero">
             <div className="case-cover">
+              {study.cover && <img className="case-cover-img" src={study.cover} alt="" draggable={false} />}
               <div className="case-tags">
                 {study.tags.map((t) => (
                   <Tag key={t}>{t}</Tag>
