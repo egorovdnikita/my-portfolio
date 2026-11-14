@@ -313,7 +313,7 @@ a {
   flex: 1 0 0;
   min-width: 1px;
   font-size: 16px;
-  font-weight: 700;
+  font-weight: 600; /* компании, репозиторий — SemiBold, как кнопки и инструменты */
   white-space: nowrap;
 }
 .row--link .icon { transition: background-color 0.15s ease; }
@@ -420,7 +420,7 @@ a {
   align-items: center;
   gap: 6px;
   font-size: 16px;
-  font-weight: 700;
+  font-weight: 600;
   white-space: nowrap;
 }
 .repos {
