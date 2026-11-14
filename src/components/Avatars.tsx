@@ -25,28 +25,32 @@ export function Avatars({ self, others }: { self: Visitor; others: Visitor[] }) 
 
   return (
     <div className="avatars" aria-label={`Сейчас на сайте: ${others.length + 1}`}>
-      {headerAvatars.map((a, i) => (
+      {headerAvatars.map((a) => (
         <span
           key={a.name}
-          className={`avatar${i > 0 ? ' avatar--ring' : ''}`}
+          className="avatar"
           data-tooltip={a.name}
           aria-label={a.name}
           tabIndex={0}
         >
-          <img src={a.src} alt="" draggable={false} />
+          <span className="avatar-face">
+            <img src={a.src} alt="" draggable={false} />
+          </span>
         </span>
       ))}
       <span
-        className={`avatar avatar--visitor${others.length ? '' : ' avatar--last'}`}
+        className="avatar avatar--visitor"
         data-tooltip={`${self.name} (вы)`}
         aria-label={`${self.name} (вы)`}
         tabIndex={0}
       >
-        <Icon src={icons.user} className="avatar-user-icon" />
+        <span className="avatar-face">
+          <Icon src={icons.user} className="avatar-user-icon" />
+        </span>
       </span>
       {others.length > 0 && (
-        <span className="avatar avatar--more avatar--ring" data-tooltip={othersLabel} aria-label={othersLabel} tabIndex={0}>
-          +{others.length}
+        <span className="avatar avatar--more" data-tooltip={othersLabel} aria-label={othersLabel} tabIndex={0}>
+          <span className="avatar-face">+{others.length}</span>
         </span>
       )}
     </div>

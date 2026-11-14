@@ -57,6 +57,7 @@
   --segment-active-icon: #171717;
   --photo-frame: #ffffff;
   --avatar-bg: #ffffff;
+  --avatar-visitor: #f5f5f5; /* неопознанный посетитель */
   --logo-edge: #ffffff;
   --shadow-panel: rgba(0, 0, 0, 0.06);
   --shadow-lift: rgba(0, 0, 0, 0.08);
@@ -105,6 +106,7 @@
   --segment-active-icon: #171717;
   --photo-frame: #1a1a1a;
   --avatar-bg: #2a2a2a;
+  --avatar-visitor: #202020;
   --logo-edge: rgba(255, 255, 255, 0.24);
   --shadow-panel: rgba(0, 0, 0, 0.4);
   --shadow-lift: rgba(0, 0, 0, 0.5);
@@ -702,25 +704,34 @@ a {
   width: 40px;
   height: 40px;
   border-radius: 999px;
-  background: var(--avatar-bg);
   outline: none;
+}
+/* Кружок с фоном и содержимым. Подсказка (::after) живёт на .avatar, поэтому маска её не обрезает */
+.avatar-face {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--avatar-bg);
 }
 .avatar img {
   display: block;
   width: 100%;
   height: 100%;
-  border-radius: 999px;
   object-fit: cover;
 }
 .avatar:not(:last-child) { margin-right: -8px; }
-.avatar--ring { border: 2px solid var(--surface); }
-/* Вы: серый кружок с иконкой пользователя */
-.avatar--visitor {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--bg);
+/* Разделитель — вырез под следующую аватарку (центр через 32 + 20 px, радиус 20 + зазор 4), а не обводка:
+   на полупрозрачной подложке обводка была бы видна */
+.avatar:not(:last-child) .avatar-face {
+  -webkit-mask: radial-gradient(circle at 52px 50%, transparent 24px, #000 24.5px);
+  mask: radial-gradient(circle at 52px 50%, transparent 24px, #000 24.5px);
 }
+/* Вы: серый кружок с иконкой пользователя */
+.avatar--visitor .avatar-face { background: var(--avatar-visitor); }
 .avatar-user-icon {
   width: 24px;
   height: 24px;
@@ -728,11 +739,8 @@ a {
   opacity: 0.32;
 }
 /* «+N»: сколько ещё людей на сайте */
+.avatar--more .avatar-face { background: var(--accent-tint); }
 .avatar--more {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--accent-tint);
   color: var(--accent);
   font-size: 16px;
   font-weight: 700;
