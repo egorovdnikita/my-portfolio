@@ -33,6 +33,8 @@
   --green: #3dd51e;
   --dot: rgba(0, 0, 0, 0.08);
   --edge: rgba(0, 160, 240, 0.55);
+  /* Сплошной цвет наконечника и точки — как линия поверх фона, чтобы линия под ними не просвечивала */
+  --edge-solid: color-mix(in srgb, #00a0f0 55%, var(--bg));
   --on-accent: #ffffff;
   --text-30: rgba(0, 0, 0, 0.3);
   --text-50: rgba(0, 0, 0, 0.5);
@@ -78,6 +80,7 @@
   --green: #3dd51e;
   --dot: rgba(255, 255, 255, 0.12);
   --edge: rgba(0, 160, 240, 0.7);
+  --edge-solid: color-mix(in srgb, #00a0f0 70%, var(--bg));
   --on-accent: #ffffff;
   --text-30: rgba(255, 255, 255, 0.3);
   --text-50: rgba(255, 255, 255, 0.5);
@@ -574,7 +577,7 @@ a {
 }
 .edge-arrow,
 .edge-dot {
-  fill: var(--edge);
+  fill: var(--edge-solid);
 }
 
 /* ---------- Лента (кадр «Портфолио», вид «лента») ---------- */

@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import {
+  ARROW_LEN,
   EDGES,
   NODES,
   nodePos,
@@ -216,7 +217,7 @@ export function Canvas({ camera, setCamera, offsets, setOffset, tool, spaceHeld,
             if (!a || !b) return null;
             const g = edgeGeometry(edge, a, b);
             const tip = g.end;
-            const back = -g.dir * 8;
+            const back = -g.dir * ARROW_LEN;
             return (
               <g key={`${edge.from}-${edge.to}`}>
                 <path d={g.path} className="edge-line" />

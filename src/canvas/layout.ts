@@ -107,6 +107,8 @@ export function zoomAt(cam: Camera, nextZ: number, sx: number, sy: number): Came
 // Отступ старта связи от карточки: в макете левая точка на 4px снаружи, правая ровно на краю
 const START_GAP = { left: 4, right: 0 };
 const ARROW_GAP = 6; // наконечник не касается карточки
+export const ARROW_LEN = 8; // длина наконечника
+// Линия обрывается у основания наконечника (с заходом 1px под него), чтобы не торчать на кончике
 
 /** Плавная связь с горизонтальными касательными, как у connector в Figma. */
 export function edgeGeometry(edge: Edge, from: Rect, to: Rect) {
@@ -115,7 +117,8 @@ export function edgeGeometry(edge: Edge, from: Rect, to: Rect) {
   const sy = edge.alignToTarget ? Math.min(from.bottom - 24, Math.max(from.top + 24, to.cy)) : from.cy;
   const tx = dir === 1 ? to.left - ARROW_GAP : to.right + ARROW_GAP;
   const ty = to.cy;
-  const k = Math.max(32, Math.abs(tx - sx) / 2);
-  const path = `M ${sx} ${sy} C ${sx + dir * k} ${sy}, ${tx - dir * k} ${ty}, ${tx} ${ty}`;
+  const lx = tx - dir * (ARROW_LEN - 1);
+  const k = Math.max(32, Math.abs(lx - sx) / 2);
+  const path = `M ${sx} ${sy} C ${sx + dir * k} ${sy}, ${lx - dir * k} ${ty}, ${lx} ${ty}`;
   return { path, start: { x: sx, y: sy }, end: { x: tx, y: ty }, dir };
 }
