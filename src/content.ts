@@ -60,19 +60,18 @@ export type Project = {
 export const projects: Project[] = [
   {
     id: 'p1',
-    title: '1win · White-Label DS',
+    title: '1win · Дизайн-система',
     description:
-      'Собрал дизайн-систему с нуля на Variables, Slots и Modes: 3 продукта и 16+ стран на одних компонентах, итерации ×2',
-    tags: ['Design System', 'White-Label', 'RTL', 'Web'],
+      'Одна DS на 3 бренда и 16+ стран: Variables, Slots, Appearance Modes и RTL. Новый бренд — через токены, итерации ×2',
+    tags: ['Design System', 'White-Label', 'RTL', 'Storybook'],
     action: { kind: 'case', caseId: '1win' },
   },
   {
     id: 'p2',
-    title: 'Wink Музыка',
-    description:
-      'Запуск музыкального стриминга с нуля на Mobile, Web и Smart TV. MAU +100 тыс., retention +20%, lifetime +16%',
-    tags: ['B2C', 'Mobile', 'Smart TV', 'Web'],
-    action: { kind: 'case', caseId: 'wink' },
+    title: '1win · Продукты',
+    description: 'Касса, кошелёк, лобби казино и B2B-панель для партнёров — три iGaming-бренда для 16+ стран',
+    tags: ['iGaming', 'B2C', 'B2B', 'Payments'],
+    action: { kind: 'case', caseId: '1win-product' },
   },
   {
     id: 'p3',

@@ -8,11 +8,10 @@ type Props = {
   zoom: number;
   closing: boolean;
   onClose: () => void;
-  onOpenCase: (id: string) => void;
 };
 
 /** Страница кейса поверх холста: колонка 900px по центру, своя прокрутка, крестик справа. */
-export function CasePage({ study, zoom, closing, onClose, onOpenCase }: Props) {
+export function CasePage({ study, zoom, closing, onClose }: Props) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   // При переходе к следующему кейсу начинаем сверху
@@ -74,31 +73,6 @@ export function CasePage({ study, zoom, closing, onClose, onOpenCase }: Props) {
             </section>
           ))}
 
-          <section className="case-card case-next">
-            <div className="case-next-row">
-              <div className="case-next-text">
-                <span className="case-label">Следующий кейс</span>
-                <span className="case-next-title">{study.next.title}</span>
-                <span className="case-small">{study.next.subtitle}</span>
-              </div>
-              {study.next.kind === 'case' ? (
-                <a
-                  className="btn btn--secondary case-next-btn"
-                  href={`#/case/${study.next.id}`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    if (study.next.kind === 'case') onOpenCase(study.next.id);
-                  }}
-                >
-                  СЛЕДУЮЩИЙ КЕЙС
-                </a>
-              ) : (
-                <a className="btn btn--secondary case-next-btn" href={study.next.url} target="_blank" rel="noreferrer">
-                  СЛЕДУЮЩИЙ КЕЙС
-                </a>
-              )}
-            </div>
-          </section>
         </article>
       </div>
 
@@ -140,8 +114,8 @@ function Block({ block }: { block: CaseBlock }) {
       return <p className="case-text">{block.text}</p>;
     case 'bullets':
       return <Bullets items={block.items} />;
-    case 'note':
-      return <p className="case-note">{block.text}</p>;
+    case 'quote':
+      return <p className="case-quote">{block.text}</p>;
     case 'image':
       return (
         <div className="case-image" style={{ height: block.height }}>

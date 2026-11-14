@@ -36,7 +36,7 @@
   /* Сплошной цвет наконечника и точки — как линия поверх фона, чтобы линия под ними не просвечивала */
   --edge-solid: color-mix(in srgb, #00a0f0 55%, var(--bg));
   --on-accent: #ffffff;
-  --text-30: rgba(0, 0, 0, 0.3);
+  --text-35: rgba(0, 0, 0, 0.35);
   --text-50: rgba(0, 0, 0, 0.5);
   --text-60: rgba(0, 0, 0, 0.6);
   --text-70: rgba(0, 0, 0, 0.7);
@@ -82,7 +82,7 @@
   --edge: rgba(0, 160, 240, 0.7);
   --edge-solid: color-mix(in srgb, #00a0f0 70%, var(--bg));
   --on-accent: #ffffff;
-  --text-30: rgba(255, 255, 255, 0.3);
+  --text-35: rgba(255, 255, 255, 0.35);
   --text-50: rgba(255, 255, 255, 0.5);
   --text-60: rgba(255, 255, 255, 0.6);
   --text-70: rgba(255, 255, 255, 0.7);
@@ -968,6 +968,9 @@ a {
   scrollbar-gutter: stable both-edges;
   padding: 16px 16px 96px;
 }
+/* Высота строки округляется до целых пикселей, как в Figma (16px × 1.4 = 22.4 → 22):
+   множитель задаётся переменной --lh, а считается от размера шрифта каждого элемента */
+.case-column * { line-height: round(calc(var(--lh, 1.2) * 1em), 1px); }
 .case-column {
   display: flex;
   flex-direction: column;
@@ -1028,7 +1031,7 @@ a {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  height: 440px;
+  height: 420px;
   padding: 0 0 16px 16px;
   border-radius: 24px;
   background: var(--fill-2);
@@ -1038,7 +1041,7 @@ a {
   flex-wrap: wrap;
   gap: 4px;
 }
-.case-tags .tag { line-height: 1.4; }
+.case-tags .tag { --lh: 1.4; background: var(--surface); } /* на обложке теги белые */
 
 .case-intro {
   display: flex;
@@ -1050,23 +1053,23 @@ a {
   color: var(--accent);
   font-size: 14px;
   font-weight: 700;
-  line-height: 1.4;
+  --lh: 1.4;
 }
 .case-title {
   font-size: 44px;
   font-weight: 700;
-  line-height: 1.15;
+  --lh: 1.15;
 }
 .case-lead {
   color: var(--text-60);
   font-size: 18px;
-  line-height: 1.4;
+  --lh: 1.4;
 }
 
 .case-meta {
   display: flex;
   gap: 8px;
-  line-height: 1.4;
+  --lh: 1.4;
 }
 .case-meta-item {
   flex: 1 0 0;
@@ -1083,13 +1086,13 @@ a {
 .case-label {
   color: var(--text-muted);
   font-size: 14px;
-  line-height: 1.4;
+  --lh: 1.4;
   white-space: nowrap;
 }
 .case-small {
   color: var(--text-50);
   font-size: 14px;
-  line-height: 1.4;
+  --lh: 1.4;
 }
 .case-header {
   display: flex;
@@ -1118,7 +1121,7 @@ a {
   color: var(--accent);
   font-size: 40px;
   font-weight: 700;
-  line-height: 1.15;
+  --lh: 1.15;
 }
 
 .case-bullets {
@@ -1129,7 +1132,7 @@ a {
   padding: 0;
   list-style: none;
   font-size: 16px;
-  line-height: 1.4;
+  --lh: 1.4;
   color: var(--text-80);
 }
 .case-bullets li { display: flex; gap: 12px; }
@@ -1138,20 +1141,21 @@ a {
 .case-h2 {
   font-size: 32px;
   font-weight: 700;
-  line-height: 1.15;
+  --lh: 1.15;
 }
 .case-text {
   color: var(--text-70);
   font-size: 17px;
-  line-height: 1.4;
+  --lh: 1.4;
 }
-.case-note {
-  padding: 16px 20px;
+.case-quote {
+  padding: 20px 24px;
   border-radius: 24px;
   background: var(--accent-soft);
   color: var(--accent);
-  font-size: 15px;
-  line-height: 1.4;
+  font-size: 20px;
+  font-weight: 700;
+  --lh: 1.4;
 }
 .case-image {
   display: flex;
@@ -1159,9 +1163,9 @@ a {
   justify-content: center;
   border-radius: 24px;
   background: var(--fill-2);
-  color: var(--text-30);
+  color: var(--text-35);
   font-size: 14px;
-  line-height: 1.4;
+  --lh: 1.4;
 }
 
 .case-hr {
@@ -1181,12 +1185,14 @@ a {
   gap: 16px;
   padding: 12px 0;
   font-size: 15px;
-  line-height: 1.4;
+  --lh: 1.4;
 }
-.case-tr > * { flex: 1 0 0; min-width: 1px; color: var(--text-70); }
+.case-tr > * { flex: 1 0 0; min-width: 1px; }
+/* Колонки: название — основной цвет, «до» — серый, «после» — акцент */
+.case-tr > :nth-child(2) { color: var(--text-50); }
+.case-tr > :nth-child(3) { color: var(--accent); }
 .case-tr > :first-child { color: var(--text); font-weight: 700; }
-.case-th > *,
-.case-th > :first-child { color: var(--text-muted); font-size: 14px; font-weight: 500; }
+.case-tr.case-th > * { color: var(--text-muted); font-size: 14px; font-weight: 500; }
 
 .case-steps {
   display: flex;
@@ -1206,7 +1212,7 @@ a {
   color: var(--accent);
   font-size: 14px;
   font-weight: 700;
-  line-height: 1.4;
+  --lh: 1.4;
 }
 .case-step-text {
   flex: 1 0 0;
@@ -1214,11 +1220,11 @@ a {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  line-height: 1.4;
+  --lh: 1.4;
 }
 .case-step-title { font-size: 16px; font-weight: 700; }
 
-.case-columns { display: flex; gap: 8px; line-height: 1.4; }
+.case-columns { display: flex; gap: 8px; --lh: 1.4; }
 .case-col {
   flex: 1 0 0;
   min-width: 1px;
@@ -1230,29 +1236,6 @@ a {
   background: var(--fill-2);
 }
 .case-col-title { font-size: 18px; font-weight: 700; }
-
-.case-next { padding: 8px; }
-.case-next-row {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 16px 8px 16px 24px;
-}
-.case-next-text {
-  flex: 1 0 0;
-  min-width: 1px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  line-height: 1.4;
-}
-.case-next-text .case-label { white-space: normal; }
-.case-next-title { font-size: 28px; font-weight: 700; }
-.case-next-btn {
-  width: 220px;
-  padding: 0 24px;
-  line-height: 1.4;
-}
 
 @media (prefers-reduced-motion: reduce) {
   .case-column,
@@ -1419,8 +1402,6 @@ a {
   .case-table { padding: 4px 12px; }
   .case-tr { gap: 8px; font-size: 13px; }
   .case-image { height: 220px !important; padding: 0 16px; text-align: center; }
-  .case-next-row { flex-wrap: wrap; padding: 12px; }
-  .case-next-btn { width: 100%; }
 }
 
 /* На мобильном холсте главная карточка вертикальная, как в мобильной ленте (ширина колонки 375 − 2×8) */
