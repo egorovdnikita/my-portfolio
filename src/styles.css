@@ -413,8 +413,6 @@ a {
   flex-wrap: wrap;
   gap: 12px;
 }
-/* В ленте карточка шире — между инструментами 24px, как в макете */
-.feed .tools { gap: 24px; }
 .tool {
   display: flex;
   align-items: center;
