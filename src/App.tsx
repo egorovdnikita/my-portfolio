@@ -1,16 +1,26 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Canvas, type Tool } from './components/Canvas';
-import { CaseModal } from './components/CaseModal';
+import { CasePage } from './components/CasePage';
 import { ShareButton } from './components/ShareButton';
 import { ExperienceCard, HeroCard, Icon, ProjectCard, VibeCard } from './components/Cards';
 import { fitCamera, zoomAt, NODES, type Camera, type NodeId, type Vec } from './canvas/layout';
-import { headerAvatars, icons, profile, projects, type Project } from './content';
+import { headerAvatars, icons, profile, projects } from './content';
+import { findCase } from './cases';
 
 type View = 'canvas' | 'feed';
 
 const ZERO_OFFSETS = Object.fromEntries(Object.keys(NODES).map((id) => [id, { x: 0, y: 0 }])) as Record<NodeId, Vec>;
 const ZOOM_PRESETS = [0.25, 0.5, 0.75, 1, 1.5, 2];
 const ZOOM_STEP = 1.25;
+
+const CASE_ZOOM_PRESETS = [0.5, 0.75, 1, 1.25, 1.5];
+const CASE_CLOSE_MS = 200;
+
+// Кейс открывается по адресу #/case/<id>: ссылку можно скопировать и отправить
+const caseFromHash = () => {
+  const m = window.location.hash.match(/^#\/case\/([\w-]+)/);
+  return findCase(m ? m[1] : null)?.id ?? null;
+};
 
 const viewportSize = () => ({ w: window.innerWidth, h: window.innerHeight });
 const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
@@ -26,7 +36,10 @@ export default function App() {
   });
   const [offsets, setOffsets] = useState<Record<NodeId, Vec>>(ZERO_OFFSETS);
   const [zoomMenu, setZoomMenu] = useState(false);
-  const [openCase, setOpenCase] = useState<Project | null>(null);
+  const [caseId, setCaseId] = useState<string | null>(caseFromHash);
+  const [caseClosing, setCaseClosing] = useState(false);
+  const [caseZoom, setCaseZoom] = useState(1);
+  const study = findCase(caseId);
 
   // Пока пользователь не трогал холст, при изменении окна кадр подстраивается
   const touched = useRef(false);
@@ -61,6 +74,40 @@ export default function App() {
     [camera, offsets, stopAnimation],
   );
 
+  // Адрес и кнопка «Назад» в браузере управляют открытым кейсом
+  useEffect(() => {
+    const sync = () => {
+      setCaseClosing(false);
+      setCaseId(caseFromHash());
+    };
+    window.addEventListener('popstate', sync);
+    window.addEventListener('hashchange', sync);
+    return () => {
+      window.removeEventListener('popstate', sync);
+      window.removeEventListener('hashchange', sync);
+    };
+  }, []);
+
+  const openCase = useCallback((id: string) => {
+    setZoomMenu(false);
+    setCaseClosing(false);
+    setCaseZoom(1);
+    if (caseFromHash() !== id) window.history.pushState(null, '', `#/case/${id}`);
+    setCaseId(id);
+  }, []);
+
+  const closeTimer = useRef(0);
+  const closeCase = useCallback(() => {
+    setZoomMenu(false);
+    setCaseClosing(true);
+    window.clearTimeout(closeTimer.current);
+    closeTimer.current = window.setTimeout(() => {
+      window.history.pushState(null, '', window.location.pathname + window.location.search);
+      setCaseId(null);
+      setCaseClosing(false);
+    }, CASE_CLOSE_MS);
+  }, []);
+
   // Меню масштаба закрывается кликом в любом месте вне панели масштаба
   useEffect(() => {
     if (!zoomMenu) return;
@@ -83,12 +130,19 @@ export default function App() {
 
   const zoomTo = useCallback(
     (z: number) => {
+      // В кейсе масштаб меняет размер страницы кейса, на холсте — камеру
+      if (caseId) {
+        setCaseZoom(Math.min(2, Math.max(0.5, Math.round(z * 100) / 100)));
+        return;
+      }
       touched.current = true;
       const { w, h } = viewportSize();
       animate(zoomAt(camera, z, w / 2, h / 2), undefined, 220);
     },
-    [animate, camera],
+    [animate, camera, caseId],
   );
+  const zoomValue = caseId ? caseZoom : camera.z;
+  const zoomPresets = caseId ? CASE_ZOOM_PRESETS : ZOOM_PRESETS;
 
   const reset = useCallback(() => {
     const { w, h } = viewportSize();
@@ -101,11 +155,11 @@ export default function App() {
     const isTyping = (e: KeyboardEvent) => (e.target as HTMLElement).closest('input, textarea, [contenteditable]');
     const onDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        setZoomMenu(false);
-        setOpenCase(null);
+        if (zoomMenu) setZoomMenu(false);
+        else if (caseId) closeCase();
         return;
       }
-      if (isTyping(e) || openCase || view !== 'canvas') return;
+      if (isTyping(e) || caseId || view !== 'canvas') return;
       if (e.code === 'Space') {
         e.preventDefault();
         setSpaceHeld(true);
@@ -128,7 +182,7 @@ export default function App() {
       window.removeEventListener('keyup', onUp);
       window.removeEventListener('blur', onBlur);
     };
-  }, [camera.z, openCase, view, zoomTo]);
+  }, [camera.z, caseId, closeCase, view, zoomMenu, zoomTo]);
 
   const setOffset = useCallback((id: NodeId, v: Vec) => setOffsets((prev) => ({ ...prev, [id]: v })), []);
 
@@ -136,13 +190,15 @@ export default function App() {
     exp: <ExperienceCard />,
     vibe: <VibeCard />,
     hero: <HeroCard />,
-    p1: <ProjectCard project={projects[0]} onOpen={setOpenCase} />,
-    p2: <ProjectCard project={projects[1]} onOpen={setOpenCase} />,
-    p3: <ProjectCard project={projects[2]} onOpen={setOpenCase} />,
+    p1: <ProjectCard project={projects[0]} onOpenCase={openCase} />,
+    p2: <ProjectCard project={projects[1]} onOpenCase={openCase} />,
+    p3: <ProjectCard project={projects[2]} onOpenCase={openCase} />,
+    p4: <ProjectCard project={projects[3]} onOpenCase={openCase} />,
   };
+  const caseOpen = Boolean(study) && !caseClosing;
 
   return (
-    <div className={`app app--${view}`}>
+    <div className={`app app--${view}${caseOpen ? ' has-case' : ''}`}>
       {view === 'canvas' ? (
         <Canvas
           camera={camera}
@@ -165,6 +221,7 @@ export default function App() {
             {nodes.p1}
             {nodes.p2}
             {nodes.p3}
+            {nodes.p4}
           </div>
         </main>
       )}
@@ -174,8 +231,13 @@ export default function App() {
           <span className="crumb">{profile.name}</span>
           <span className="tag">Pro</span>
           <Icon src={icons.chevronRight} className="icon--subtle" />
-          <span className="crumb">Портфолио</span>
-          <Icon src={icons.chevronDown} className="icon--subtle" />
+          {study ? (
+            <button type="button" className="crumb crumb--link" onClick={closeCase}>
+              Портфолио
+            </button>
+          ) : (
+            <span className="crumb">Портфолио</span>
+          )}
         </div>
         <div className="panel panel--share">
           <div className="avatars">
@@ -197,9 +259,9 @@ export default function App() {
 
       <footer className="bottombar">
         <div className="bottombar-side">
-          {view === 'canvas' && (
+          {(view === 'canvas' || study) && (
             <div className="panel panel--tools zoom">
-              <button type="button" className="tool-btn" aria-label="Приблизить" onClick={() => zoomTo(camera.z * ZOOM_STEP)}>
+              <button type="button" className="tool-btn" aria-label="Приблизить" onClick={() => zoomTo(zoomValue * ZOOM_STEP)}>
                 <Icon src={icons.zoomIn} className="icon--strong" />
               </button>
               <button
@@ -209,14 +271,14 @@ export default function App() {
                 aria-expanded={zoomMenu}
                 onClick={() => setZoomMenu((v) => !v)}
               >
-                {Math.round(camera.z * 100)}%
+                {Math.round(zoomValue * 100)}%
                 <Icon src={icons.chevronDown} className="icon--muted zoom-chevron" />
               </button>
-              <button type="button" className="tool-btn" aria-label="Отдалить" onClick={() => zoomTo(camera.z / ZOOM_STEP)}>
+              <button type="button" className="tool-btn" aria-label="Отдалить" onClick={() => zoomTo(zoomValue / ZOOM_STEP)}>
                 <Icon src={icons.zoomOut} className="icon--strong" />
               </button>
               <div className={`menu${zoomMenu ? ' is-open' : ''}`} role="menu" aria-hidden={!zoomMenu}>
-                    {ZOOM_PRESETS.map((z) => (
+                    {zoomPresets.map((z) => (
                       <button
                         key={z}
                         type="button"
@@ -235,7 +297,7 @@ export default function App() {
           )}
         </div>
 
-        <div className="bottombar-center">
+        <div className="bottombar-center" hidden={Boolean(study)}>
           {view === 'canvas' && (
             <div className="panel panel--tools">
               <button
@@ -290,7 +352,9 @@ export default function App() {
         </div>
       </footer>
 
-      {openCase && <CaseModal project={openCase} onClose={() => setOpenCase(null)} />}
+      {study && (
+        <CasePage study={study} zoom={caseZoom} closing={caseClosing} onClose={closeCase} onOpenCase={openCase} />
+      )}
     </div>
   );
 }

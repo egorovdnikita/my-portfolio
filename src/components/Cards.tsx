@@ -108,7 +108,7 @@ export function HeroCard() {
           </div>
         </div>
         <div className="hero-actions">
-          <LinkButton href={profile.cvUrl} variant="secondary" download>
+          <LinkButton href={profile.cvUrl} variant="secondary">
             СКАЧАТЬ CV
             <Icon src={icons.download} size={24} className="icon--strong" />
           </LinkButton>
@@ -126,12 +126,10 @@ export function HeroCard() {
 function LinkButton({
   href,
   variant,
-  download,
   children,
 }: {
   href: string;
   variant: 'primary' | 'secondary';
-  download?: boolean;
   children: React.ReactNode;
 }) {
   const external = href.startsWith('http');
@@ -141,7 +139,6 @@ function LinkButton({
       href={href || undefined}
       aria-disabled={!href}
       title={href ? undefined : 'Ссылка скоро появится'}
-      download={download && href ? '' : undefined}
       target={external ? '_blank' : undefined}
       rel={external ? 'noreferrer' : undefined}
     >
@@ -150,7 +147,8 @@ function LinkButton({
   );
 }
 
-export function ProjectCard({ project, onOpen }: { project: Project; onOpen: (p: Project) => void }) {
+export function ProjectCard({ project, onOpenCase }: { project: Project; onOpenCase: (caseId: string) => void }) {
+  const { action } = project;
   return (
     <section className="card card--project">
       <div className="project-cover">
@@ -164,29 +162,23 @@ export function ProjectCard({ project, onOpen }: { project: Project; onOpen: (p:
         <h2>{project.title}</h2>
         <p className="muted">{project.description}</p>
       </div>
-      {project.action.kind === 'case' ? (
-        <button type="button" className="btn btn--secondary btn--block" onClick={() => onOpen(project)}>
+      {action.kind === 'case' ? (
+        <a
+          className="btn btn--secondary btn--block"
+          href={`#/case/${action.caseId}`}
+          onClick={(e) => {
+            e.preventDefault();
+            onOpenCase(action.caseId);
+          }}
+        >
           ПОДРОБНЕЕ
-        </button>
+        </a>
       ) : (
-        <LinkButtonBlock href={project.action.url} />
+        <a className="btn btn--secondary btn--block" href={action.url} target="_blank" rel="noreferrer">
+          {action.label}
+          <Icon src={icons.external} size={16} className="icon--subtle" />
+        </a>
       )}
     </section>
-  );
-}
-
-function LinkButtonBlock({ href }: { href: string }) {
-  return (
-    <a
-      className="btn btn--secondary btn--block"
-      href={href || undefined}
-      aria-disabled={!href}
-      title={href ? undefined : 'Ссылка скоро появится'}
-      target="_blank"
-      rel="noreferrer"
-    >
-      ПЕРЕЙТИ
-      <Icon src={icons.external} size={16} className="icon--subtle" />
-    </a>
   );
 }

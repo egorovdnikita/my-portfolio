@@ -4,7 +4,7 @@
 
 export const WORLD = { width: 1920, height: 1080 };
 
-export type NodeId = 'exp' | 'vibe' | 'hero' | 'p1' | 'p2' | 'p3';
+export type NodeId = 'exp' | 'vibe' | 'hero' | 'p1' | 'p2' | 'p3' | 'p4';
 
 export const NODES: Record<NodeId, { x: number; y: number; ax: number }> = {
   exp: { x: 80, y: 312, ax: 0 },
@@ -13,6 +13,9 @@ export const NODES: Record<NodeId, { x: number; y: number; ax: number }> = {
   p1: { x: 1619, y: 327, ax: 0.5 },
   p2: { x: 1872, y: 802, ax: 1 },
   p3: { x: 1885, y: 420, ax: 0 },
+  // В макете три слота под кейсы, кейсов четыре: четвёртый стоит справа от второго,
+  // с тем же смещением, что у третьего относительно первого
+  p4: { x: 1913, y: 895, ax: 0 },
 };
 
 export type Edge = {
@@ -32,6 +35,7 @@ export const EDGES: Edge[] = [
   { from: 'hero', to: 'p1', side: 'right', dot: true },
   { from: 'hero', to: 'p2', side: 'right', dot: true },
   { from: 'p1', to: 'p3', side: 'right', alignToTarget: true },
+  { from: 'p2', to: 'p4', side: 'right', alignToTarget: true },
 ];
 
 export type Vec = { x: number; y: number };

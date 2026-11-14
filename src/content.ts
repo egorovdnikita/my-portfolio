@@ -1,5 +1,7 @@
 // Весь контент сайта в одном месте. Тексты и ссылки меняются здесь.
 
+import { BEHANCE } from './cases';
+
 const asset = (name: string) => `${import.meta.env.BASE_URL}assets/${name}`;
 
 export const profile = {
@@ -9,9 +11,8 @@ export const profile = {
     'Я продуктовый дизайнер с опытом 5+ лет. Работал с B2C-продуктами на 10+ млн пользователей, сложными B2B-интерфейсами и AI-инструментами. Веду задачи полным циклом, от исследований до контроля реализации.',
   tags: ['B2B', 'B2C', 'Web', 'Mobile'],
   photo: asset('photo.jpg'),
-  // TODO: ссылка на резюме (PDF положить в public/ и указать путь) и на Telegram
-  cvUrl: '',
-  telegramUrl: '',
+  cvUrl: 'https://clck.ru/3THQuC',
+  telegramUrl: 'https://t.me/egorov_d_nikita',
   footerHandle: '@egorov.d.nikita',
 };
 
@@ -47,31 +48,42 @@ export type Project = {
   title: string;
   description: string;
   tags: string[];
-  // «Подробнее» открывает кейс поверх холста, «Перейти» ведёт по внешней ссылке
-  action: { kind: 'case' } | { kind: 'link'; url: string };
+  // «Подробнее» открывает кейс на сайте, «Смотреть на Behance» ведёт на внешнюю страницу
+  action: { kind: 'case'; caseId: string } | { kind: 'link'; url: string; label: string };
 };
 
+// Порядок как в цепочке «Следующий кейс» из макета
 export const projects: Project[] = [
   {
     id: 'p1',
-    title: 'Название проекта',
-    description: 'Холдинг разрабатывает и поддерживает масштабируемую инфраструктуру, объединяющую десятки сервисов',
-    tags: ['B2B', 'B2C', 'Web', 'Mobile'],
-    action: { kind: 'case' },
+    title: '1win · White-Label DS',
+    description:
+      'Собрал дизайн-систему с нуля на Variables, Slots и Modes: 3 продукта и 16+ стран на одних компонентах, итерации ×2',
+    tags: ['Design System', 'White-Label', 'RTL', 'Web'],
+    action: { kind: 'case', caseId: '1win' },
   },
   {
     id: 'p2',
-    title: 'Название проекта',
-    description: 'Холдинг разрабатывает и поддерживает масштабируемую инфраструктуру, объединяющую десятки сервисов',
-    tags: ['B2B', 'B2C', 'Web', 'Mobile'],
-    action: { kind: 'link', url: '' },
+    title: 'Wink Музыка',
+    description:
+      'Запуск музыкального стриминга с нуля на Mobile, Web и Smart TV. MAU +100 тыс., retention +20%, lifetime +16%',
+    tags: ['B2C', 'Mobile', 'Smart TV', 'Web'],
+    action: { kind: 'case', caseId: 'wink' },
   },
   {
     id: 'p3',
-    title: 'Название проекта',
-    description: 'Холдинг разрабатывает и поддерживает масштабируемую инфраструктуру, объединяющую десятки сервисов',
-    tags: ['B2B', 'B2C', 'Web', 'Mobile'],
-    action: { kind: 'link', url: '' },
+    title: 'Ростелеком Базис',
+    description:
+      'Корпоративный сайт разработчика платформ виртуализации: структура для B2B-аудитории и подача сложного продукта',
+    tags: ['B2B', 'Web', 'Корпоративный сайт'],
+    action: { kind: 'link', url: BEHANCE.basis, label: 'СМОТРЕТЬ НА BEHANCE' },
+  },
+  {
+    id: 'p4',
+    title: 'Ростелеком Лицей',
+    description: 'Раздел «Экзамены» образовательной платформы: подготовка школьников к ОГЭ и ЕГЭ в одном сценарии',
+    tags: ['EdTech', 'B2C', 'Web'],
+    action: { kind: 'link', url: BEHANCE.lyceum, label: 'СМОТРЕТЬ НА BEHANCE' },
   },
 ];
 
@@ -87,6 +99,7 @@ export const icons = {
   external: asset('ic-external.svg'),
   download: asset('ic-download.svg'),
   telegram: asset('ic-telegram.svg'),
+  close: asset('ic-close.svg'),
   zoomIn: asset('ic-zoom-in.svg'),
   zoomOut: asset('ic-zoom-out.svg'),
   move: asset('ic-move.svg'),
