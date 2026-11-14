@@ -58,6 +58,28 @@ export function ExperienceCard() {
 
 const ACTIVITY_CLASS = ['bar--0', 'bar--1', 'bar--2', 'bar--3'];
 
+// Псевдослучайное число 0..1 по номеру столбика: у каждого свой темп, но одинаково при каждой загрузке
+const rand = (i: number, salt: number) => {
+  const x = Math.sin(i * 12.9898 + salt * 78.233) * 43758.5453;
+  return x - Math.floor(x);
+};
+// Высота «дышит» вокруг центра: волна по ряду (задержка растёт с номером) + свой темп и амплитуда у каждого
+const LEVEL_RANGE: [number, number][] = [
+  [8, 16],
+  [10, 20],
+  [12, 24],
+  [14, 24],
+];
+const barStyle = (level: number, i: number) => {
+  const [min, max] = LEVEL_RANGE[level];
+  return {
+    '--bar-min': `${min + rand(i, 1) * 3}px`,
+    '--bar-max': `${max - rand(i, 2) * 3}px`,
+    '--bar-dur': `${2.4 + rand(i, 3) * 1.8}s`,
+    '--bar-delay': `${-(i * 0.14 + rand(i, 4) * 0.6)}s`,
+  } as React.CSSProperties;
+};
+
 export function VibeCard() {
   return (
     <section className="card card--vibe">
@@ -69,7 +91,7 @@ export function VibeCard() {
         </div>
         <div className="bars" aria-hidden>
           {vibecoding.activity.map((level, i) => (
-            <span key={i} className={`bar ${ACTIVITY_CLASS[level]}`} />
+            <span key={i} className={`bar ${ACTIVITY_CLASS[level]}`} style={barStyle(level, i)} />
           ))}
         </div>
         <div className="tools">

@@ -262,6 +262,17 @@ a {
 .bar--1 { height: 20px; background: var(--green); opacity: 0.3; }
 .bar--2 { height: 100%; background: var(--green); opacity: 0.8; }
 .bar--3 { height: 100%; background: var(--green); }
+/* Волна: каждый столбик медленно меняет высоту от центра в своём темпе */
+.bars .bar {
+  animation: bar-wave var(--bar-dur, 3s) ease-in-out var(--bar-delay, 0s) infinite alternate;
+}
+@keyframes bar-wave {
+  from { height: var(--bar-min); }
+  to { height: var(--bar-max); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bars .bar { animation: none; }
+}
 .tools {
   display: flex;
   flex-wrap: wrap;
