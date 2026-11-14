@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 // Посетитель получает случайный id и имя («Неопознанный барсук»), они живут в localStorage,
 // поэтому несколько вкладок одного человека считаются одним посетителем.
 
-export const PRESENCE_URL = 'wss://portfolio-presence.egorovdnikita.workers.dev/ws';
+export const PRESENCE_URL = 'wss://portfolio-presence.promminer-pool.workers.dev/ws';
 
 export type Visitor = { id: string; name: string };
 
