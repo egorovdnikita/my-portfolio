@@ -411,6 +411,8 @@ a {
   flex-wrap: wrap;
   gap: 12px;
 }
+/* В ленте карточка шире — между инструментами 24px, как в макете */
+.feed .tools { gap: 24px; }
 .tool {
   display: flex;
   align-items: center;
@@ -1393,6 +1395,8 @@ a {
   .case-scroll { scrollbar-gutter: auto; }
   .feed { padding: 112px 8px 112px; }
   .feed-column { --feed-w: 100%; }
+  /* Инструменты в «Вайбкодинге» — по всей ширине (auto в макете) */
+  .feed .tools { justify-content: space-between; gap: 12px 0; }
 
   /* Кейс: колонка во всю ширину, крестик внизу по центру */
   .case { --case-w: 100%; }
