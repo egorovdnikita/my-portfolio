@@ -281,9 +281,9 @@ export default function App() {
                 {flip('p2')}
                 {flip('p3')}
                 {flip('p4')}
+                {flip('s1')}
                 {flip('s2')}
                 {flip('s3')}
-                {flip('s1')}
               </>
             ) : (
               <div className="feed-grid">
