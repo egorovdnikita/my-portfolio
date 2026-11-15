@@ -9,7 +9,7 @@
 }
 @font-face {
   font-family: 'Iosevka';
-  font-weight: 700;
+  font-weight: 600;
   font-style: normal;
   font-display: swap;
   src: url('/fonts/Iosevka-Bold.woff2') format('woff2');
@@ -472,7 +472,7 @@ a {
 }
 .hero-title h1 {
   font-size: 24px;
-  font-weight: 700;
+  font-weight: 600;
 }
 .hero-role {
   font-size: 14px;
@@ -531,7 +531,7 @@ a {
 }
 .project-text h2 {
   font-size: 24px;
-  font-weight: 700;
+  font-weight: 600;
 }
 /* Компактная карточка кейса (Базис, Лицей): ширина 400px, без обложки */
 .card--project-compact { width: 400px; }
@@ -706,7 +706,7 @@ a {
 }
 .crumb {
   font-size: 16px;
-  font-weight: 700;
+  font-weight: 600;
   white-space: nowrap;
 }
 
@@ -760,7 +760,7 @@ a {
 .avatar--more {
   color: var(--accent);
   font-size: 16px;
-  font-weight: 700;
+  font-weight: 600;
 }
 .avatar:hover,
 .avatar:focus-visible { z-index: 2; }
@@ -880,7 +880,7 @@ a {
   gap: 8px;
   padding: 4px 8px; /* как в макете: без стрелки, «100%» в кнопке 48px */
   font-size: 16px;
-  font-weight: 700;
+  font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
 
@@ -954,7 +954,7 @@ a {
   border-radius: 16px;
   text-align: left;
   font-size: 16px;
-  font-weight: 700;
+  font-weight: 600;
 }
 .menu-item:hover { background: var(--fill-4); }
 
@@ -1086,12 +1086,12 @@ a {
 .case-eyebrow {
   color: var(--accent);
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 600;
   --lh: 1.4;
 }
 .case-title {
   font-size: 44px;
-  font-weight: 700;
+  font-weight: 600;
   --lh: 1.15;
 }
 .case-lead {
@@ -1115,7 +1115,7 @@ a {
   border-radius: 24px;
   background: var(--fill-2);
 }
-.case-meta-value { font-size: 16px; font-weight: 700; }
+.case-meta-value { font-size: 16px; font-weight: 600; }
 
 .case-label {
   color: var(--text-muted);
@@ -1154,7 +1154,7 @@ a {
 .case-stat-value {
   color: var(--accent);
   font-size: 40px;
-  font-weight: 700;
+  font-weight: 600;
   --lh: 1.15;
 }
 
@@ -1174,7 +1174,7 @@ a {
 
 .case-h2 {
   font-size: 32px;
-  font-weight: 700;
+  font-weight: 600;
   --lh: 1.15;
 }
 .case-text {
@@ -1225,7 +1225,7 @@ a {
 /* Колонки: название — основной цвет, «до» — серый, «после» — акцент */
 .case-tr > :nth-child(2) { color: var(--text-50); }
 .case-tr > :nth-child(3) { color: var(--accent); }
-.case-tr > :first-child { color: var(--text); font-weight: 700; }
+.case-tr > :first-child { color: var(--text); font-weight: 600; }
 .case-tr.case-th > * { color: var(--text-muted); font-size: 14px; font-weight: 500; }
 
 .case-steps { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; --lh: 1.4; }
@@ -1243,7 +1243,7 @@ a {
   flex-direction: column;
   gap: 4px;
 }
-.case-step-title { font-size: 16px; font-weight: 700; }
+.case-step-title { font-size: 16px; font-weight: 600; }
 .case-steps--lg .case-small { font-size: 16px; }
 
 .case-columns { display: flex; flex-wrap: wrap; gap: 8px; --lh: 1.4; }
@@ -1259,7 +1259,7 @@ a {
   border-radius: 24px;
   background: var(--fill-2);
 }
-.case-col-title { font-size: 18px; font-weight: 700; }
+.case-col-title { font-size: 18px; font-weight: 600; }
 
 /* Места под картинки и иконки — пунктир, как заглушки в макете */
 .case-cutout {
@@ -1374,7 +1374,7 @@ a {
   background: var(--accent-soft-9);
   color: var(--accent);
   font-size: 16px;
-  font-weight: 700;
+  font-weight: 600;
 }
 .btn--share-block {
   width: 100%;
