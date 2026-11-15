@@ -2,7 +2,7 @@
 
 export type CaseBlock =
   | { type: 'text'; text: string }
-  /** plain — без прочерка, с пустым местом под маркер (блок «Итог») */
+  /** plain — точка вместо прочерка (блок «Итог») */
   | { type: 'bullets'; items: string[]; plain?: boolean }
   | { type: 'table'; head: [string, string, string]; rows: [string, string, string][] }
   | { type: 'quote'; text: string }

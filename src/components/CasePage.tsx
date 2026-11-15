@@ -82,14 +82,14 @@ function Header({ label }: { label: string }) {
   );
 }
 
-/** Пункты: с прочерком или (в «Итоге») с пустым местом 24px под маркер, как в макете */
+/** Пункты: с прочерком или (в «Итоге») с синей точкой в слоте 24px, как в макете */
 function Bullets({ items, plain }: { items: string[]; plain?: boolean }) {
   return (
     <ul className={`case-bullets${plain ? ' case-bullets--plain' : ''}`}>
       {items.map((item) => (
         <li key={item}>
           <span className="case-dash" aria-hidden>
-            {plain ? '' : '—'}
+            {plain ? '•' : '—'}
           </span>
           <span>{item}</span>
         </li>

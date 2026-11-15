@@ -1171,7 +1171,7 @@ a {
 }
 .case-bullets li { display: flex; gap: 12px; }
 .case-bullets--plain li { gap: 4px; }
-.case-bullets--plain .case-dash { flex-shrink: 0; width: 24px; }
+.case-bullets--plain .case-dash { flex-shrink: 0; width: 24px; padding-left: 5px; }
 .case-dash { color: var(--accent); white-space: nowrap; }
 
 .case-h2 {
@@ -1269,20 +1269,13 @@ a {
 .case-col-title { font-size: 18px; font-weight: 600; }
 
 /* Места под картинки и иконки — пунктир, как заглушки в макете */
+/* Большое место под картинку — пока пустое, без рамки (как в макете) */
 .case-cutout {
   flex-shrink: 0;
   height: 96px;
-  border: 1px dashed var(--placeholder);
   border-radius: 16px;
 }
-.case-cutout--round { width: 32px; height: 32px; border-radius: 999px; }
-.case-icon-slot {
-  flex-shrink: 0;
-  width: 20px;
-  height: 20px;
-  border: 1px dashed var(--placeholder);
-  border-radius: 8px;
-}
+.case-cutout--round { width: 32px; height: 32px; border: 1px dashed var(--placeholder); border-radius: 999px; }
 
 @media (prefers-reduced-motion: reduce) {
   .case-column,
