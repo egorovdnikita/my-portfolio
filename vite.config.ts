@@ -1,8 +1,8 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
-// Сайт публикуется на GitHub Pages по адресу /my-portfolio/
+// Сайт публикуется на собственном домене egorovdnikita.ru.
 export default defineConfig({
-  base: '/my-portfolio/',
+  base: '/',
   plugins: [react()],
 });

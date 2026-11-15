@@ -17,4 +17,4 @@ npm run dev
 
 Тексты и ссылки — в `src/content.ts`. Шрифт Iosevka (SIL OFL 1.1), урезан до латиницы и кириллицы.
 
-Публикация: GitHub Actions собирает сайт и выкладывает на GitHub Pages при пуше в `main`.
+Публикация: GitHub Actions собирает сайт и выкладывает на GitHub Pages при пуше в `main`. Основной адрес — https://egorovdnikita.ru/.
