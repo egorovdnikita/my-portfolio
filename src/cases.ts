@@ -137,7 +137,7 @@ export const cases: CaseStudy[] = [
   },
   {
     id: '1win-product',
-    cover: `${import.meta.env.BASE_URL}assets/cover-case-product.jpg`,
+    cover: `${import.meta.env.BASE_URL}assets/cover-case-product-v2.jpg`,
     tags: ['iGaming', 'B2C', 'B2B', 'Payments', 'Casino', 'Локализация', 'Web'],
     title: 'Как касса объясняет условия перевода и его статус',
     lead: 'Человек отправил деньги, но баланс прежний. Подождать или заплатить снова? Я проектировал кассу, которая помогает разобраться.',
