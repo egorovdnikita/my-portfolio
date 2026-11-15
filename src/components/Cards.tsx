@@ -290,7 +290,7 @@ function LinkButton({
 
 export function ShotCard({ shot }: { shot: Shot }) {
   return (
-    <section className={`shot-card${shot.bottom ? ' shot-card--bottom' : ''}`} aria-label={shot.title}>
+    <section className={`shot-card${shot.bottom ? ' shot-card--bottom' : ''}`} style={{ '--shot-rotation': `${shot.rotation}deg` } as React.CSSProperties} aria-label={shot.title}>
       <div className="shot-surface" style={{ backgroundImage: `url("${shot.image}")` }} />
       <div className="shot-header">
         <div className="shot-text">

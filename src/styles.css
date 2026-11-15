@@ -562,8 +562,9 @@ a {
 
 /* Карточки SHOT: квадрат 450px, тексты и метки масштабируются вместе с ним. */
 .shot-card { position: relative; width: 450px; aspect-ratio: 1; container-type: inline-size; color: #fff; }
-.shot-surface { position: absolute; inset: 0; border-radius: 5.333333cqw; background-size: cover; background-position: center; }
-.shot-header { position: absolute; top: 0; left: 0; width: 100%; display: flex; align-items: center; gap: 1.777778cqw; padding: 5.333333cqw; border-radius: 5.333333cqw 5.333333cqw 0 0; background: linear-gradient(to bottom, #0008, transparent); }
+.node .shot-card { transform: rotate(var(--shot-rotation)); transform-origin: 0 0; }
+.shot-surface { position: absolute; inset: 0; background-size: cover; background-position: center; }
+.shot-header { position: absolute; top: 0; left: 0; width: 100%; display: flex; align-items: center; gap: 1.777778cqw; padding: 5.333333cqw; background: linear-gradient(to bottom, #0008, transparent); }
 .shot-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1.777778cqw; }
 .shot-text h2 { font-size: 5.333333cqw; line-height: 6.444444cqw; font-weight: 600; letter-spacing: -0.05em; }
 .shot-text p { font-size: 3.111111cqw; line-height: 3.777778cqw; white-space: pre-line; }
@@ -572,7 +573,7 @@ a {
 .shot-badge { position: absolute; left: 84.331978cqw; top: -4.222222cqw; width: 18.888889cqw; height: 12.444444cqw; display: grid; place-items: center; transform: rotate(15deg); transform-origin: 0 0; background: #ff0091; color: #fff; font-family: 'Iosevka', monospace; font-size: 7.111111cqw; line-height: 8.888889cqw; font-weight: 700; letter-spacing: -0.04em; }
 .shot-tags { position: absolute; bottom: 0; left: 0; display: flex; gap: 0.888889cqw; padding: 5.333333cqw; }
 .shot-tags span { padding: 0.888889cqw 1.777778cqw; border-radius: 2.222222cqw; background: #f5f5f5; color: #000; font-size: 3.111111cqw; line-height: 3.777778cqw; }
-.shot-card--bottom .shot-header { top: auto; bottom: 0; border-radius: 0 0 5.333333cqw 5.333333cqw; background: linear-gradient(to bottom, transparent, #0008); }
+.shot-card--bottom .shot-header { top: auto; bottom: 0; background: linear-gradient(to bottom, transparent, #0008); }
 .feed .shot-card { width: 100%; margin-top: 19px; }
 
 /* ---------- Холст ---------- */
