@@ -1004,6 +1004,14 @@ a {
   scrollbar-gutter: stable both-edges;
   padding: 16px 16px 96px;
 }
+/* Своя полоса прокрутки в кейсе и ленте: без подложки, ползунок цвета иконок сайта */
+.case-scroll,
+.feed {
+  scrollbar-width: thin;
+  scrollbar-color: var(--icon-subtle) transparent;
+}
+.case-scroll:hover,
+.feed:hover { scrollbar-color: var(--icon-muted) transparent; }
 /* Высота строки округляется до целых пикселей, как в Figma (16px × 1.4 = 22.4 → 22):
    множитель задаётся переменной --lh, а считается от размера шрифта каждого элемента */
 .case-column * { line-height: round(calc(var(--lh, 1.2) * 1em), 1px); }
