@@ -49,7 +49,7 @@ export function CasePage({ study, zoom, closing, onClose }: Props) {
           {study.role && (
             <section className="case-card case-panel">
               <Header label={study.role.label} />
-              <Bullets items={study.role.items} />
+              <Bullets items={study.role.items} plain />
             </section>
           )}
 
@@ -82,7 +82,7 @@ function Header({ label }: { label: string }) {
   );
 }
 
-/** Пункты: с прочерком или (в «Итоге») с синей точкой в слоте 24px, как в макете */
+/** Пункты: с прочерком или (в «Моей роли» и «Итоге») с синей точкой в слоте 24px, как в макете */
 function Bullets({ items, plain }: { items: string[]; plain?: boolean }) {
   return (
     <ul className={`case-bullets${plain ? ' case-bullets--plain' : ''}`}>
