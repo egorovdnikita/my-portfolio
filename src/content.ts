@@ -102,11 +102,12 @@ export type Shot = {
   tags: string[];
   bottom?: boolean;
   rotation: number;
+  outlined?: boolean;
 };
 
 export const shots: Shot[] = [
   { id: 's1', title: 'Wink Музыка', description: 'Стриминговый сервис внутри\nэкосистемы онлайн-кинотеатра WINK', image: asset('shot-wink.jpg'), tags: ['iOS', 'Android', 'Apple TV', 'SmartTV'], rotation: -3.944458232017951 },
-  { id: 's2', title: 'ReelView', description: 'Сервис коротких видео сериалов\nдля американского рынка', image: asset('shot-reelview.jpg'), tags: ['iOS', 'Android'], rotation: 3.7976093910559716 },
+  { id: 's2', title: 'ReelView', description: 'Сервис коротких видео сериалов\nдля американского рынка', image: asset('shot-reelview.jpg'), tags: ['iOS', 'Android'], rotation: 3.7976093910559716, outlined: true },
   { id: 's3', title: 'OneTapes', description: 'Веб-сервис для аналитики продаж\nдля игровых маркетплейсов', image: asset('shot-onetapes.jpg'), tags: [], bottom: true, rotation: 2.3720705779599403 },
 ];
 

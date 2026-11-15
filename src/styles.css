@@ -564,6 +564,7 @@ a {
 .shot-card { position: relative; width: 450px; aspect-ratio: 1; container-type: inline-size; color: #fff; }
 .node .shot-card { transform: rotate(var(--shot-rotation)); transform-origin: 0 0; }
 .shot-surface { position: absolute; inset: 0; background-size: cover; background-position: center; }
+.shot-card--outlined .shot-surface { outline: 4px solid var(--bg); }
 .shot-header { position: absolute; top: 0; left: 0; width: 100%; display: flex; align-items: center; gap: 1.777778cqw; padding: 5.333333cqw; background: linear-gradient(to bottom, #0008, transparent); }
 .shot-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1.777778cqw; }
 .shot-text h2 { font-size: 5.333333cqw; line-height: 6.444444cqw; font-weight: 600; letter-spacing: -0.05em; }
@@ -574,7 +575,22 @@ a {
 .shot-tags { position: absolute; bottom: 0; left: 0; display: flex; gap: 0.888889cqw; padding: 5.333333cqw; }
 .shot-tags span { padding: 0.888889cqw 1.777778cqw; border-radius: 2.222222cqw; background: #f5f5f5; color: #000; font-size: 3.111111cqw; line-height: 3.777778cqw; }
 .shot-card--bottom .shot-header { top: auto; bottom: 0; background: linear-gradient(to bottom, transparent, #0008); }
-.feed .shot-card { width: 100%; margin-top: 19px; }
+.feed-shots {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 920 / 937.128555;
+  margin-top: -19px; /* общий gap 8px + отступ −19px = −11px в макете */
+}
+.feed-shots > [data-flip] { position: absolute; width: 48.9130434783%; }
+.feed-shots > [data-flip='s1'] { left: 0; top: 3.30320047%; }
+.feed-shots > [data-flip='s2'] { left: 51.2710637632%; top: 21.03537943%; }
+.feed-shots > [data-flip='s3'] { left: 2.0244432532%; top: 50.03467999%; }
+.feed-shots .shot-card { width: 100%; transform: rotate(var(--shot-rotation)); transform-origin: 0 0; }
+@media (max-width: 767px) {
+  .feed-shots { display: flex; flex-direction: column; align-items: center; gap: 48px; aspect-ratio: auto; margin-top: 32px; padding: 16px 0 24px; }
+  .feed-shots > [data-flip] { position: static; width: calc(100% - 40px); }
+  .feed-shots .shot-card { transform-origin: center; }
+}
 
 /* ---------- Холст ---------- */
 

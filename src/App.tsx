@@ -281,12 +281,6 @@ export default function App() {
                 {flip('p2')}
                 {flip('p3')}
                 {flip('p4')}
-                {flip('s1')}
-                {flip('s2')}
-                {flip('s3')}
-                <p className="legal legal--feed">
-                  {profile.footerHandle} | {profile.footerNote}
-                </p>
               </>
             ) : (
               <div className="feed-grid">
@@ -294,17 +288,20 @@ export default function App() {
                   {flip('exp')}
                   {flip('p1')}
                   {flip('p3')}
-                  {flip('s1')}
-                  {flip('s3')}
                 </div>
                 <div className="feed-col">
                   {flip('vibe')}
                   {flip('p2')}
                   {flip('p4')}
-                  {flip('s2')}
                 </div>
               </div>
             )}
+            <div className="feed-shots">
+              {flip('s1')}
+              {flip('s2')}
+              {flip('s3')}
+            </div>
+            {isMobile && <p className="legal legal--feed">{profile.footerHandle} | {profile.footerNote}</p>}
           </div>
         </main>
       )}
