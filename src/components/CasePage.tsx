@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useRef } from 'react';
 import type { CaseBlock, CaseStudy } from '../cases';
 import { icons } from '../content';
-import { Icon, Tag } from './Cards';
+import { Icon } from './Cards';
 
 type Props = {
   study: CaseStudy;
@@ -26,11 +26,6 @@ export function CasePage({ study, zoom, closing, onClose }: Props) {
           <section className="case-card case-hero">
             <div className="case-cover">
               {study.cover && <img className="case-cover-img" src={study.cover} alt="" draggable={false} />}
-              <div className="case-tags">
-                {study.tags.map((t) => (
-                  <Tag key={t}>{t}</Tag>
-                ))}
-              </div>
             </div>
             <div className="case-intro">
               <h1 className="case-title">{study.title}</h1>

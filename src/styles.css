@@ -1082,13 +1082,6 @@ a {
   background: var(--fill-2);
   overflow: hidden;
 }
-.case-tags {
-  position: relative;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-}
-.case-tags .tag { --lh: 1.4; background: var(--surface); color: var(--text); } /* на обложке теги цвета карточки, текст основного цвета */
 
 .case-intro {
   display: flex;
