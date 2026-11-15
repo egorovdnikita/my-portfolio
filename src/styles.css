@@ -560,36 +560,27 @@ a {
   gap: 8px;
 }
 
-/* Карточки SHOT: квадрат 450px, тексты и метки масштабируются вместе с ним. */
-.shot-card { position: relative; width: 450px; aspect-ratio: 1; container-type: inline-size; color: #fff; }
+/* Карточки SHOT: тексты и метки масштабируются вместе с шириной. */
+.shot-card { --shot-unit: calc(100cqw / 450); position: relative; width: 450px; aspect-ratio: 1; container-type: inline-size; color: #fff; }
 .node .shot-card { transform: rotate(var(--shot-rotation)); transform-origin: 0 0; }
 .shot-surface { position: absolute; inset: 0; background-size: cover; background-position: center; }
 .shot-card--outlined .shot-surface { outline: 4px solid var(--bg); }
-.shot-header { position: absolute; top: 0; left: 0; width: 100%; display: flex; align-items: center; gap: 1.777778cqw; padding: 5.333333cqw; background: linear-gradient(to bottom, #0008, transparent); }
-.shot-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1.777778cqw; }
-.shot-text h2 { font-size: 5.333333cqw; line-height: 6.444444cqw; font-weight: 600; letter-spacing: -0.05em; }
-.shot-text p { font-size: 3.111111cqw; line-height: 3.777778cqw; white-space: pre-line; }
-.shot-lock { flex-shrink: 0; width: 14.222222cqw; height: 14.222222cqw; display: grid; place-items: center; background: #fff; border-radius: 50%; }
-.shot-lock img { width: 5.333333cqw; height: 5.333333cqw; }
-.shot-badge { position: absolute; left: 84.331978cqw; top: -4.222222cqw; width: 18.888889cqw; height: 12.444444cqw; display: grid; place-items: center; transform: rotate(15deg); transform-origin: 0 0; background: #ff0091; color: #fff; font-family: 'Iosevka', monospace; font-size: 7.111111cqw; line-height: 8.888889cqw; font-weight: 700; letter-spacing: -0.04em; }
-.shot-tags { position: absolute; bottom: 0; left: 0; display: flex; gap: 0.888889cqw; padding: 5.333333cqw; }
-.shot-tags span { padding: 0.888889cqw 1.777778cqw; border-radius: 2.222222cqw; background: #f5f5f5; color: #000; font-size: 3.111111cqw; line-height: 3.777778cqw; }
+.shot-header { position: absolute; top: 0; left: 0; width: 100%; display: flex; align-items: center; gap: calc(8 * var(--shot-unit)); padding: calc(24 * var(--shot-unit)); background: linear-gradient(to bottom, #0008, transparent); }
+.shot-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: calc(8 * var(--shot-unit)); }
+.shot-text h2 { font-size: calc(24 * var(--shot-unit)); line-height: calc(29 * var(--shot-unit)); font-weight: 600; letter-spacing: -0.05em; }
+.shot-text p { font-size: calc(14 * var(--shot-unit)); line-height: calc(17 * var(--shot-unit)); white-space: pre-line; }
+.shot-lock { flex-shrink: 0; width: calc(64 * var(--shot-unit)); height: calc(64 * var(--shot-unit)); display: grid; place-items: center; background: #fff; border-radius: 50%; }
+.shot-lock img { width: calc(24 * var(--shot-unit)); height: calc(24 * var(--shot-unit)); }
+.shot-badge { position: absolute; left: calc(379.493901 * var(--shot-unit)); top: calc(-19 * var(--shot-unit)); width: calc(85 * var(--shot-unit)); height: calc(56 * var(--shot-unit)); display: grid; place-items: center; transform: rotate(15deg); transform-origin: 0 0; background: #ff0091; color: #fff; font-family: 'Iosevka', monospace; font-size: calc(32 * var(--shot-unit)); line-height: calc(40 * var(--shot-unit)); font-weight: 700; letter-spacing: -0.04em; }
+.shot-tags { position: absolute; bottom: 0; left: 0; display: flex; gap: calc(4 * var(--shot-unit)); padding: calc(24 * var(--shot-unit)); }
+.shot-tags span { padding: calc(4 * var(--shot-unit)) calc(8 * var(--shot-unit)); border-radius: calc(10 * var(--shot-unit)); background: #f5f5f5; color: #000; font-size: calc(14 * var(--shot-unit)); line-height: calc(17 * var(--shot-unit)); }
 .shot-card--bottom .shot-header { top: auto; bottom: 0; background: linear-gradient(to bottom, transparent, #0008); }
-.feed-shots {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 920 / 937.128555;
-  margin-top: -19px; /* общий gap 8px + отступ −19px = −11px в макете */
-}
-.feed-shots > [data-flip] { position: absolute; width: 48.9130434783%; }
-.feed-shots > [data-flip='s1'] { left: 0; top: 3.30320047%; }
-.feed-shots > [data-flip='s2'] { left: 51.2710637632%; top: 21.03537943%; }
-.feed-shots > [data-flip='s3'] { left: 2.0244432532%; top: 50.03467999%; }
-.feed-shots .shot-card { width: 100%; transform: rotate(var(--shot-rotation)); transform-origin: 0 0; }
+.feed .shot-card { --shot-unit: calc(100cqw / 456); width: 100%; aspect-ratio: 456 / 450; }
+.feed-col > [data-flip='s1'] { flex: 1; min-height: 0; }
+.feed-col > [data-flip='s1'] .shot-card { height: 100%; aspect-ratio: auto; }
 @media (max-width: 767px) {
-  .feed-shots { display: flex; flex-direction: column; align-items: center; gap: 48px; aspect-ratio: auto; margin-top: 32px; padding: 16px 0 24px; }
-  .feed-shots > [data-flip] { position: static; width: calc(100% - 40px); }
-  .feed-shots .shot-card { transform-origin: center; }
+  .feed .shot-card,
+  .feed [data-flip='s1'] .shot-card { aspect-ratio: 1; }
 }
 
 /* ---------- Холст ---------- */
@@ -675,7 +666,7 @@ a {
 @media (max-width: 1799px) {
   .feed-column { --feed-w: 800px; }
 }
-.feed-grid { display: flex; gap: 8px; align-items: flex-start; }
+.feed-grid { display: flex; gap: 8px; align-items: stretch; }
 .feed-col {
   flex: 1 0 0;
   min-width: 1px;
