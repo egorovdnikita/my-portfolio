@@ -1,4 +1,4 @@
-import { experience, icons, profile, vibecoding, type Project } from '../content';
+import { experience, icons, profile, vibecoding, type Project, type Shot } from '../content';
 import { useEffect, useRef, useState } from 'react';
 import lottie from 'lottie-web';
 import contributions from '../data/contributions.json';
@@ -285,6 +285,25 @@ function LinkButton({
     >
       {children}
     </a>
+  );
+}
+
+export function ShotCard({ shot }: { shot: Shot }) {
+  return (
+    <section className={`shot-card${shot.bottom ? ' shot-card--bottom' : ''}`} aria-label={shot.title}>
+      <div className="shot-surface" style={{ backgroundImage: `url("${shot.image}")` }} />
+      <div className="shot-header">
+        <div className="shot-text">
+          <h2>{shot.title}</h2>
+          <p>{shot.description}</p>
+        </div>
+        <span className="shot-lock" aria-label="Кейс недоступен">
+          <img src={icons.lock} alt="" draggable={false} />
+        </span>
+        <span className="shot-badge">SHOT</span>
+      </div>
+      {shot.tags.length > 0 && <div className="shot-tags">{shot.tags.map((tag) => <span key={tag}>{tag}</span>)}</div>}
+    </section>
   );
 }
 

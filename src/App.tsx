@@ -7,9 +7,9 @@ import { usePresence } from './presence';
 import { useIsMobile } from './useMedia';
 import { useTheme } from './theme';
 import { MobileShare } from './components/MobileShare';
-import { ExperienceCard, HeroCard, Icon, ProjectCard, VibeCard } from './components/Cards';
+import { ExperienceCard, HeroCard, Icon, ProjectCard, ShotCard, VibeCard } from './components/Cards';
 import { initialCamera, zoomAt, NODES, type Camera, type NodeId, type Vec } from './canvas/layout';
-import { icons, profile, projects } from './content';
+import { icons, profile, projects, shots } from './content';
 import { findCase } from './cases';
 
 type View = 'canvas' | 'feed';
@@ -248,6 +248,9 @@ export default function App() {
     p2: <ProjectCard project={projects[1]} onOpenCase={openCase} />,
     p3: <ProjectCard project={projects[2]} onOpenCase={openCase} />,
     p4: <ProjectCard project={projects[3]} onOpenCase={openCase} />,
+    s1: <ShotCard shot={shots[0]} />,
+    s2: <ShotCard shot={shots[1]} />,
+    s3: <ShotCard shot={shots[2]} />,
   };
   const flip = (id: NodeId) => <div data-flip={id}>{nodes[id]}</div>;
   const caseOpen = Boolean(study) && !caseClosing;
@@ -278,6 +281,9 @@ export default function App() {
                 {flip('p2')}
                 {flip('p3')}
                 {flip('p4')}
+                {flip('s1')}
+                {flip('s2')}
+                {flip('s3')}
                 <p className="legal legal--feed">
                   {profile.footerHandle} | {profile.footerNote}
                 </p>
@@ -288,11 +294,14 @@ export default function App() {
                   {flip('exp')}
                   {flip('p1')}
                   {flip('p3')}
+                  {flip('s1')}
+                  {flip('s3')}
                 </div>
                 <div className="feed-col">
                   {flip('vibe')}
                   {flip('p2')}
                   {flip('p4')}
+                  {flip('s2')}
                 </div>
               </div>
             )}

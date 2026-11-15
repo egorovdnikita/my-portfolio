@@ -94,7 +94,23 @@ export const projects: Project[] = [
   },
 ];
 
+export type Shot = {
+  id: 's1' | 's2' | 's3';
+  title: string;
+  description: string;
+  image: string;
+  tags: string[];
+  bottom?: boolean;
+};
+
+export const shots: Shot[] = [
+  { id: 's1', title: 'Wink Музыка', description: 'Стриминговый сервис внутри\nэкосистемы онлайн-кинотеатра WINK', image: asset('shot-wink.jpg'), tags: ['iOS', 'Android', 'Apple TV', 'SmartTV'] },
+  { id: 's2', title: 'ReelView', description: 'Сервис коротких видео сериалов\nдля американского рынка', image: asset('shot-reelview.jpg'), tags: ['iOS', 'Android'] },
+  { id: 's3', title: 'OneTapes', description: 'Веб-сервис для аналитики продаж\nдля игровых маркетплейсов', image: asset('shot-onetapes.jpg'), tags: [], bottom: true },
+];
+
 export const icons = {
+  lock: asset('ic-lock.svg'),
   chevronRight: asset('ic-chevron-right.svg'),
   link: asset('ic-link.svg'),
   external: asset('ic-external.svg'),

@@ -4,7 +4,7 @@
 
 export const WORLD = { width: 1920, height: 1080 };
 
-export type NodeId = 'exp' | 'vibe' | 'hero' | 'p1' | 'p2' | 'p3' | 'p4';
+export type NodeId = 'exp' | 'vibe' | 'hero' | 'p1' | 'p2' | 'p3' | 'p4' | 's1' | 's2' | 's3';
 
 export const NODES: Record<NodeId, { x: number; y: number; ax: number }> = {
   exp: { x: 80, y: 312, ax: 0 },
@@ -18,6 +18,10 @@ export const NODES: Record<NodeId, { x: number; y: number; ax: number }> = {
   // и тем же сдвигом 28px по горизонтали, что был до обложек
   p3: { x: 1416 + 28, y: 98 - 94 - 238 / 2, ax: 0 },
   p4: { x: 1500 - 28, y: 643 + 506 + 94 + 220 / 2, ax: 0 },
+  // Новые карточки: позиции относительно первого кейса в макете, без связей.
+  s1: { x: 1416 + 652, y: 351 - 461.5 + 225, ax: 0 },
+  s2: { x: 1416 + 1132, y: 351 - 461.5 + 48 + 225, ax: 0 },
+  s3: { x: 1416 + 931, y: 351 - 461.5 + 520 + 225, ax: 0 },
 };
 
 export type Edge = {
