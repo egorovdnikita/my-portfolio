@@ -532,7 +532,10 @@ a {
 .project-text h2 {
   font-size: 24px;
   font-weight: 600;
+  letter-spacing: -0.05em; /* чуть плотнее общего −4% */
 }
+/* Базис и Лицей — название чуть меньше */
+.project-text--compact h2 { font-size: 22px; }
 /* Компактная карточка кейса (Базис, Лицей): ширина 400px, без обложки */
 .card--project-compact { width: 400px; }
 .project-text--compact { gap: 16px; }
