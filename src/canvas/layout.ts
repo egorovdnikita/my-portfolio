@@ -8,7 +8,7 @@ export type NodeId = 'exp' | 'vibe' | 'hero' | 'p1' | 'p2' | 'p3' | 'p4';
 
 export const NODES: Record<NodeId, { x: number; y: number; ax: number }> = {
   exp: { x: 80, y: 312, ax: 0 },
-  vibe: { x: 154, y: 736, ax: 0 },
+  vibe: { x: 136, y: 736, ax: 0 }, // карточка 382px, правый край как раньше
   hero: { x: 960.5, y: 540, ax: 0.5 },
   // Кейсы с обложками 450×506 стоят как в макете: левый край и центр по вертикали
   p1: { x: 1416, y: 98 + 506 / 2, ax: 0 },

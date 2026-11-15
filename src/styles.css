@@ -329,7 +329,7 @@ a {
 
 /* Вайбкодинг */
 .card--vibe {
-  width: 364px;
+  width: 382px;
   padding: 8px;
   gap: 8px;
   align-items: flex-end;
@@ -415,6 +415,8 @@ a {
   flex-wrap: wrap;
   gap: 12px;
 }
+/* В ленте карточка шире — между инструментами 24px, как в макете */
+.feed .tools { gap: 24px; }
 .tool {
   display: flex;
   align-items: center;
