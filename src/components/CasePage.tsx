@@ -48,7 +48,7 @@ export function CasePage({ study, zoom, closing, onClose }: Props) {
 
           {study.role && (
             <section className="case-card case-panel">
-              <Header label={study.role.label} num={study.role.note} />
+              <Header label={study.role.label} />
               <Bullets items={study.role.items} />
             </section>
           )}
@@ -73,24 +73,23 @@ export function CasePage({ study, zoom, closing, onClose }: Props) {
   );
 }
 
-/** Заголовок блока: подпись, линия и справа либо пояснение, либо место под иконку (как в макете) */
-function Header({ label, num }: { label: string; num?: string }) {
+/** Заголовок блока — только подпись, как в макете */
+function Header({ label }: { label: string }) {
   return (
     <div className="case-header">
       <span className="case-label">{label}</span>
-      <span className="case-line" aria-hidden />
-      {num ? <span className="case-label">{num}</span> : <span className="case-icon-slot" aria-hidden />}
     </div>
   );
 }
 
-function Bullets({ items }: { items: string[] }) {
+/** Пункты: с прочерком или (в «Итоге») с пустым местом 24px под маркер, как в макете */
+function Bullets({ items, plain }: { items: string[]; plain?: boolean }) {
   return (
-    <ul className="case-bullets">
+    <ul className={`case-bullets${plain ? ' case-bullets--plain' : ''}`}>
       {items.map((item) => (
         <li key={item}>
           <span className="case-dash" aria-hidden>
-            —
+            {plain ? '' : '—'}
           </span>
           <span>{item}</span>
         </li>
@@ -104,7 +103,7 @@ function Block({ block }: { block: CaseBlock }) {
     case 'text':
       return <p className="case-text">{block.text}</p>;
     case 'bullets':
-      return <Bullets items={block.items} />;
+      return <Bullets items={block.items} plain={block.plain} />;
     case 'quote':
       return <p className="case-quote">{block.text}</p>;
     case 'image':

@@ -2,7 +2,8 @@
 
 export type CaseBlock =
   | { type: 'text'; text: string }
-  | { type: 'bullets'; items: string[] }
+  /** plain — без прочерка, с пустым местом под маркер (блок «Итог») */
+  | { type: 'bullets'; items: string[]; plain?: boolean }
   | { type: 'table'; head: [string, string, string]; rows: [string, string, string][] }
   | { type: 'quote'; text: string }
   | { type: 'image'; caption: string; height: number }
@@ -21,7 +22,7 @@ export type CaseStudy = {
   lead: string;
   meta: { label: string; value: string }[];
   /** Блок «Моя роль» после шапки: подпись слева, пояснение справа, пункты */
-  role?: { label: string; note: string; items: string[] };
+  role?: { label: string; items: string[] };
   sections: CaseSection[];
 };
 
@@ -45,7 +46,6 @@ export const cases: CaseStudy[] = [
     ],
     role: {
       label: 'Моя роль',
-      note: 'За что я отвечал',
       items: [
         'Вместе с дизайн-лидом определил, какие части интерфейса можно сделать общими.',
         'Спроектировал правила темизации и сменного содержимого.',
@@ -123,6 +123,7 @@ export const cases: CaseStudy[] = [
         blocks: [
           {
             type: 'bullets',
+            plain: true,
             items: [
               'Один порядок действий: выбрать способ, проверить условия и подтвердить перевод.',
               'Общие поля и подсказки можно использовать повторно при сборке кассы для нового рынка.',
@@ -148,7 +149,6 @@ export const cases: CaseStudy[] = [
     ],
     role: {
       label: 'Моя роль',
-      note: 'За что я отвечал',
       items: [
         'Проектировал выбор способа оплаты и проверку условий до перевода.',
         'Связал возврат в кассу с проверкой статуса в истории.',
@@ -248,6 +248,7 @@ export const cases: CaseStudy[] = [
         blocks: [
           {
             type: 'bullets',
+            plain: true,
             items: [
               'До отправки сверить то, что важно для его способа: комиссию, сеть или минимальную сумму.',
               'После возврата найти исходную операцию и проверить, обрабатывается ли она.',

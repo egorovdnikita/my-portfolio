@@ -1139,12 +1139,6 @@ a {
   align-items: center;
   gap: 12px;
 }
-.case-line {
-  flex: 1 0 0;
-  min-width: 1px;
-  height: 1px;
-  background: var(--fill-8);
-}
 
 .case-stats { display: flex; gap: 8px; }
 .case-stat {
@@ -1176,6 +1170,8 @@ a {
   color: var(--text-80);
 }
 .case-bullets li { display: flex; gap: 12px; }
+.case-bullets--plain li { gap: 4px; }
+.case-bullets--plain .case-dash { flex-shrink: 0; width: 24px; }
 .case-dash { color: var(--accent); white-space: nowrap; }
 
 .case-h2 {
@@ -1235,6 +1231,10 @@ a {
 .case-tr > :first-child { color: var(--text); font-weight: 600; }
 .case-tr.case-th > * { color: var(--text-muted); font-size: 14px; font-weight: 500; }
 
+.case-section > .case-steps,
+.case-section > .case-columns { margin: 0 -16px; }
+.case-section > .case-steps:last-child,
+.case-section > .case-columns:last-child { margin-bottom: -16px; }
 .case-steps { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; --lh: 1.4; }
 /* Карточка шага: место под картинку сверху, ниже заголовок и текст */
 .case-step {
@@ -1439,6 +1439,11 @@ a {
   .case-title { font-size: 28px; }
   .case-lead { font-size: 16px; }
   .case-panel { padding: 16px; }
+  /* сетки — те же 8px от краёв блока */
+  .case-section > .case-steps,
+  .case-section > .case-columns { margin: 0 -8px; }
+  .case-section > .case-steps:last-child,
+  .case-section > .case-columns:last-child { margin-bottom: -8px; }
   .case-h2 { font-size: 24px; }
   .case-text { font-size: 15px; }
   /* Мета под описанием — по две в ряд */
