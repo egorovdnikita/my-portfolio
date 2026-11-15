@@ -1092,6 +1092,7 @@ a {
 .case-title {
   font-size: 44px;
   font-weight: 600;
+  letter-spacing: -0.06em; /* крупный заголовок плотнее общего −4% */
   --lh: 1.15;
 }
 .case-lead {
@@ -1175,6 +1176,7 @@ a {
 .case-h2 {
   font-size: 32px;
   font-weight: 600;
+  letter-spacing: -0.06em;
   --lh: 1.15;
 }
 .case-text {
