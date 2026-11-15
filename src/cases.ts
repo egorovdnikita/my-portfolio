@@ -34,7 +34,7 @@ export const BEHANCE = {
 export const cases: CaseStudy[] = [
   {
     id: '1win',
-    cover: `${import.meta.env.BASE_URL}assets/cover-case-ds.jpg`,
+    cover: `${import.meta.env.BASE_URL}assets/cover-case-ds-v2.jpg`,
     tags: ['Design System', 'White-Label', 'Variables', 'Slots', 'RTL', 'Storybook', 'DesignOps'],
     title: 'Как общая библиотека помогает собрать кассу для трёх брендов',
     lead: 'При запуске нового бренда команда заново собирала знакомые поля и подсказки. Вместе с дизайн-лидом я выделил общие решения, которые можно использовать в трёх версиях кассы.',

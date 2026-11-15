@@ -64,7 +64,7 @@ export const projects: Project[] = [
     title: 'Дизайн-система для трёх брендов',
     description: 'Как общие компоненты и токены брендов помогают собрать один сценарий в разных темах.',
     tags: ['Design System', 'White-Label', 'RTL', 'Storybook'],
-    cover: asset('cover-card-ds.jpg'),
+    cover: asset('cover-card-ds-v2.jpg'),
     action: { kind: 'case', caseId: '1win' },
   },
   {
