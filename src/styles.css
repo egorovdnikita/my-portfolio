@@ -1176,7 +1176,7 @@ a {
   list-style: none;
   font-size: 16px;
   --lh: 1.4;
-  color: var(--text-muted);
+  color: var(--text);
 }
 .case-bullets li { display: flex; gap: 12px; }
 .case-bullets--plain li { gap: 4px; }
