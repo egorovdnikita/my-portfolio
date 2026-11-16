@@ -1,5 +1,5 @@
-import { Fragment, useEffect, useRef } from 'react';
-import type { CaseBlock, CaseStudy } from '../cases';
+import { Fragment, useEffect, useRef, useState } from 'react';
+import { isMedia, type CaseBlock, type CaseMedia, type CaseStudy, type ThemedImage } from '../cases';
 import { icons } from '../content';
 import { Icon } from './Cards';
 
@@ -48,7 +48,10 @@ export function CasePage({ study, zoom, closing, onClose }: Props) {
             </section>
           )}
 
-          {study.sections.map((section) => (
+          {study.sections.map((section, i) =>
+            isMedia(section) ? (
+              <Media key={i} item={section} />
+            ) : (
             <section key={section.label} className="case-card case-panel case-section">
               <Header label={section.label} />
               <h2 className="case-h2">{section.title}</h2>
@@ -56,7 +59,8 @@ export function CasePage({ study, zoom, closing, onClose }: Props) {
                 <Block key={i} block={block} />
               ))}
             </section>
-          ))}
+            ),
+          )}
 
         </article>
       </div>
@@ -136,7 +140,7 @@ function Block({ block }: { block: CaseBlock }) {
         <div className={`case-steps${block.size === 'lg' ? ' case-steps--lg' : ''}`}>
           {block.items.map((step) => (
             <div key={step.title} className="case-step">
-              <span className="case-cutout" aria-hidden />
+              {step.image ? <Themed image={step.image} className="case-shot" /> : <span className="case-cutout" aria-hidden />}
               <div className="case-step-text">
                 <span className="case-step-title">{step.title}</span>
                 <span className="case-small">{step.text}</span>
@@ -150,7 +154,13 @@ function Block({ block }: { block: CaseBlock }) {
         <div className="case-columns">
           {block.items.map((col) => (
             <div key={col.title} className="case-col">
-              <span className={`case-cutout${block.items.length < 4 ? ' case-cutout--round' : ''}`} aria-hidden />
+              {col.icon ? (
+                <img className="case-col-icon" src={col.icon} alt="" draggable={false} />
+              ) : (
+                !block.bare && (
+                  <span className={`case-cutout${block.items.length < 4 ? ' case-cutout--round' : ''}`} aria-hidden />
+                )
+              )}
               <span className="case-col-title">{col.title}</span>
               <span className="case-small">{col.text}</span>
             </div>
@@ -158,4 +168,71 @@ function Block({ block }: { block: CaseBlock }) {
         </div>
       );
   }
+}
+
+/** Вырезка интерфейса: картинка своей темы, вторая скрыта стилями */
+function Themed({ image, className }: { image: ThemedImage; className: string }) {
+  return (
+    <span className={className}>
+      <img className="only-light" src={image.light} alt="" draggable={false} />
+      <img className="only-dark" src={image.dark} alt="" draggable={false} />
+    </span>
+  );
+}
+
+function Media({ item }: { item: CaseMedia }) {
+  if (item.media === 'image') {
+    return (
+      <div className="case-media">
+        <img src={item.src} alt={item.alt} draggable={false} />
+      </div>
+    );
+  }
+  return <Gallery slides={item.slides} />;
+}
+
+/** Галерея: листается свайпом и прокруткой (с привязкой к слайду), стрелками и точками */
+function Gallery({ slides }: { slides: { src: string; alt: string }[] }) {
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [active, setActive] = useState(0);
+
+  const goTo = (i: number) => {
+    const track = trackRef.current;
+    if (!track) return;
+    const next = (i + slides.length) % slides.length;
+    track.scrollTo({ left: next * track.clientWidth, behavior: 'smooth' });
+  };
+
+  const onScroll = () => {
+    const track = trackRef.current;
+    if (track) setActive(Math.round(track.scrollLeft / track.clientWidth));
+  };
+
+  return (
+    <div className="case-gallery" role="group" aria-roledescription="галерея">
+      <div ref={trackRef} className="case-gallery-track" onScroll={onScroll}>
+        {slides.map((slide) => (
+          <img key={slide.src} className="case-gallery-slide" src={slide.src} alt={slide.alt} draggable={false} />
+        ))}
+      </div>
+      <button type="button" className="case-gallery-arrow is-prev" aria-label="Предыдущий слайд" onClick={() => goTo(active - 1)}>
+        <Icon src={icons.chevronLeft} size={32} className="icon--strong" />
+      </button>
+      <button type="button" className="case-gallery-arrow is-next" aria-label="Следующий слайд" onClick={() => goTo(active + 1)}>
+        <Icon src={icons.chevronLeft} size={32} className="icon--strong" />
+      </button>
+      <div className="case-gallery-dots">
+        {slides.map((slide, i) => (
+          <button
+            key={slide.src}
+            type="button"
+            className={`case-gallery-dot${i === active ? ' is-active' : ''}`}
+            aria-label={`Слайд ${i + 1}`}
+            aria-current={i === active}
+            onClick={() => goTo(i)}
+          />
+        ))}
+      </div>
+    </div>
+  );
 }

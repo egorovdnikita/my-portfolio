@@ -555,7 +555,7 @@ a {
 .shot-text p { font-size: calc(14 * var(--shot-unit)); line-height: calc(17 * var(--shot-unit)); white-space: pre-line; }
 .shot-lock { flex-shrink: 0; width: calc(64 * var(--shot-unit)); height: calc(64 * var(--shot-unit)); display: grid; place-items: center; background: #fff; border-radius: 50%; }
 .shot-lock img { width: calc(24 * var(--shot-unit)); height: calc(24 * var(--shot-unit)); }
-.shot-badge { position: absolute; left: calc(379.493901 * var(--shot-unit)); top: calc(-19 * var(--shot-unit)); width: calc(85 * var(--shot-unit)); height: calc(56 * var(--shot-unit)); display: grid; place-items: center; transform: rotate(15deg); transform-origin: 0 0; background: #ff0091; color: #fff; font-family: 'Iosevka', monospace; font-size: calc(32 * var(--shot-unit)); line-height: calc(40 * var(--shot-unit)); font-weight: 700; letter-spacing: -0.04em; }
+.shot-badge { position: absolute; left: calc(379.493901 * var(--shot-unit)); top: calc(-19 * var(--shot-unit)); width: calc(85 * var(--shot-unit)); height: calc(56 * var(--shot-unit)); display: grid; place-items: center; transform: rotate(15deg); transform-origin: 0 0; background: #ff0090; color: #fff; font-family: 'Iosevka', monospace; font-size: calc(32 * var(--shot-unit)); line-height: calc(40 * var(--shot-unit)); font-weight: 700; letter-spacing: -0.04em; }
 .shot-tags { position: absolute; bottom: 0; left: 0; display: flex; gap: calc(4 * var(--shot-unit)); padding: calc(24 * var(--shot-unit)); }
 .shot-tags span { padding: calc(4 * var(--shot-unit)) calc(8 * var(--shot-unit)); border-radius: calc(10 * var(--shot-unit)); background: #f5f5f5; color: #000; font-size: calc(14 * var(--shot-unit)); line-height: calc(17 * var(--shot-unit)); }
 .shot-card--bottom .shot-header { top: auto; bottom: 0; background: linear-gradient(to bottom, transparent, #0008); }
@@ -1286,6 +1286,91 @@ a {
 }
 .case-cutout--round { width: 32px; height: 32px; border: 1px dashed var(--placeholder); border-radius: 999px; }
 
+/* Иконка способа оплаты над заголовком колонки, 24px */
+.case-col-icon { display: block; width: 24px; height: 24px; }
+
+/* Вырезка интерфейса в карточке шага: 374×114 в макете, тянется по ширине карточки */
+.case-shot { display: block; }
+.case-shot img { display: block; width: 100%; height: auto; }
+.only-dark { display: none !important; }
+:root[data-theme='dark'] .only-dark { display: block !important; }
+:root[data-theme='dark'] .only-light { display: none !important; }
+
+/* Картинка во всю ширину колонки — отдельная карточка, 852×420 в макете */
+.case-media {
+  aspect-ratio: 852 / 420;
+  border-radius: 32px;
+  background: var(--fill-2);
+  overflow: hidden;
+}
+.case-media img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+/* Галерея 852×507: слайды листаются по горизонтали с привязкой, стрелки 64px выступают за край на половину */
+.case-gallery { position: relative; }
+.case-gallery-track {
+  display: flex;
+  aspect-ratio: 852 / 507;
+  border-radius: 32px;
+  background: var(--fill-2);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+.case-gallery-track::-webkit-scrollbar { display: none; }
+.case-gallery-slide {
+  flex: 0 0 100%;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+.case-gallery-arrow {
+  position: absolute;
+  top: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  margin-top: -32px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: var(--surface);
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+.case-gallery-arrow:hover { background: var(--nav-bg-hover); }
+.case-gallery-arrow.is-prev { left: -32px; }
+.case-gallery-arrow.is-next { right: -32px; }
+.case-gallery-arrow.is-next .icon { transform: scaleX(-1); }
+.case-gallery-dots {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px;
+  border-radius: 32px;
+  background: rgba(255, 255, 255, 0.16);
+  transform: translateX(-50%);
+}
+.case-gallery-dot {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: width 0.25s ease, background-color 0.25s ease;
+}
+.case-gallery-dot.is-active { width: 32px; background: #ffffff; }
+
 @media (prefers-reduced-motion: reduce) {
   .case-column,
   .case-close,
@@ -1430,6 +1515,7 @@ a {
 
   /* Кейс: колонка во всю ширину, крестик внизу по центру */
   .case { --case-w: 100%; }
+  .case-gallery-arrow { display: none; }
   .case-scroll { padding: 112px 8px 112px; }
   .case-close {
     top: auto;

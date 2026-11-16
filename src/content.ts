@@ -114,6 +114,7 @@ export const shots: Shot[] = [
 export const icons = {
   lock: asset('ic-lock.svg'),
   chevronRight: asset('ic-chevron-right.svg'),
+  chevronLeft: asset('ic-chevron-left.svg'),
   link: asset('ic-link.svg'),
   external: asset('ic-external.svg'),
   download: asset('ic-download.svg'),
