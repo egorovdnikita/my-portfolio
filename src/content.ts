@@ -61,19 +61,19 @@ export type Project = {
 export const projects: Project[] = [
   {
     id: 'p1',
-    title: 'Дизайн-система для трёх брендов',
-    description: 'Как общие компоненты и токены брендов помогают собрать один сценарий в разных темах.',
-    tags: ['Design System', 'White-Label', 'RTL', 'Storybook'],
-    cover: asset('cover-card-ds-v2.jpg'),
-    action: { kind: 'case', caseId: '1win' },
-  },
-  {
-    id: 'p2',
     title: 'Касса и история операций',
     description: 'Как показать условия перевода и помочь пользователю проверить его статус.',
     tags: ['iGaming', 'B2C', 'B2B', 'Payments'],
     cover: asset('cover-card-product.jpg'),
     action: { kind: 'case', caseId: '1win-product' },
+  },
+  {
+    id: 'p2',
+    title: 'Дизайн-система для трёх брендов',
+    description: 'Как общие компоненты и токены брендов помогают собрать один сценарий в разных темах.',
+    tags: ['Design System', 'White-Label', 'RTL', 'Storybook'],
+    cover: asset('cover-card-ds-v2.jpg'),
+    action: { kind: 'case', caseId: '1win' },
   },
   {
     id: 'p3',

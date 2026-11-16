@@ -33,7 +33,6 @@
   --icon-muted: #737373;
   --icon-subtle: #a3a3a3;
   --green: #3dd51e;
-  --dot: rgba(0, 0, 0, 0.08);
   --edge: rgba(0, 160, 240, 0.55);
   /* Сплошной цвет наконечника и точки — как линия поверх фона, чтобы линия под ними не просвечивала */
   --edge-solid: color-mix(in srgb, #00a0f0 55%, var(--bg));
@@ -86,7 +85,6 @@
   --icon-muted: #a3a3a3;
   --icon-subtle: #737373;
   --green: #3dd51e;
-  --dot: rgba(255, 255, 255, 0.12);
   --edge: rgba(0, 160, 240, 0.7);
   --edge-solid: color-mix(in srgb, #00a0f0 70%, var(--bg));
   --on-accent: #ffffff;
@@ -650,9 +648,6 @@ a {
   scrollbar-gutter: stable both-edges;
   padding: 16px 16px 96px;
   background-color: var(--bg);
-  background-image: radial-gradient(circle, var(--dot) 1px, transparent 1.2px);
-  background-size: 17.25px 17.25px;
-  background-attachment: local;
 }
 .feed-column {
   --feed-w: 920px;
