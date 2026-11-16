@@ -188,11 +188,11 @@ function Media({ item }: { item: CaseMedia }) {
       </div>
     );
   }
-  return <Gallery slides={item.slides} />;
+  return <Gallery background={item.background} slides={item.slides} />;
 }
 
-/** Галерея: листается свайпом и прокруткой (с привязкой к слайду), стрелками и точками */
-function Gallery({ slides }: { slides: { src: string; alt: string }[] }) {
+/** Галерея: фон неподвижен, листаются только телефоны — свайпом, прокруткой, стрелками и точками */
+function Gallery({ background, slides }: { background: string; slides: { src: string; alt: string }[] }) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
 
@@ -210,9 +210,16 @@ function Gallery({ slides }: { slides: { src: string; alt: string }[] }) {
 
   return (
     <div className="case-gallery" role="group" aria-roledescription="галерея">
-      <div ref={trackRef} className="case-gallery-track" onScroll={onScroll}>
+      <div
+        ref={trackRef}
+        className="case-gallery-track"
+        style={{ backgroundImage: `url(${background})` }}
+        onScroll={onScroll}
+      >
         {slides.map((slide) => (
-          <img key={slide.src} className="case-gallery-slide" src={slide.src} alt={slide.alt} draggable={false} />
+          <div key={slide.src} className="case-gallery-slide">
+            <img src={slide.src} alt={slide.alt} draggable={false} />
+          </div>
         ))}
       </div>
       <button type="button" className="case-gallery-arrow is-prev" aria-label="Предыдущий слайд" onClick={() => goTo(active - 1)}>

@@ -1311,7 +1311,9 @@ a {
   display: flex;
   aspect-ratio: 852 / 507;
   border-radius: 32px;
-  background: var(--fill-2);
+  background-color: var(--fill-2);
+  background-size: cover;
+  background-position: center;
   overflow-x: auto;
   overflow-y: hidden;
   scroll-snap-type: x mandatory;
@@ -1319,13 +1321,21 @@ a {
   scrollbar-width: none;
 }
 .case-gallery-track::-webkit-scrollbar { display: none; }
+/* Фон трека не прокручивается вместе со слайдами; телефоны — как в кадре 2150×1280: x 114, y 164, ширина 1922 */
 .case-gallery-slide {
+  position: relative;
   flex: 0 0 100%;
   width: 100%;
   height: 100%;
-  object-fit: cover;
   scroll-snap-align: start;
   scroll-snap-stop: always;
+}
+.case-gallery-slide img {
+  position: absolute;
+  left: 5.3023%;
+  top: 12.8125%;
+  width: 89.3953%;
+  height: auto;
 }
 .case-gallery-arrow {
   position: absolute;

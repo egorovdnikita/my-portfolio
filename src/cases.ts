@@ -19,7 +19,8 @@ export type CaseSection = { label: string; title: string; blocks: CaseBlock[] };
 /** Картинка или галерея во всю ширину колонки — отдельной карточкой между секциями */
 export type CaseMedia =
   | { media: 'image'; src: string; alt: string }
-  | { media: 'gallery'; slides: { src: string; alt: string }[] };
+  /** background — общий неподвижный фон со стрелками сверху; слайды — прозрачные PNG с телефонами */
+  | { media: 'gallery'; background: string; slides: { src: string; alt: string }[] };
 
 export const isMedia = (item: CaseSection | CaseMedia): item is CaseMedia => 'media' in item;
 
@@ -195,7 +196,8 @@ export const cases: CaseStudy[] = [
       },
       {
         media: 'gallery',
-        slides: [1, 2, 3, 4].map((i) => ({ src: asset(`case-product-gallery-${i}.jpg`), alt: `Экраны кассы, слайд ${i}` })),
+        background: asset('case-product-gallery-bg.jpg'),
+        slides: [1, 2, 3, 4].map((i) => ({ src: asset(`case-product-gallery-phones-${i}.png`), alt: `Экраны кассы, слайд ${i}` })),
       },
       {
         label: 'Касса',
