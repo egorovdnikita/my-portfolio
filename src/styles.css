@@ -19,12 +19,9 @@
   --bg: #f5f5f5;
   --surface: #ffffff;
   --text: #000000;
-  --text-secondary: rgba(0, 0, 0, 0.7);
   --text-muted: rgba(0, 0, 0, 0.5);
   --accent: #00a0f0;
   --accent-hover: #0092db;
-  /* Внутреннее свечение синих кнопок — как в макете Figma (Inner shadow 0 0 8px #fff) */
-  --accent-glow: #ffffff;
   --accent-soft: rgba(0, 160, 240, 0.08);
   --fill-2: rgba(0, 0, 0, 0.02);
   --fill-4: rgba(0, 0, 0, 0.04);
@@ -33,15 +30,16 @@
   --icon-strong: #171717;
   --icon-muted: #737373;
   --icon-subtle: #a3a3a3;
-  --green: #3dd51e;
+  --contrib-0: rgba(0, 0, 0, 0.06);
+  --contrib-1: #beebb4;
+  --contrib-2: #90e37f;
+  --contrib-3: #65dc4d;
+  --contrib-4: #3dd51e;
   --edge: rgba(0, 160, 240, 0.55);
   /* Сплошной цвет наконечника и точки — как линия поверх фона, чтобы линия под ними не просвечивала */
   --edge-solid: color-mix(in srgb, #00a0f0 55%, var(--bg));
   --on-accent: #ffffff;
-  --accent-soft-9: rgba(0, 160, 240, 0.09);
   --accent-tint: #ddf4ff;
-  --surface-hover: #fafafa;
-  --cell-empty: rgba(0, 0, 0, 0.06);
   --placeholder: rgba(128, 128, 128, 0.55);
   --shimmer: rgba(255, 255, 255, 0.45);
   --nav-bg: rgba(255, 255, 255, 0.5);
@@ -51,7 +49,6 @@
   --nav-border: #ffffff;
   --segment-active: #ffffff;
   --segment-active-icon: #171717;
-  --photo-frame: #ffffff;
   --avatar-bg: #ffffff;
   --avatar-visitor: #ebebeb; /* неопознанный посетитель */
   --logo-edge: #ffffff;
@@ -68,11 +65,9 @@
   --bg: #0f0f0f;
   --surface: #1a1a1a;
   --text: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.7);
   --text-muted: rgba(255, 255, 255, 0.5);
   --accent: #00a0f0;
   --accent-hover: #1aaaf2;
-  --accent-glow: #ffffff;
   --accent-soft: rgba(0, 160, 240, 0.16);
   --fill-2: rgba(255, 255, 255, 0.03);
   --fill-4: rgba(255, 255, 255, 0.06);
@@ -81,14 +76,15 @@
   --icon-strong: #f5f5f5;
   --icon-muted: #a3a3a3;
   --icon-subtle: #737373;
-  --green: #3dd51e;
+  --contrib-0: rgba(255, 255, 255, 0.1);
+  --contrib-1: #1d4a14;
+  --contrib-2: #287c17;
+  --contrib-3: #33a91b;
+  --contrib-4: #3dd51e;
   --edge: rgba(0, 160, 240, 0.7);
   --edge-solid: color-mix(in srgb, #00a0f0 70%, var(--bg));
   --on-accent: #ffffff;
-  --accent-soft-9: rgba(0, 160, 240, 0.18);
   --accent-tint: #0b3448;
-  --surface-hover: #222222;
-  --cell-empty: rgba(255, 255, 255, 0.1);
   --placeholder: rgba(128, 128, 128, 0.55);
   --shimmer: rgba(255, 255, 255, 0.22);
   --nav-bg: rgba(26, 26, 26, 0.5);
@@ -96,7 +92,6 @@
   --nav-border: rgba(255, 255, 255, 0.08);
   --segment-active: #ffffff; /* активный сегмент белый и в тёмной теме */
   --segment-active-icon: #171717;
-  --photo-frame: #1a1a1a;
   --avatar-bg: #2a2a2a;
   --avatar-visitor: #202020;
   --logo-edge: rgba(255, 255, 255, 0.24);
@@ -226,7 +221,7 @@ a {
 }
 .btn--secondary { background: var(--fill-4); color: var(--text); }
 .btn--secondary:hover { background: var(--fill-6); }
-.btn--primary { background: var(--accent); color: var(--on-accent); box-shadow: inset 0 0 8px var(--accent-glow); }
+.btn--primary { background: var(--accent); color: var(--on-accent); box-shadow: inset 0 0 8px var(--on-accent); }
 .btn--primary:hover { background: var(--accent-hover); }
 .btn--block { width: 100%; }
 .btn[aria-disabled='true'] { cursor: default; }
@@ -352,17 +347,16 @@ a {
   grid-auto-flow: column;
 }
 .contrib-cell {
-  --heat: var(--green);
   position: relative;
   aspect-ratio: 1;
   border-radius: 3px;
-  background: var(--cell-empty);
+  background: var(--contrib-0);
   overflow: hidden;
 }
-.contrib-cell[data-level='1'] { background: color-mix(in srgb, var(--heat) 30%, var(--bg)); }
-.contrib-cell[data-level='2'] { background: color-mix(in srgb, var(--heat) 55%, var(--bg)); }
-.contrib-cell[data-level='3'] { background: color-mix(in srgb, var(--heat) 78%, var(--bg)); }
-.contrib-cell[data-level='4'] { background: var(--heat); }
+.contrib-cell[data-level='1'] { background: var(--contrib-1); }
+.contrib-cell[data-level='2'] { background: var(--contrib-2); }
+.contrib-cell[data-level='3'] { background: var(--contrib-3); }
+.contrib-cell[data-level='4'] { background: var(--contrib-4); }
 .contrib-cell.is-future { opacity: 0.28; }
 /* Переливание: светлая волна проходит по столбцам слева направо, затем пауза */
 .contrib-cell::after {
@@ -436,10 +430,10 @@ a {
   position: relative;
   width: 196px;
   flex-shrink: 0;
-  border: 4px solid var(--photo-frame);
+  border: 4px solid var(--surface);
   border-radius: 32px;
   overflow: hidden;
-  background: var(--photo-frame);
+  background: var(--surface);
 }
 .hero-photo-img {
   position: absolute;
@@ -893,7 +887,7 @@ a {
 }
 .tool-btn:hover { background: var(--fill-4); }
 .tool-btn.is-active,
-.tool-btn.is-active:hover { background: var(--accent); box-shadow: inset 0 0 8px var(--accent-glow); }
+.tool-btn.is-active:hover { background: var(--accent); box-shadow: inset 0 0 8px var(--on-accent); }
 .zoom-value {
   width: auto;
   gap: 8px;
@@ -1116,7 +1110,7 @@ a {
   --lh: 1.15;
 }
 .case-lead {
-  color: var(--text-secondary);
+  color: var(--text-muted);
   font-size: 18px;
   --lh: 1.4;
 }
@@ -1182,7 +1176,7 @@ a {
   list-style: none;
   font-size: 16px;
   --lh: 1.4;
-  color: var(--text-secondary);
+  color: var(--text-muted);
 }
 .case-bullets li { display: flex; gap: 12px; }
 .case-bullets--plain li { gap: 4px; }
@@ -1196,7 +1190,7 @@ a {
   --lh: 1.15;
 }
 .case-text {
-  color: var(--text-secondary);
+  color: var(--text-muted);
   font-size: 17px;
   --lh: 1.4;
 }
@@ -1386,7 +1380,7 @@ a {
   height: 40px;
   flex-shrink: 0;
   border-radius: 999px;
-  background: var(--accent-soft-9);
+  background: var(--accent-soft);
   color: var(--accent);
   font-size: 16px;
   font-weight: 600;
