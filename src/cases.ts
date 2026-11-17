@@ -197,21 +197,19 @@ export const cases: CaseStudy[] = [
           },
           {
             type: 'columns',
+            bare: true,
             items: [
               {
                 title: 'Платёжные методы',
                 text: 'Регион может менять следующий шаг оплаты.',
-                icon: asset('ic-pay-sber.svg'),
               },
               {
                 title: 'Условия до оплаты',
                 text: 'Комиссию, сеть и минимум нужно сверить до отправки.',
-                icon: asset('ic-pay-terms.svg'),
               },
               {
                 title: 'Статус после оплаты',
                 text: 'Обработка и истёкший таймер требуют разных действий.',
-                icon: asset('ic-pay-status.svg'),
               },
             ],
           },
