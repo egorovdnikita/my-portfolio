@@ -499,6 +499,9 @@ a {
   width: 100%;
 }
 .hero-actions .btn { flex: 1 0 0; min-width: 1px; }
+/* Как в макете: в светлой теме кнопка белая, в тёмной — полупрозрачная заливка */
+.hero-actions .btn--secondary { background: var(--bg-surface); }
+:root[data-theme='dark'] .hero-actions .btn--secondary { background: var(--fill-4); }
 
 /* Кейсы */
 .card--project {
