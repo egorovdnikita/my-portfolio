@@ -35,6 +35,8 @@ export type Edge = {
   dot?: boolean;
   /** Связь вниз выходит не из центра карточки, а на уровне текстового блока — как в макете */
   low?: boolean;
+  /** Сдвиг точки старта по вертикали, чтобы связи с одной стороны не выходили из одной точки */
+  dy?: number;
 };
 
 export const EDGES: Edge[] = [
@@ -42,8 +44,8 @@ export const EDGES: Edge[] = [
   { from: 'hero', to: 'vibe', side: 'left', dot: true, low: true },
   { from: 'hero', to: 'p1', side: 'right', dot: true },
   { from: 'hero', to: 'p2', side: 'right', dot: true, low: true },
-  { from: 'hero', to: 'p3', side: 'right', dot: true },
-  { from: 'hero', to: 'p4', side: 'right', dot: true, low: true },
+  { from: 'hero', to: 'p3', side: 'right', dot: true, dy: -56 },
+  { from: 'hero', to: 'p4', side: 'right', dot: true, low: true, dy: 56 },
 ];
 
 export type Vec = { x: number; y: number };
@@ -128,8 +130,8 @@ export function edgeGeometry(edge: Edge, from: Rect, to: Rect, lowY?: number) {
   const sy = edge.alignToTarget
     ? Math.min(from.bottom - 24, Math.max(from.top + 24, to.cy))
     : edge.low && lowY !== undefined
-      ? from.top + lowY
-      : from.cy;
+      ? from.top + lowY + (edge.dy ?? 0)
+      : from.cy + (edge.dy ?? 0);
   const tx = dir === 1 ? to.left - ARROW_GAP : to.right + ARROW_GAP;
   const ty = to.cy;
   const lx = tx - dir * (ARROW_LEN - 1);
