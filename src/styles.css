@@ -1567,7 +1567,7 @@ a {
   /* Лента в одну колонку. Полоса прокрутки на телефоне поверх контента — место под неё не нужно */
   .feed,
   .case-scroll { scrollbar-gutter: auto; }
-  .feed { padding: 112px 8px 112px; }
+  .feed { padding: 88px 8px 112px; } /* у фото прозрачный верх — карточка ближе к шапке */
   .feed-column { --feed-w: 100%; }
   /* Инструменты в «Вайбкодинге» — по всей ширине (auto в макете) */
   .feed .tools { justify-content: space-between; gap: 12px 0; }

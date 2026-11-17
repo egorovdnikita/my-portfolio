@@ -98,8 +98,9 @@ export function initialCamera(vw: number, vh: number, hero?: Size): Camera {
     const avail = vh - TOP_UI - BOTTOM_UI;
     // Чуть дальше, чем во всю ширину: по бокам видны соседние карточки
     const z = clampZoom(Math.min((vw - 16) / size.w, avail / size.h, 1) * 0.85);
-    const cy = TOP_UI + avail / 2;
-    return { x: vw / 2 - h.x * z, y: cy - h.y * z, z };
+    // Карточка прижата к шапке: у фото и так прозрачный верх, лишний отступ не нужен
+    const top = TOP_UI - 8;
+    return { x: vw / 2 - h.x * z, y: top - (h.y - size.h / 2) * z, z };
   }
   // Ближе обычного, но карточка целиком между шапкой и нижней панелью — кнопки не заходят под панель
   const size = hero ?? { w: 457, h: 556 };
