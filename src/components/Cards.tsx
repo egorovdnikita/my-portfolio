@@ -169,8 +169,10 @@ export function VibeCard() {
 
 /** Карточка «обо мне»: без подложки, фото-вырезка сверху, текст и кнопки по центру — как в макете. */
 /**
- * Видео-портрет без звука по кругу. React не пишет атрибут muted в разметку, а Safari на iPhone
- * без него не запускает автовоспроизведение — поэтому выставляем muted сами и запускаем play() при появлении.
+ * Видео-портрет без звука по кругу.
+ * React не пишет атрибут muted в разметку, а Safari на iPhone без него не запускает автовоспроизведение — выставляем сами.
+ * Пробуем запустить сразу, после загрузки и когда видео попало в кадр. Если iPhone всё равно не разрешил
+ * (режим энергосбережения, выключено автовоспроизведение) — запускаем при первом касании экрана.
  */
 function HeroVideo({ src, poster }: { src: string; poster: string }) {
   const ref = useRef<HTMLVideoElement>(null);
@@ -180,9 +182,30 @@ function HeroVideo({ src, poster }: { src: string; poster: string }) {
     v.muted = true;
     v.defaultMuted = true;
     v.setAttribute('muted', '');
-    v.play().catch(() => {
-      /* автозапуск запрещён (режим энергосбережения) — останется первый кадр */
-    });
+    v.setAttribute('playsinline', '');
+
+    const GESTURES = ['touchend', 'pointerup', 'click', 'keydown'] as const;
+    const removeGestures = () => GESTURES.forEach((g) => window.removeEventListener(g, tryPlay, true));
+    function tryPlay() {
+      if (!v || !v.paused) return removeGestures();
+      v.play().then(removeGestures, () => {
+        /* не разрешили — ждём касания */
+      });
+    }
+
+    tryPlay();
+    v.addEventListener('loadeddata', tryPlay);
+    GESTURES.forEach((g) => window.addEventListener(g, tryPlay, { capture: true, passive: true }));
+    const io = new IntersectionObserver((entries) => entries.some((e) => e.isIntersecting) && tryPlay());
+    io.observe(v);
+    const onVisible = () => document.visibilityState === 'visible' && tryPlay();
+    document.addEventListener('visibilitychange', onVisible);
+    return () => {
+      v.removeEventListener('loadeddata', tryPlay);
+      removeGestures();
+      io.disconnect();
+      document.removeEventListener('visibilitychange', onVisible);
+    };
   }, [src]);
   return <video ref={ref} className="hero-photo-img" src={src} poster={poster} autoPlay muted loop playsInline preload="auto" aria-hidden />;
 }
