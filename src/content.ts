@@ -14,7 +14,7 @@ export const profile = {
     { text: '4 года опыта', x: 244, y: 251, angle: 7.83 },
   ],
   /** Видео-портрет 1080×1080, 5 с по кругу: фон вшит в цвет страницы, поэтому своё видео на каждую тему */
-  video: { light: asset('hero-video-light.mp4'), dark: asset('hero-video-dark.mp4') },
+  video: { light: asset('hero-video-light-v9.mp4'), dark: asset('hero-video-dark-v9.mp4') },
   cvUrl: 'https://clck.ru/3THQuC',
   linkedinUrl: 'https://www.linkedin.com/in/egorovdnikita/',
   telegramUrl: 'https://t.me/egorov_d_nikita',
