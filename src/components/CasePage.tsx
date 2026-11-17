@@ -24,9 +24,13 @@ export function CasePage({ study, zoom, closing, onClose }: Props) {
       <div ref={scrollRef} className="case-scroll">
         <article key={study.id} className="case-column" style={{ zoom }}>
           <section className="case-card case-hero">
-            <div className="case-cover">
-              {study.cover && <img className="case-cover-img" src={study.cover} alt="" draggable={false} />}
-            </div>
+            {study.heroMedia ? (
+              <Media item={study.heroMedia} />
+            ) : (
+              <div className="case-cover">
+                {study.cover && <img className="case-cover-img" src={study.cover} alt="" draggable={false} />}
+              </div>
+            )}
             <div className="case-intro">
               <h1 className="case-title">{study.title}</h1>
               <p className="case-lead">{study.lead}</p>

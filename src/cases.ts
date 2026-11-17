@@ -33,6 +33,8 @@ export type CaseStudy = {
   tags: string[];
   /** Обложка в шапке кейса — картинка из макета */
   cover?: string;
+  /** Галерея или сравнение в шапке вместо обложки */
+  heroMedia?: CaseMedia;
   title: string;
   lead: string;
   meta: { label: string; value: string }[];
@@ -52,7 +54,13 @@ export const BEHANCE = {
 export const cases: CaseStudy[] = [
   {
     id: '1win',
-    cover: asset('cover-case-ds-v3.jpg'),
+    heroMedia: {
+      media: 'compare',
+      before: asset('case-ds-compare-A2.jpg'),
+      after: asset('case-ds-compare-B2.jpg'),
+      alt: 'Обложки продуктовых библиотек в двух брендах',
+      ratio: '836 / 500',
+    },
     tags: ['Design System', 'White-Label', 'Variables', 'Slots', 'RTL', 'Storybook', 'DesignOps'],
     title: 'White Label для трёх брендов',
     lead: 'Спроектировал библиотеку для трёх брендов. У каждого были свои оформление и сценарии. Вместе с дизайн-лидом я определил, где достаточно сменить тему и где нужен отдельный продуктовый блок.',
@@ -167,7 +175,11 @@ export const cases: CaseStudy[] = [
   },
   {
     id: '1win-product',
-    cover: asset('cover-case-product-v3.jpg'),
+    heroMedia: {
+      media: 'gallery',
+      background: asset('case-product-gallery-bg.jpg'),
+      slides: [1, 2, 3, 4].map((i) => ({ src: asset(`case-product-gallery-phones-${i}.png`), alt: `Экраны кассы, слайд ${i}` })),
+    },
     tags: ['iGaming', 'B2C', 'B2B', 'Payments', 'Casino', 'Локализация', 'Web'],
     title: 'Как понять, дошёл ли платёж',
     lead: 'Спроектировал кассу с понятным статусом платежа. Если баланс прежний, важно понять, обрабатывается ли первый перевод или время оплаты истекло. Я разделил эти состояния и связал проверку статуса с историей операций.',
@@ -214,11 +226,6 @@ export const cases: CaseStudy[] = [
             ],
           },
         ],
-      },
-      {
-        media: 'gallery',
-        background: asset('case-product-gallery-bg.jpg'),
-        slides: [1, 2, 3, 4].map((i) => ({ src: asset(`case-product-gallery-phones-${i}.png`), alt: `Экраны кассы, слайд ${i}` })),
       },
       {
         label: 'Касса',

@@ -1078,6 +1078,9 @@ a {
   overflow: hidden;
 }
 .case-hero { gap: 8px; padding: 8px; }
+/* Галерея в шапке: 836×500, стрелки выступают за край карточки */
+.case-hero:has(.case-gallery) { overflow: visible; }
+.case-hero .case-gallery-track { aspect-ratio: 836 / 500; }
 .case-panel { gap: 16px; padding: 24px; }
 .case-section { gap: 20px; }
 
