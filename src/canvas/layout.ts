@@ -91,7 +91,7 @@ const BOTTOM_UI = 96; // нижняя панель
 
 /**
  * Стартовый кадр — фокус на карточке «обо мне».
- * Десктоп: как у референса, ближе обычного — 120% на 1920, меньше на узких и низких экранах.
+ * Десктоп: 90%, меньше только на низких экранах.
  * Телефон: вертикальная карточка целиком между шапкой и нижней панелью (размер карточки измеряется).
  */
 export function initialCamera(vw: number, vh: number, hero?: Size): Camera {
@@ -110,7 +110,8 @@ export function initialCamera(vw: number, vh: number, hero?: Size): Camera {
   // Ближе обычного, но карточка целиком между шапкой и нижней панелью — кнопки не заходят под панель
   const size = hero ?? { w: 457, h: 556 };
   const avail = vh - TOP_UI - BOTTOM_UI;
-  const z = clampZoom(Math.min(1.2, Math.max(0.6, vw / 1600), avail / size.h));
+  // 90%, меньше — только если карточка не помещается по высоте
+  const z = clampZoom(Math.min(0.9, avail / size.h));
   const cy = TOP_UI + avail / 2;
   return { x: vw / 2 - h.x * z, y: cy - h.y * z, z };
 }
