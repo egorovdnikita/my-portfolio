@@ -1,6 +1,5 @@
 import { experience, icons, profile, vibecoding, type Project, type Shot } from '../content';
-import { useEffect, useRef, useState } from 'react';
-import lottie from 'lottie-web';
+import { useState } from 'react';
 import contributions from '../data/contributions.json';
 
 /** Иконка-маска: цвет задаётся через CSS (как Master Icon в макете). */
@@ -26,8 +25,8 @@ function Img({ src, className }: { src: string; className: string }) {
   return <img src={src} alt="" className={className} draggable={false} />;
 }
 
-/** Логотип 24/32px с градиентной обводкой, как в макете. */
-function Logo({ src, size }: { src: string; size: 24 | 32 }) {
+/** Логотип 24/40px с градиентной обводкой, как в макете. */
+function Logo({ src, size }: { src: string; size: 24 | 40 }) {
   return (
     <span className={`logo logo--${size}`}>
       <img src={src} alt="" draggable={false} />
@@ -38,23 +37,32 @@ function Logo({ src, size }: { src: string; size: 24 | 32 }) {
 export function ExperienceCard() {
   return (
     <section className="card card--exp">
-      <div className="card-head">
-        <span className="muted">{experience.title}</span>
-        <Divider />
-        <span className="muted">{experience.total}</span>
-      </div>
-      <div className="rows">
-        {experience.items.map((item, i) => (
-          <div key={item.company} className="rows-group">
-            {i > 0 && <Divider />}
-            <div className="row">
-              <Logo src={item.logo} size={32} />
-              <span className="row-title">{item.company}</span>
-              <span className="muted">{item.period}</span>
+      <div className="exp-top">
+        <div className="card-head">
+          <span className="muted">{experience.title}</span>
+          <Divider />
+          <span className="muted">{experience.total}</span>
+        </div>
+        <div className="rows">
+          {experience.items.map((item, i) => (
+            <div key={item.company} className="rows-group">
+              {i > 0 && <Divider />}
+              <div className="row">
+                <Logo src={item.logo} size={40} />
+                <span className="row-text">
+                  <span className="row-title">{item.company}</span>
+                  <span className="muted">{item.role}</span>
+                </span>
+                <span className="muted">{item.period}</span>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
+      <LinkButton href={profile.cvUrl} variant="secondary" block>
+        Скачать CV
+        <Icon src={icons.download} size={20} className="icon--strong" />
+      </LinkButton>
     </section>
   );
 }
@@ -95,57 +103,6 @@ const MONTHS_OF = ['янв.', 'февр.', 'марта', 'апр.', 'мая', '�
 const dayLabel = (date: Date) => `${date.getUTCDate()} ${MONTHS_OF[date.getUTCMonth()]}`;
 
 type Tip = { i: number; x: number; y: number };
-
-/** Исходный клип Triangle / Thinking из локального пака AgentPulse. */
-// Боты пака Agent Pals: у каждого свой облик, клип один и тот же — «Thinking»
-const AGENT_PALS = [
-  'Arch', 'Briefcase', 'Cat', 'Circle', 'Cloud', 'Clover', 'Drop', 'Flame', 'Flower',
-  'Ghost', 'Heart', 'Hexagon', 'Oval', 'Pill', 'Scallop', 'Square', 'Star', 'Triangle',
-];
-const LAST_BOT_KEY = 'agent-pal';
-
-/** Случайный бот при каждой загрузке, но не тот, что был в прошлый раз. Выбор один на загрузку страницы */
-let chosenBot: string | null = null;
-function pickBot() {
-  if (chosenBot) return chosenBot;
-  let last: string | null = null;
-  try {
-    last = localStorage.getItem(LAST_BOT_KEY);
-  } catch {
-    /* приватный режим — просто без запоминания */
-  }
-  const pool = AGENT_PALS.filter((b) => b !== last);
-  const bot = pool[Math.floor(Math.random() * pool.length)];
-  chosenBot = bot;
-  try {
-    localStorage.setItem(LAST_BOT_KEY, bot);
-  } catch {
-    /* ignore */
-  }
-  return bot;
-}
-
-function AgentPulseLogo() {
-  const container = useRef<HTMLSpanElement>(null);
-  useEffect(() => {
-    if (!container.current) return;
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const animation = lottie.loadAnimation({
-      container: container.current,
-      renderer: 'svg',
-      loop: true,
-      autoplay: !reducedMotion.matches,
-      path: `${import.meta.env.BASE_URL}assets/agent-pals/${pickBot()}.json`,
-    });
-    const onMotionChange = () => reducedMotion.matches ? animation.goToAndStop(0, true) : animation.play();
-    reducedMotion.addEventListener('change', onMotionChange);
-    return () => {
-      reducedMotion.removeEventListener('change', onMotionChange);
-      animation.destroy();
-    };
-  }, []);
-  return <span className="agent-pulse-logo" aria-hidden><span ref={container} className="agent-pulse-animation" /></span>;
-}
 
 export function VibeCard() {
   // Подсказка над клеткой: число коммитов и дата. Координаты — внутри .contrib, поэтому работают и на холсте с масштабом
@@ -206,21 +163,10 @@ export function VibeCard() {
           ))}
         </div>
       </div>
-      <div className="repos">
-        {vibecoding.repos.map((repo, i) => (
-          <div key={repo.name} className="rows-group">
-            {i > 0 && <Divider />}
-            <a className="row row--link" href={repo.url} target="_blank" rel="noreferrer">
-              <AgentPulseLogo />
-              <span className="repo-label">
-                <span className="repo-title">{repo.name}</span>
-                <Icon src={icons.external} size={16} className="icon--subtle" />
-              </span>
-              <span className="repo-spacer" aria-hidden />
-            </a>
-          </div>
-        ))}
-      </div>
+      <LinkButton href={vibecoding.github.url} variant="secondary" block>
+        {vibecoding.github.label}
+        <Icon src={icons.external} size={20} className="icon--subtle" />
+      </LinkButton>
     </section>
   );
 }
@@ -250,9 +196,9 @@ export function HeroCard({ variant = 'canvas' }: { variant?: 'canvas' | 'feed' |
         <p className="muted hero-about">{profile.about}</p>
       </div>
       <div className="hero-actions">
-        <LinkButton href={profile.cvUrl} variant="secondary">
-          Скачать CV
-          <Icon src={icons.download} size={24} className="icon--strong" />
+        <LinkButton href={profile.linkedinUrl} variant="secondary">
+          LinkedIn
+          <Icon src={icons.external} size={20} className="icon--subtle" />
         </LinkButton>
         <LinkButton href={profile.telegramUrl} variant="primary">
           Написать TG
@@ -267,16 +213,19 @@ export function HeroCard({ variant = 'canvas' }: { variant?: 'canvas' | 'feed' |
 function LinkButton({
   href,
   variant,
+  block,
   children,
 }: {
   href: string;
   variant: 'primary' | 'secondary';
+  /** Во всю ширину карточки */
+  block?: boolean;
   children: React.ReactNode;
 }) {
   const external = href.startsWith('http');
   return (
     <a
-      className={`btn btn--${variant}`}
+      className={`btn btn--${variant}${block ? ' btn--block' : ''}`}
       href={href || undefined}
       aria-disabled={!href}
       title={href ? undefined : 'Ссылка скоро появится'}
@@ -290,17 +239,21 @@ function LinkButton({
 
 export function ShotCard({ shot }: { shot: Shot }) {
   return (
-    <section className={`shot-card${shot.bottom ? ' shot-card--bottom' : ''}${shot.outlined ? ' shot-card--outlined' : ''}`} style={{ '--shot-rotation': `${shot.rotation}deg` } as React.CSSProperties} aria-label={shot.title}>
+    <section
+      className={`shot-card${shot.outlined ? ' shot-card--outlined' : ''}`}
+      style={{ '--shot-rotation': `${shot.rotation}deg`, '--shot-shade': shot.shade } as React.CSSProperties}
+      aria-label={shot.title}
+    >
       <div className="shot-surface" style={{ backgroundImage: `url("${shot.image}")` }} />
       <div className="shot-header">
         <div className="shot-text">
           <h2>{shot.title}</h2>
           <p>{shot.description}</p>
         </div>
-        <span className="shot-lock" aria-label="Кейс недоступен">
+        <span className="shot-lock" aria-label="Кейс под NDA">
           <img src={icons.lock} alt="" draggable={false} />
         </span>
-        <span className="shot-badge">SHOT</span>
+        <span className="shot-badge">NDA</span>
       </div>
       {shot.tags.length > 0 && <div className="shot-tags">{shot.tags.map((tag) => <span key={tag}>{tag}</span>)}</div>}
     </section>
@@ -358,7 +311,7 @@ export function ProjectCard({ project, onOpenCase }: { project: Project; onOpenC
       ) : (
         <a className="btn btn--secondary btn--block" href={action.url} target="_blank" rel="noreferrer">
           {action.label}
-          <Icon src={icons.external} size={16} className="icon--subtle" />
+          <Icon src={icons.external} size={20} className="icon--subtle" />
         </a>
       )}
     </section>

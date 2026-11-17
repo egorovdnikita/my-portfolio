@@ -250,7 +250,6 @@ export default function App() {
     p4: <ProjectCard project={projects[3]} onOpenCase={openCase} />,
     s1: <ShotCard shot={shots[0]} />,
     s2: <ShotCard shot={shots[1]} />,
-    s3: <ShotCard shot={shots[2]} />,
   };
   const flip = (id: NodeId) => <div data-flip={id}>{nodes[id]}</div>;
   const caseOpen = Boolean(study) && !caseClosing;
@@ -283,7 +282,6 @@ export default function App() {
                 {flip('p4')}
                 {flip('s1')}
                 {flip('s2')}
-                {flip('s3')}
               </>
             ) : (
               <div className="feed-grid">
@@ -291,14 +289,13 @@ export default function App() {
                   {flip('exp')}
                   {flip('p1')}
                   {flip('p3')}
-                  {flip('s2')}
-                  {flip('s3')}
+                  {flip('s1')}
                 </div>
                 <div className="feed-col">
                   {flip('vibe')}
                   {flip('p2')}
                   {flip('p4')}
-                  {flip('s1')}
+                  {flip('s2')}
                 </div>
               </div>
             )}

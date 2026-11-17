@@ -4,10 +4,10 @@
 
 export const WORLD = { width: 1920, height: 1080 };
 
-export type NodeId = 'exp' | 'vibe' | 'hero' | 'p1' | 'p2' | 'p3' | 'p4' | 's1' | 's2' | 's3';
+export type NodeId = 'exp' | 'vibe' | 'hero' | 'p1' | 'p2' | 'p3' | 'p4' | 's1' | 's2';
 
 export const NODES: Record<NodeId, { x: number; y: number; ax: number }> = {
-  exp: { x: 80, y: 312, ax: 0 },
+  exp: { x: 89, y: 98 + 62 + 314 / 2, ax: 0 }, // карточка 400×314 с кнопкой «Скачать CV»
   vibe: { x: 136, y: 736, ax: 0 }, // карточка 382px, правый край как раньше
   hero: { x: 960.5, y: 540, ax: 0.5 },
   // Кейсы с обложками 450×506 стоят как в макете: левый край и центр по вертикали
@@ -18,10 +18,9 @@ export const NODES: Record<NodeId, { x: number; y: number; ax: number }> = {
   // и тем же сдвигом 28px по горизонтали, что был до обложек
   p3: { x: 1416 + 28, y: 98 - 94 - 238 / 2, ax: 0 },
   p4: { x: 1500 - 28, y: 643 + 506 + 94 + 220 / 2, ax: 0 },
-  // Новые карточки: позиции относительно первого кейса в макете, без связей.
+  // Кейсы под NDA: позиции относительно первого кейса в макете, без связей.
   s1: { x: 1194 + 859.0553588867188, y: -110.5 + 16.010597229003906 + 225, ax: 0 },
   s2: { x: 1194 + 1347.4727783203125, y: -110.5 + 33.591773986816406 + 225, ax: 0 },
-  s3: { x: 1194 + 1162.5052490234375, y: -110.5 + 510.88037109375 + 225, ax: 0 },
 };
 
 export type Edge = {
@@ -144,7 +143,8 @@ export function edgeGeometry(edge: Edge, from: Rect, to: Rect, lowY?: number, co
   const tx = dir === 1 ? to.left - ARROW_GAP : to.right + ARROW_GAP;
   const ty = to.cy;
   const lx = tx - dir * (ARROW_LEN - 1);
-  const k = Math.max(32, Math.abs(lx - sx) / 2);
+  // На телефоне изгиб сильнее: карточки ближе друг к другу, и связь почти прямая
+  const k = compact ? Math.max(56, Math.abs(lx - sx) * 0.8) : Math.max(32, Math.abs(lx - sx) / 2);
   const path = `M ${sx} ${sy} C ${sx + dir * k} ${sy}, ${lx - dir * k} ${ty}, ${lx} ${ty}`;
   return { path, start: { x: sx, y: sy }, end: { x: tx, y: ty }, dir };
 }

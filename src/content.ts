@@ -16,6 +16,7 @@ export const profile = {
   /** Вырезка с прозрачным фоном и растушёвкой снизу, 3x от 315px */
   photo: asset('hero-photo.png'),
   cvUrl: 'https://clck.ru/3THQuC',
+  linkedinUrl: 'https://www.linkedin.com/in/egorovdnikita/',
   telegramUrl: 'https://t.me/egorov_d_nikita',
   footerHandle: '@egorov.d.nikita',
   footerNote: 'Все права защищены',
@@ -26,9 +27,9 @@ export const experience = {
   title: 'Опыт работы',
   total: '4 года',
   items: [
-    { company: '1win', period: '2025 - сейчас', logo: asset('job-1win.png') },
-    { company: 'Ростелеком', period: '2023 - 2025', logo: asset('job-rostelecom.png') },
-    { company: 'Смарт Юнит', period: '2022 - 2023', logo: asset('job-smartunit.png') },
+    { company: '1win', role: 'Ведущий дизайнер (Senior)', period: '2025 - сейчас', logo: asset('job-1win.png') },
+    { company: 'Ростелеком', role: 'Продуктовый дизайнер (Senior)', period: '2023 - 2025', logo: asset('job-rostelecom.png') },
+    { company: 'Смарт Юнит', role: 'Продуктовый дизайнер (Middle)', period: '2022 - 2023', logo: asset('job-smartunit.png') },
   ],
 };
 
@@ -41,9 +42,7 @@ export const vibecoding = {
     { name: 'Claude', icon: asset('avatar-claude.png') },
     { name: 'Orca', icon: asset('tool-orca.png') },
   ],
-  repos: [
-    { name: 'Перейти в GitHub', url: 'https://github.com/egorovdnikita/agent-pulse' },
-  ],
+  github: { label: 'Перейти в GitHub', url: 'https://github.com/egorovdnikita/agent-pulse' },
 };
 
 export type Project = {
@@ -97,20 +96,21 @@ export const projects: Project[] = [
 ];
 
 export type Shot = {
-  id: 's1' | 's2' | 's3';
+  id: 's1' | 's2';
   title: string;
   description: string;
   image: string;
   tags: string[];
-  bottom?: boolean;
+  /** Затемнение под заголовком (непрозрачность низа градиента в макете) */
+  shade: number;
   rotation: number;
   outlined?: boolean;
 };
 
+// Кейсы под NDA: только обложка, без страницы кейса
 export const shots: Shot[] = [
-  { id: 's1', title: 'Wink Музыка', description: 'Стриминговый сервис внутри\nэкосистемы онлайн-кинотеатра WINK', image: asset('shot-wink.jpg'), tags: ['iOS', 'Android', 'Apple TV', 'SmartTV'], rotation: -3.944458232017951 },
-  { id: 's2', title: 'ReelView', description: 'Сервис коротких видео сериалов\nдля американского рынка', image: asset('shot-reelview.jpg'), tags: ['iOS', 'Android'], rotation: 3.7976093910559716, outlined: true },
-  { id: 's3', title: 'OneTapes', description: 'Веб-сервис для аналитики продаж\nдля игровых маркетплейсов', image: asset('shot-onetapes.jpg'), tags: [], bottom: true, rotation: 2.3720705779599403 },
+  { id: 's1', title: 'Wink Музыка', description: 'Стриминговый сервис внутри\nэкосистемы онлайн-кинотеатра WINK', image: asset('shot-wink-v2.jpg'), tags: ['iOS', 'Android', 'Apple TV', 'SmartTV'], shade: 0.5, rotation: -3.944458232017951 },
+  { id: 's2', title: 'ReelView', description: 'Сервис коротких видео сериалов\nдля американского рынка', image: asset('shot-reelview-v2.jpg'), tags: ['iOS', 'Android'], shade: 0.3, rotation: 3.7976093910559716, outlined: true },
 ];
 
 export const icons = {

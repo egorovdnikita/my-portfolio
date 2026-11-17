@@ -16,44 +16,53 @@
 }
 
 :root {
-  --bg: #f5f5f5;
-  --surface: #ffffff;
-  --text: #000000;
+  /* Токены совпадают с переменными Figma «Портфолио / Тема»: группа/имя в Figma = --группа-имя здесь */
+  /* bg — фоны */
+  --bg-page: #f5f5f5;
+  --bg-surface: #ffffff;
+  --bg-nav: rgba(255, 255, 255, 0.5);
+  --bg-nav-hover: rgba(250, 250, 250, 0.7);
+  --bg-avatar: #ebebeb; /* неопознанный посетитель */
+  /* text — текст */
+  --text-primary: #000000;
   --text-muted: rgba(0, 0, 0, 0.5);
-  --accent: #00a0f0;
+  /* accent — акцент */
+  --accent-base: #00a0f0;
   --accent-hover: #0092db;
   --accent-soft: rgba(0, 160, 240, 0.08);
+  --accent-tint: #ddf4ff;
+  /* fill — полупрозрачные заливки поверх фона */
   --fill-2: rgba(0, 0, 0, 0.02);
   --fill-4: rgba(0, 0, 0, 0.04);
   --fill-6: rgba(0, 0, 0, 0.06);
   --fill-8: rgba(0, 0, 0, 0.08);
+  --fill-placeholder: rgba(128, 128, 128, 0.55);
+  /* icon — иконки */
   --icon-strong: #171717;
   --icon-muted: #737373;
   --icon-subtle: #a3a3a3;
+  /* border — обводки */
+  --border-nav: #ffffff; /* стеклянные плашки навигации, 1px внутрь */
+  --border-logo: #ffffff;
+  /* shadow — цвет теней */
+  --shadow-panel: rgba(0, 0, 0, 0.06);
+  --shadow-lift: rgba(0, 0, 0, 0.08);
+  /* contrib — уровни календаря вкладов */
   --contrib-0: rgba(0, 0, 0, 0.06);
   --contrib-1: #beebb4;
   --contrib-2: #90e37f;
   --contrib-3: #65dc4d;
   --contrib-4: #3dd51e;
+  /* static — одинаковые в обеих темах */
+  --static-white: #ffffff;
+  --static-black: #000000;
+
+  /* Только на сайте: эффекты, которых нет в макете */
   --edge: rgba(0, 160, 240, 0.55);
   /* Сплошной цвет наконечника и точки — как линия поверх фона, чтобы линия под ними не просвечивала */
-  --edge-solid: color-mix(in srgb, #00a0f0 55%, var(--bg));
-  --on-accent: #ffffff;
-  --accent-tint: #ddf4ff;
-  --placeholder: rgba(128, 128, 128, 0.55);
+  --edge-solid: color-mix(in srgb, #00a0f0 55%, var(--bg-page));
   --shimmer: rgba(255, 255, 255, 0.45);
-  --nav-bg: rgba(255, 255, 255, 0.5);
-  --nav-bg-hover: rgba(250, 250, 250, 0.7);
   --nav-blur: blur(16px) saturate(180%);
-  /* Обводка стеклянных плашек навигации, 1px внутрь */
-  --nav-border: #ffffff;
-  --segment-active: #ffffff;
-  --segment-active-icon: #171717;
-  --avatar-bg: #ffffff;
-  --avatar-visitor: #ebebeb; /* неопознанный посетитель */
-  --logo-edge: #ffffff;
-  --shadow-panel: rgba(0, 0, 0, 0.06);
-  --shadow-lift: rgba(0, 0, 0, 0.08);
   --tooltip-bg: rgba(24, 24, 22, 0.9);
   --tooltip-shadow: rgba(24, 24, 22, 0.16);
   --tooltip-text: #ffffff;
@@ -62,41 +71,40 @@
 
 /* Тёмная тема: тема ставится атрибутом data-theme на <html> (скрипт в index.html и useTheme) */
 :root[data-theme='dark'] {
-  --bg: #0f0f0f;
-  --surface: #1a1a1a;
-  --text: #ffffff;
+  --bg-page: #0f0f0f;
+  --bg-surface: #1a1a1a;
+  --bg-nav: rgba(26, 26, 26, 0.5);
+  --bg-nav-hover: rgba(34, 34, 34, 0.7);
+  --bg-avatar: #202020;
+  --text-primary: #ffffff;
   --text-muted: rgba(255, 255, 255, 0.5);
-  --accent: #00a0f0;
+  --accent-base: #00a0f0;
   --accent-hover: #1aaaf2;
   --accent-soft: rgba(0, 160, 240, 0.16);
+  --accent-tint: #0b3448;
   --fill-2: rgba(255, 255, 255, 0.03);
   --fill-4: rgba(255, 255, 255, 0.06);
   --fill-6: rgba(255, 255, 255, 0.08);
   --fill-8: rgba(255, 255, 255, 0.12);
+  --fill-placeholder: rgba(128, 128, 128, 0.55);
   --icon-strong: #f5f5f5;
   --icon-muted: #a3a3a3;
   --icon-subtle: #737373;
+  --border-nav: rgba(255, 255, 255, 0.08);
+  --border-logo: rgba(255, 255, 255, 0.24);
+  --shadow-panel: rgba(0, 0, 0, 0.4);
+  --shadow-lift: rgba(0, 0, 0, 0.5);
   --contrib-0: rgba(255, 255, 255, 0.1);
   --contrib-1: #1d4a14;
   --contrib-2: #287c17;
   --contrib-3: #33a91b;
   --contrib-4: #3dd51e;
+  --static-white: #ffffff;
+  --static-black: #000000;
+
   --edge: rgba(0, 160, 240, 0.7);
-  --edge-solid: color-mix(in srgb, #00a0f0 70%, var(--bg));
-  --on-accent: #ffffff;
-  --accent-tint: #0b3448;
-  --placeholder: rgba(128, 128, 128, 0.55);
+  --edge-solid: color-mix(in srgb, #00a0f0 70%, var(--bg-page));
   --shimmer: rgba(255, 255, 255, 0.22);
-  --nav-bg: rgba(26, 26, 26, 0.5);
-  --nav-bg-hover: rgba(34, 34, 34, 0.7);
-  --nav-border: rgba(255, 255, 255, 0.08);
-  --segment-active: #ffffff; /* активный сегмент белый и в тёмной теме */
-  --segment-active-icon: #171717;
-  --avatar-bg: #2a2a2a;
-  --avatar-visitor: #202020;
-  --logo-edge: rgba(255, 255, 255, 0.24);
-  --shadow-panel: rgba(0, 0, 0, 0.4);
-  --shadow-lift: rgba(0, 0, 0, 0.5);
   --tooltip-bg: rgba(64, 64, 62, 0.96);
   --tooltip-shadow: rgba(0, 0, 0, 0.4);
   --tooltip-text: #ffffff;
@@ -117,8 +125,8 @@ body,
 }
 
 body {
-  background: var(--bg);
-  color: var(--text);
+  background: var(--bg-page);
+  color: var(--text-primary);
   /* Тест: Inter с межбуквенным −4%. Откат — вернуть 'Iosevka', ui-monospace, monospace и убрать letter-spacing */
   font-family: 'Inter', system-ui, sans-serif;
   letter-spacing: -0.04em;
@@ -153,7 +161,7 @@ a {
 }
 
 :focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--accent-base);
   outline-offset: 2px;
 }
 
@@ -171,7 +179,7 @@ a {
 .icon--strong { background-color: var(--icon-strong); }
 .icon--muted { background-color: var(--icon-muted); }
 .icon--subtle { background-color: var(--icon-subtle); }
-.icon--white { background-color: var(--on-accent); }
+.icon--white { background-color: var(--static-white); }
 
 /* ---------- Общие элементы ---------- */
 
@@ -182,7 +190,7 @@ a {
   padding: 4px 8px;
   border-radius: 10px;
   background: var(--accent-soft);
-  color: var(--accent);
+  color: var(--accent-base);
   font-size: 14px;
   font-weight: 500;
   white-space: nowrap;
@@ -220,9 +228,9 @@ a {
   transition: background-color 0.15s ease;
   user-select: none;
 }
-.btn--secondary { background: var(--fill-4); color: var(--text); }
+.btn--secondary { background: var(--fill-4); color: var(--text-primary); }
 .btn--secondary:hover { background: var(--fill-6); }
-.btn--primary { background: var(--accent); color: var(--on-accent); box-shadow: inset 0 0 8px var(--on-accent); }
+.btn--primary { background: var(--accent-base); color: var(--static-white); box-shadow: inset 0 0 8px var(--static-white); }
 .btn--primary:hover { background: var(--accent-hover); }
 .btn--block { width: 100%; }
 .btn[aria-disabled='true'] { cursor: default; }
@@ -246,13 +254,13 @@ a {
   inset: 0;
   padding: 1px;
   border-radius: inherit;
-  background: linear-gradient(135deg, var(--logo-edge) 0%, transparent 35%, transparent 65%, var(--logo-edge) 100%);
+  background: linear-gradient(135deg, var(--border-logo) 0%, transparent 35%, transparent 65%, var(--border-logo) 100%);
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
   mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
   pointer-events: none;
 }
-.logo--32 { width: 32px; height: 32px; border-radius: 12px; }
+.logo--40 { width: 40px; height: 40px; border-radius: 16px; }
 .logo--24 { width: 24px; height: 24px; border-radius: 8px; }
 /* Логотипы Базиса и Лицея: обводка 2px, как была в SVG (rect 61×61, rx 19, stroke 2) */
 .logo--63 { width: 63px; height: 63px; border-radius: 20px; }
@@ -263,7 +271,7 @@ a {
 /* ---------- Карточки ---------- */
 
 .card {
-  background: var(--surface);
+  background: var(--bg-surface);
   border-radius: 32px;
   display: flex;
   flex-direction: column;
@@ -286,8 +294,10 @@ a {
   gap: 6px;
   width: 100%;
 }
-/* Разделитель начинается от текста, а не от логотипа (274px в макете) */
+/* Разделитель начинается от текста, а не от логотипа */
 .rows-group > .dash { width: calc(100% - 42px); }
+.card--exp .rows { gap: 10px; }
+.card--exp .rows-group { gap: 10px; }
 
 .row {
   display: flex;
@@ -299,18 +309,30 @@ a {
   flex: 1 0 0;
   min-width: 1px;
   font-size: 16px;
-  font-weight: 600; /* компании, репозиторий — SemiBold, как кнопки и инструменты */
+  font-weight: 600; /* компании — SemiBold, как кнопки и инструменты */
   white-space: nowrap;
 }
-.row--link .icon { transition: background-color 0.15s ease; }
-.row--link:hover .icon { background-color: var(--icon-strong); }
+/* Компания и должность друг под другом */
+.row-text {
+  flex: 1 0 0;
+  min-width: 1px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
 
-/* Опыт работы */
+/* Опыт работы: блок со списком и кнопка «Скачать CV» внизу */
 .card--exp {
-  width: 364px;
-  padding: 24px;
-  gap: 12px;
-  align-items: flex-end;
+  width: 400px;
+  padding: 8px;
+  gap: 8px;
+}
+.exp-top {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+  width: 100%;
 }
 
 /* Вайбкодинг */
@@ -410,16 +432,6 @@ a {
   font-weight: 600;
   white-space: nowrap;
 }
-.repos {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 6px;
-  width: 100%;
-  padding: 16px;
-  border-radius: 24px;
-  background: var(--fill-2);
-}
 
 /* Главная карточка 457px: без подложки, фото 315×315 с прозрачным фоном, ниже текст и кнопки по центру */
 .hero {
@@ -440,8 +452,8 @@ a {
   padding: 8px 12px;
   border: 1px solid var(--fill-6);
   border-radius: 999px;
-  background: var(--surface);
-  color: var(--text);
+  background: var(--bg-surface);
+  color: var(--text-primary);
   font-size: 12px;
   font-weight: 500;
   line-height: normal;
@@ -487,7 +499,6 @@ a {
   width: 100%;
 }
 .hero-actions .btn { flex: 1 0 0; min-width: 1px; }
-.hero-actions .btn--secondary { background: var(--surface); }
 
 /* Кейсы */
 .card--project {
@@ -519,8 +530,8 @@ a {
   top: 12px;
   left: 12px;
 }
-/* Теги поверх обложки: плашка цвета фона, текст основного цвета */
-.project-tags .tag { background: var(--bg); color: var(--text); }
+/* Теги поверх обложки одинаковые в обеих темах: белая плашка, чёрный текст */
+.project-tags .tag { background: var(--static-white); color: var(--static-black); }
 .project-text {
   display: flex;
   flex-direction: column;
@@ -553,28 +564,23 @@ a {
   gap: 8px;
 }
 
-/* Карточки SHOT: тексты и метки масштабируются вместе с шириной. */
-.shot-card { --shot-unit: calc(100cqw / 450); position: relative; width: 450px; aspect-ratio: 1; container-type: inline-size; color: #fff; }
+/* Кейсы под NDA: тексты и метки масштабируются вместе с шириной (макет — 456×450) */
+.shot-card { --shot-unit: calc(100cqw / 456); position: relative; width: 456px; aspect-ratio: 456 / 450; container-type: inline-size; color: var(--static-white); }
 .node .shot-card { transform: rotate(var(--shot-rotation)); transform-origin: 0 0; }
-.shot-surface { position: absolute; inset: 0; background-size: cover; background-position: center; }
-.shot-card--outlined .shot-surface { outline: 4px solid var(--bg); }
-.shot-header { position: absolute; top: 0; left: 0; width: 100%; display: flex; align-items: center; gap: calc(8 * var(--shot-unit)); padding: calc(24 * var(--shot-unit)); background: linear-gradient(to bottom, #0008, transparent); }
+.shot-surface { position: absolute; inset: 0; border-radius: calc(32 * var(--shot-unit)); background-size: cover; background-position: center; }
+/* На холсте шоты лежат внахлёст — обводка цвета фона отделяет их */
+.node .shot-card--outlined .shot-surface { outline: 4px solid var(--bg-page); }
+.shot-header { position: absolute; top: 0; left: 0; width: 100%; display: flex; align-items: center; gap: calc(8 * var(--shot-unit)); padding: calc(24 * var(--shot-unit)); border-radius: calc(32 * var(--shot-unit)) calc(32 * var(--shot-unit)) 0 0; background: linear-gradient(to bottom, rgb(0 0 0 / var(--shot-shade)), transparent); }
 .shot-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: calc(8 * var(--shot-unit)); }
 .shot-text h2 { font-size: calc(24 * var(--shot-unit)); line-height: calc(29 * var(--shot-unit)); font-weight: 600; letter-spacing: -0.05em; }
 .shot-text p { font-size: calc(14 * var(--shot-unit)); line-height: calc(17 * var(--shot-unit)); white-space: pre-line; }
-.shot-lock { flex-shrink: 0; width: calc(64 * var(--shot-unit)); height: calc(64 * var(--shot-unit)); display: grid; place-items: center; background: #fff; border-radius: 50%; }
+.shot-lock { flex-shrink: 0; width: calc(64 * var(--shot-unit)); height: calc(64 * var(--shot-unit)); display: grid; place-items: center; background: var(--static-white); border-radius: 50%; }
 .shot-lock img { width: calc(24 * var(--shot-unit)); height: calc(24 * var(--shot-unit)); }
-.shot-badge { position: absolute; left: calc(379.493901 * var(--shot-unit)); top: calc(-19 * var(--shot-unit)); width: calc(85 * var(--shot-unit)); height: calc(56 * var(--shot-unit)); display: grid; place-items: center; transform: rotate(15deg); transform-origin: 0 0; background: #ff0090; color: #fff; font-family: 'Iosevka', monospace; font-size: calc(32 * var(--shot-unit)); line-height: calc(40 * var(--shot-unit)); font-weight: 700; letter-spacing: -0.04em; }
+/* Метка NDA: наклон 15° вокруг верхнего левого угла, как поворот в Figma */
+.shot-badge { position: absolute; left: calc(388 * var(--shot-unit)); top: calc(-19 * var(--shot-unit)); padding: calc(8 * var(--shot-unit)) calc(12 * var(--shot-unit)); transform: rotate(15deg); transform-origin: 0 0; background: #ff0090; color: var(--static-white); font-family: 'Iosevka', monospace; font-size: calc(32 * var(--shot-unit)); line-height: calc(40 * var(--shot-unit)); font-weight: 700; letter-spacing: -0.04em; }
 .shot-tags { position: absolute; bottom: 0; left: 0; display: flex; gap: calc(4 * var(--shot-unit)); padding: calc(24 * var(--shot-unit)); }
-.shot-tags span { padding: calc(4 * var(--shot-unit)) calc(8 * var(--shot-unit)); border-radius: calc(10 * var(--shot-unit)); background: #f5f5f5; color: #000; font-size: calc(14 * var(--shot-unit)); line-height: calc(17 * var(--shot-unit)); }
-.shot-card--bottom .shot-header { top: auto; bottom: 0; background: linear-gradient(to bottom, transparent, #0008); }
-.feed .shot-card { --shot-unit: calc(100cqw / 456); width: 100%; aspect-ratio: 456 / 450; }
-.feed-col > [data-flip='s1'] { flex: 1; min-height: 0; }
-.feed-col > [data-flip='s1'] .shot-card { height: 100%; aspect-ratio: auto; }
-@media (max-width: 767px) {
-  .feed .shot-card,
-  .feed [data-flip='s1'] .shot-card { aspect-ratio: 1; }
-}
+.shot-tags span { padding: calc(4 * var(--shot-unit)) calc(8 * var(--shot-unit)); border-radius: calc(10 * var(--shot-unit)); background: var(--static-white); color: var(--static-black); font-size: calc(14 * var(--shot-unit)); line-height: calc(17 * var(--shot-unit)); }
+.feed .shot-card { width: 100%; }
 
 /* ---------- Холст ---------- */
 
@@ -585,7 +591,7 @@ a {
   touch-action: none;
   user-select: none;
   -webkit-user-select: none;
-  background-color: var(--bg);
+  background-color: var(--bg-page);
 }
 .world {
   position: absolute;
@@ -642,7 +648,7 @@ a {
   overflow-y: auto;
   scrollbar-gutter: stable both-edges;
   padding: 16px 16px 96px;
-  background-color: var(--bg);
+  background-color: var(--bg-page);
 }
 .feed-column {
   --feed-w: 920px;
@@ -704,10 +710,10 @@ a {
   pointer-events: auto;
   display: flex;
   align-items: center;
-  background: var(--nav-bg);
+  background: var(--bg-nav);
   -webkit-backdrop-filter: var(--nav-blur);
   backdrop-filter: var(--nav-blur);
-  box-shadow: inset 0 0 0 1px var(--nav-border);
+  box-shadow: inset 0 0 0 1px var(--border-nav);
   border-radius: 24px;
 }
 
@@ -744,7 +750,7 @@ a {
   height: 100%;
   border-radius: 999px;
   overflow: hidden;
-  background: var(--avatar-bg);
+  background: var(--bg-avatar);
 }
 .avatar img {
   display: block;
@@ -760,7 +766,7 @@ a {
   mask: radial-gradient(circle at 52px 50%, transparent 24px, #000 24.5px);
 }
 /* Вы: серый кружок с иконкой пользователя */
-.avatar--visitor .avatar-face { background: var(--avatar-visitor); }
+.avatar--visitor .avatar-face { background: var(--bg-avatar); }
 .avatar-user-icon {
   width: 24px;
   height: 24px;
@@ -770,7 +776,7 @@ a {
 /* «+N»: сколько ещё людей на сайте */
 .avatar--more .avatar-face { background: var(--accent-tint); }
 .avatar--more {
-  color: var(--accent);
+  color: var(--accent-base);
   font-size: 16px;
   font-weight: 600;
 }
@@ -887,7 +893,7 @@ a {
 }
 .tool-btn:hover { background: var(--fill-4); }
 .tool-btn.is-active,
-.tool-btn.is-active:hover { background: var(--accent); box-shadow: inset 0 0 8px var(--on-accent); }
+.tool-btn.is-active:hover { background: var(--accent-base); box-shadow: inset 0 0 8px var(--static-white); }
 .zoom-value {
   width: auto;
   gap: 8px;
@@ -914,8 +920,8 @@ a {
   border-radius: 16px;
   transition: background-color 0.15s ease;
 }
-.segment-btn.is-active { background: var(--segment-active); }
-.segment-btn.is-active .icon { background-color: var(--segment-active-icon); }
+.segment-btn.is-active { background: var(--static-white); }
+.segment-btn.is-active .icon { background-color: var(--static-black); }
 
 .legal {
   font-size: 14px;
@@ -937,7 +943,7 @@ a {
   min-width: 100%;
   padding: 8px;
   border-radius: 24px;
-  background: var(--surface);
+  background: var(--bg-surface);
   box-shadow: 0 8px 24px var(--shadow-lift);
   transform-origin: 50% 100%;
   /* Закрытие: быстро гаснет и опускается */
@@ -978,7 +984,7 @@ a {
 [hidden] { display: none !important; }
 
 .crumb--link { cursor: pointer; transition: color 0.15s ease; }
-.crumb--link:hover { color: var(--accent); }
+.crumb--link:hover { color: var(--accent-base); }
 
 /* ---------- Кейс (кадры «Кейс / 1win», «Кейс / Wink Музыка») ---------- */
 
@@ -1033,7 +1039,7 @@ a {
   animation: case-in 0.32s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .case-close {
-  box-shadow: inset 0 0 0 1px var(--nav-border);
+  box-shadow: inset 0 0 0 1px var(--border-nav);
   -webkit-backdrop-filter: var(--nav-blur);
   backdrop-filter: var(--nav-blur);
   position: fixed;
@@ -1046,11 +1052,11 @@ a {
   width: 64px;
   height: 64px;
   border-radius: 999px;
-  background: var(--nav-bg);
+  background: var(--bg-nav);
   transition: background-color 0.15s ease;
   animation: fade-in 0.2s ease;
 }
-.case-close:hover { background: var(--nav-bg-hover); }
+.case-close:hover { background: var(--bg-nav-hover); }
 .case.is-closing .case-column {
   animation: case-out 0.2s ease-in forwards;
 }
@@ -1071,7 +1077,7 @@ a {
   display: flex;
   flex-direction: column;
   width: 100%;
-  background: var(--surface);
+  background: var(--bg-surface);
   border-radius: 32px;
   overflow: hidden;
 }
@@ -1101,7 +1107,7 @@ a {
   padding: 24px 24px 16px;
 }
 .case-eyebrow {
-  color: var(--accent);
+  color: var(--accent-base);
   font-size: 14px;
   font-weight: 600;
   --lh: 1.4;
@@ -1164,7 +1170,7 @@ a {
   background: var(--fill-2);
 }
 .case-stat-value {
-  color: var(--accent);
+  color: var(--accent-base);
   font-size: 40px;
   font-weight: 600;
   --lh: 1.15;
@@ -1179,12 +1185,12 @@ a {
   list-style: none;
   font-size: 16px;
   --lh: 1.4;
-  color: var(--text);
+  color: var(--text-primary);
 }
 .case-bullets li { display: flex; gap: 12px; }
 .case-bullets--plain li { gap: 4px; }
 .case-bullets--plain .case-dash { flex-shrink: 0; width: 24px; padding-left: 5px; }
-.case-dash { color: var(--accent); white-space: nowrap; }
+.case-dash { color: var(--accent-base); white-space: nowrap; }
 
 .case-h2 {
   font-size: 32px;
@@ -1201,7 +1207,7 @@ a {
   padding: 20px 24px;
   border-radius: 24px;
   background: var(--accent-soft);
-  color: var(--accent);
+  color: var(--accent-base);
   font-size: 17px;
   font-weight: 500;
   --lh: 1.4;
@@ -1239,8 +1245,8 @@ a {
 .case-tr > * { flex: 1 0 0; min-width: 1px; }
 /* Колонки: название — основной цвет, «до» — серый, «после» — акцент */
 .case-tr > :nth-child(2) { color: var(--text-muted); }
-.case-tr > :nth-child(3) { color: var(--accent); }
-.case-tr > :first-child { color: var(--text); font-weight: 600; }
+.case-tr > :nth-child(3) { color: var(--accent-base); }
+.case-tr > :first-child { color: var(--text-primary); font-weight: 600; }
 .case-tr.case-th > * { color: var(--text-muted); font-size: 14px; font-weight: 500; }
 
 .case-section > .case-steps,
@@ -1294,7 +1300,7 @@ a {
   height: 96px;
   border-radius: 16px;
 }
-.case-cutout--round { width: 32px; height: 32px; border: 1px dashed var(--placeholder); border-radius: 999px; }
+.case-cutout--round { width: 32px; height: 32px; border: 1px dashed var(--fill-placeholder); border-radius: 999px; }
 
 /* Иконка способа оплаты над заголовком колонки, 24px */
 .case-col-icon { display: block; width: 24px; height: 24px; }
@@ -1364,11 +1370,11 @@ a {
   padding: 0;
   border: 0;
   border-radius: 999px;
-  background: var(--surface);
+  background: var(--bg-surface);
   cursor: pointer;
   transition: background-color 0.15s ease;
 }
-.case-gallery-arrow:hover { background: var(--nav-bg-hover); }
+.case-gallery-arrow:hover { background: var(--bg-nav-hover); }
 .case-gallery-arrow.is-prev { left: -32px; }
 .case-gallery-arrow.is-next { right: -32px; }
 .case-gallery-arrow.is-next .icon { transform: scaleX(-1); }
@@ -1439,11 +1445,11 @@ a {
   height: 64px;
   margin: -32px 0 0 -32px;
   border-radius: 999px;
-  background: var(--surface);
-  color: var(--text);
+  background: var(--bg-surface);
+  color: var(--text-primary);
   fill: currentColor;
 }
-.case-compare-handle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.case-compare-handle:focus-visible { outline: 2px solid var(--accent-base); outline-offset: 2px; }
 
 @media (prefers-reduced-motion: reduce) {
   .case-column,
@@ -1509,7 +1515,7 @@ a {
   gap: 8px;
   padding: 8px;
   border-radius: 32px;
-  background: var(--surface);
+  background: var(--bg-surface);
   filter: drop-shadow(0 0 16px var(--shadow-panel));
   transform-origin: 50% 0;
   opacity: 0;
@@ -1540,7 +1546,7 @@ a {
   flex-shrink: 0;
   border-radius: 999px;
   background: var(--accent-soft);
-  color: var(--accent);
+  color: var(--accent-base);
   font-size: 16px;
   font-weight: 600;
 }
@@ -1629,33 +1635,3 @@ a {
 
 /* На мобильном холсте главная карточка вертикальная, как в мобильной ленте (ширина колонки 375 − 2×8) */
 .node .hero--mobile { width: 359px; }
-
-.repos .row { gap: 12px; }
-/* Кнопка «Перейти в GitHub»: логотип слева, подпись с иконкой по центру, справа пустое место 32px для симметрии */
-.repo-label {
-  flex: 1 0 0;
-  min-width: 1px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-.repo-title { font-size: 16px; font-weight: 600; white-space: nowrap; }
-.repo-spacer { flex-shrink: 0; width: 32px; height: 32px; }
-
-/* Геометрия Triangle / Thinking из блока Figma; без подложки — маскот выходит за слот 32px */
-.agent-pulse-logo {
-  position: relative;
-  flex-shrink: 0;
-  width: 32px;
-  height: 32px;
-}
-.agent-pulse-animation {
-  position: absolute;
-  width: 100px;
-  height: 100px;
-  left: calc(50% - 13.8px);
-  top: calc(50% - 3.8px);
-  transform: translate(-50%, -50%) rotate(-13.35deg);
-  pointer-events: none;
-}
