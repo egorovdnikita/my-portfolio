@@ -61,19 +61,19 @@ export type Project = {
 export const projects: Project[] = [
   {
     id: 'p1',
+    title: 'White Label для трёх брендов',
+    description: 'Спроектировал библиотеку для трёх брендов.',
+    tags: ['Design System', 'White-Label', 'RTL', 'Storybook'],
+    cover: asset('cover-card-ds-v4.jpg'),
+    action: { kind: 'case', caseId: '1win' },
+  },
+  {
+    id: 'p2',
     title: 'Как понять, дошёл ли платёж',
     description: 'Спроектировал кассу с понятным статусом платежа.',
     tags: ['iGaming', 'B2C', 'B2B', 'Payments'],
     cover: asset('cover-card-product.jpg'),
     action: { kind: 'case', caseId: '1win-product' },
-  },
-  {
-    id: 'p2',
-    title: 'White Label для трёх брендов',
-    description: 'Спроектировал библиотеку для трёх брендов.',
-    tags: ['Design System', 'White-Label', 'RTL', 'Storybook'],
-    cover: asset('cover-card-ds-v3.jpg'),
-    action: { kind: 'case', caseId: '1win' },
   },
   {
     id: 'p3',
