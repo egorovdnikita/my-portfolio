@@ -1302,6 +1302,8 @@ a {
 .case-shot img { display: block; width: 56.15%; height: auto; }
 .case-step:has(> .case-shot) { gap: 20px; }
 .case-step:has(> .case-shot) .case-step-text { text-align: center; }
+/* Переносы строк из макета (\n в тексте); на узких экранах строка дополнительно переносится сама */
+.case-step-text .case-small { white-space: pre-line; }
 .only-dark { display: none !important; }
 :root[data-theme='dark'] .only-dark { display: block !important; }
 :root[data-theme='dark'] .only-light { display: none !important; }

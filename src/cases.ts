@@ -7,7 +7,7 @@ export type CaseBlock =
   | { type: 'table'; head: [string, string, string]; rows: [string, string, string][] }
   | { type: 'quote'; text: string }
   | { type: 'image'; caption: string; height: number }
-  /** Карточки 2×2; lg — текст 16px вместо 14. image — вырезка интерфейса для светлой и тёмной темы */
+  /** Карточки 2×2; lg — текст 16px вместо 14. image — вырезка интерфейса для светлой и тёмной темы; \n в тексте — перенос строки как в макете */
   | { type: 'steps'; items: { title: string; text: string; image?: ThemedImage }[]; size?: 'lg' }
   /** icon — иконка над заголовком; bare — без иконки и без пунктирной заглушки */
   | { type: 'columns'; items: { title: string; text: string; icon?: string }[]; bare?: boolean }
@@ -233,22 +233,22 @@ export const cases: CaseStudy[] = [
             items: [
               {
                 title: 'Способ оплаты',
-                text: 'Показываю доступные способы и при необходимости уточняю регион.',
+                text: 'Показываю доступные способы и при\nнеобходимости уточняю регион.',
                 image: themed('cut-product-method'),
               },
               {
                 title: 'Условия перевода',
-                text: 'До отправки видны сумма и комиссия либо сеть и минимальная сумма.',
+                text: 'До отправки видны сумма и комиссия\nлибо сеть и минимальная сумма.',
                 image: themed('cut-product-terms'),
               },
               {
                 title: 'Возврат после оплаты',
-                text: 'После возврата показываю статус, даже если баланс ещё не обновился.',
+                text: 'После возврата показываю статус,\nдаже если баланс ещё не обновился.',
                 image: themed('cut-product-return'),
               },
               {
                 title: 'Следующий шаг',
-                text: 'В обработке — проверить историю. Время вышло — повторить или сменить способ.',
+                text: 'В обработке — проверить историю.\nВремя вышло — повторить или сменить способ.',
                 image: themed('cut-product-next'),
               },
             ],
