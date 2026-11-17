@@ -212,8 +212,11 @@ export function VibeCard() {
             {i > 0 && <Divider />}
             <a className="row row--link" href={repo.url} target="_blank" rel="noreferrer">
               <AgentPulseLogo />
-              <span className="row-title">{repo.name}</span>
-              <Icon src={icons.external} size={16} className="icon--subtle" />
+              <span className="repo-label">
+                <span className="repo-title">{repo.name}</span>
+                <Icon src={icons.external} size={16} className="icon--subtle" />
+              </span>
+              <span className="repo-spacer" aria-hidden />
             </a>
           </div>
         ))}

@@ -40,7 +40,7 @@ export const vibecoding = {
     { name: 'Orca', icon: asset('tool-orca.png') },
   ],
   repos: [
-    { name: 'GitHub: agent-pulse', url: 'https://github.com/egorovdnikita/agent-pulse' },
+    { name: 'Перейти в GitHub', url: 'https://github.com/egorovdnikita/agent-pulse' },
   ],
 };
 
