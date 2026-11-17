@@ -235,7 +235,8 @@ export function HeroCard({ variant = 'canvas' }: { variant?: 'canvas' | 'feed' |
           <span
             key={b.text}
             className="hero-badge"
-            style={{ left: b.x, top: b.y, transform: `rotate(${b.angle}deg)` }}
+            // Координаты из макета для фото 315px — в процентах, чтобы ярлыки ехали вместе с фото на телефоне
+            style={{ left: `${(b.x / 315) * 100}%`, top: `${(b.y / 315) * 100}%`, transform: `rotate(${b.angle}deg)` }}
           >
             {b.text}
           </span>
