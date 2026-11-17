@@ -37,15 +37,18 @@ export type Edge = {
   low?: boolean;
   /** Сдвиг точки старта по вертикали, чтобы связи с одной стороны не выходили из одной точки */
   dy?: number;
+  /** Сдвиг точки старта по горизонтали: плюс — наружу от карточки, минус — внутрь (на пустое поле у фото) */
+  dx?: number;
 };
 
 export const EDGES: Edge[] = [
-  { from: 'hero', to: 'exp', side: 'left', dot: true },
-  { from: 'hero', to: 'vibe', side: 'left', dot: true, low: true },
-  { from: 'hero', to: 'p1', side: 'right', dot: true },
-  { from: 'hero', to: 'p2', side: 'right', dot: true, low: true },
-  { from: 'hero', to: 'p3', side: 'right', dot: true, dy: -74 },
-  { from: 'hero', to: 'p4', side: 'right', dot: true, low: true, dy: 38 },
+  // Точки старта разбросаны по вертикали и горизонтали, чтобы связи не выходили ровным столбиком
+  { from: 'hero', to: 'exp', side: 'left', dot: true, dx: -36 },
+  { from: 'hero', to: 'vibe', side: 'left', dot: true, low: true, dx: 18 },
+  { from: 'hero', to: 'p1', side: 'right', dot: true, dx: 14 },
+  { from: 'hero', to: 'p2', side: 'right', dot: true, low: true, dx: 28 },
+  { from: 'hero', to: 'p3', side: 'right', dot: true, dy: -74, dx: -44 },
+  { from: 'hero', to: 'p4', side: 'right', dot: true, low: true, dy: 38, dx: -12 },
 ];
 
 export type Vec = { x: number; y: number };
@@ -127,7 +130,7 @@ export const ARROW_LEN = 8; // длина наконечника
 /** Плавная связь с горизонтальными касательными, как у connector в Figma. */
 export function edgeGeometry(edge: Edge, from: Rect, to: Rect, lowY?: number) {
   const dir = edge.side === 'right' ? 1 : -1;
-  const sx = dir === 1 ? from.right + START_GAP.right : from.left - START_GAP.left;
+  const sx = (dir === 1 ? from.right + START_GAP.right : from.left - START_GAP.left) + dir * (edge.dx ?? 0);
   const sy = edge.alignToTarget
     ? Math.min(from.bottom - 24, Math.max(from.top + 24, to.cy))
     : edge.low && lowY !== undefined
