@@ -44,8 +44,8 @@ export const EDGES: Edge[] = [
   { from: 'hero', to: 'vibe', side: 'left', dot: true, low: true },
   { from: 'hero', to: 'p1', side: 'right', dot: true },
   { from: 'hero', to: 'p2', side: 'right', dot: true, low: true },
-  { from: 'hero', to: 'p3', side: 'right', dot: true, dy: -56 },
-  { from: 'hero', to: 'p4', side: 'right', dot: true, low: true, dy: 56 },
+  { from: 'hero', to: 'p3', side: 'right', dot: true, dy: -74 },
+  { from: 'hero', to: 'p4', side: 'right', dot: true, low: true, dy: 38 },
 ];
 
 export type Vec = { x: number; y: number };
