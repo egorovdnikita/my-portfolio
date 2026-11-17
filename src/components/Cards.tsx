@@ -21,10 +21,6 @@ function Divider() {
   return <span className="dash" aria-hidden />;
 }
 
-function Img({ src, className }: { src: string; className: string }) {
-  return <img src={src} alt="" className={className} draggable={false} />;
-}
-
 /** Логотип 24/40px с градиентной обводкой, как в макете. */
 function Logo({ src, size }: { src: string; size: 24 | 40 }) {
   return (
@@ -176,7 +172,9 @@ export function HeroCard({ variant = 'canvas' }: { variant?: 'canvas' | 'feed' |
   return (
     <section className={`hero hero--${variant}`}>
       <div className="hero-photo">
-        <Img src={profile.photo} className="hero-photo-img" />
+        {/* Видимо только видео текущей темы; без звука и по кругу, на iPhone — без полноэкранного режима */}
+        <video className="hero-photo-img only-light" src={profile.video.light} autoPlay muted loop playsInline aria-hidden />
+        <video className="hero-photo-img only-dark" src={profile.video.dark} autoPlay muted loop playsInline aria-hidden />
         {profile.badges.map((b) => (
           <span
             key={b.text}
