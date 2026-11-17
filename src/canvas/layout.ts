@@ -33,15 +33,17 @@ export type Edge = {
   alignToTarget?: boolean;
   /** Точка на старте связи (в макете есть только у главной карточки) */
   dot?: boolean;
+  /** Связь вниз выходит не из центра карточки, а на уровне текстового блока — как в макете */
+  low?: boolean;
 };
 
 export const EDGES: Edge[] = [
   { from: 'hero', to: 'exp', side: 'left', dot: true },
-  { from: 'hero', to: 'vibe', side: 'left', dot: true },
+  { from: 'hero', to: 'vibe', side: 'left', dot: true, low: true },
   { from: 'hero', to: 'p1', side: 'right', dot: true },
-  { from: 'hero', to: 'p2', side: 'right', dot: true },
+  { from: 'hero', to: 'p2', side: 'right', dot: true, low: true },
   { from: 'hero', to: 'p3', side: 'right', dot: true },
-  { from: 'hero', to: 'p4', side: 'right', dot: true },
+  { from: 'hero', to: 'p4', side: 'right', dot: true, low: true },
 ];
 
 export type Vec = { x: number; y: number };
@@ -116,10 +118,14 @@ export const ARROW_LEN = 8; // длина наконечника
 // Линия обрывается у основания наконечника (с заходом 1px под него), чтобы не торчать на кончике
 
 /** Плавная связь с горизонтальными касательными, как у connector в Figma. */
-export function edgeGeometry(edge: Edge, from: Rect, to: Rect) {
+export function edgeGeometry(edge: Edge, from: Rect, to: Rect, lowY?: number) {
   const dir = edge.side === 'right' ? 1 : -1;
   const sx = dir === 1 ? from.right + START_GAP.right : from.left - START_GAP.left;
-  const sy = edge.alignToTarget ? Math.min(from.bottom - 24, Math.max(from.top + 24, to.cy)) : from.cy;
+  const sy = edge.alignToTarget
+    ? Math.min(from.bottom - 24, Math.max(from.top + 24, to.cy))
+    : edge.low && lowY !== undefined
+      ? from.top + lowY
+      : from.cy;
   const tx = dir === 1 ? to.left - ARROW_GAP : to.right + ARROW_GAP;
   const ty = to.cy;
   const lx = tx - dir * (ARROW_LEN - 1);

@@ -183,6 +183,10 @@ export function Canvas({ camera, setCamera, offsets, setOffset, tool, spaceHeld,
     {} as Partial<Record<NodeId, ReturnType<typeof nodeRect>>>,
   );
 
+  // Нижние связи главной карточки выходят на уровне центра текстового блока (под фото)
+  const heroText = nodeRefs.current.hero?.querySelector<HTMLElement>('.hero-text');
+  const heroLowY = heroText ? heroText.offsetTop + heroText.offsetHeight / 2 : undefined;
+
   const cursor = drag?.kind === 'pan' && drag.moved ? 'grabbing' : panMode ? 'grab' : 'default';
 
   return (
@@ -207,7 +211,7 @@ export function Canvas({ camera, setCamera, offsets, setOffset, tool, spaceHeld,
             const a = rects[edge.from];
             const b = rects[edge.to];
             if (!a || !b) return null;
-            const g = edgeGeometry(edge, a, b);
+            const g = edgeGeometry(edge, a, b, heroLowY);
             const tip = g.end;
             const back = -g.dir * ARROW_LEN;
             return (
