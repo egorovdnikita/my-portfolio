@@ -1,5 +1,5 @@
 import { experience, icons, profile, vibecoding, type Project, type Shot } from '../content';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import contributions from '../data/contributions.json';
 
 /** Иконка-маска: цвет задаётся через CSS (как Master Icon в макете). */
@@ -168,13 +168,30 @@ export function VibeCard() {
 }
 
 /** Карточка «обо мне»: без подложки, фото-вырезка сверху, текст и кнопки по центру — как в макете. */
-export function HeroCard({ variant = 'canvas' }: { variant?: 'canvas' | 'feed' | 'mobile' }) {
+/**
+ * Видео-портрет без звука по кругу. React не пишет атрибут muted в разметку, а Safari на iPhone
+ * без него не запускает автовоспроизведение — поэтому выставляем muted сами и запускаем play() при появлении.
+ */
+function HeroVideo({ src, poster }: { src: string; poster: string }) {
+  const ref = useRef<HTMLVideoElement>(null);
+  useEffect(() => {
+    const v = ref.current;
+    if (!v) return;
+    v.muted = true;
+    v.defaultMuted = true;
+    v.setAttribute('muted', '');
+    v.play().catch(() => {
+      /* автозапуск запрещён (режим энергосбережения) — останется первый кадр */
+    });
+  }, [src]);
+  return <video ref={ref} className="hero-photo-img" src={src} poster={poster} autoPlay muted loop playsInline preload="auto" aria-hidden />;
+}
+
+export function HeroCard({ variant = 'canvas', theme }: { variant?: 'canvas' | 'feed' | 'mobile'; theme: 'light' | 'dark' }) {
   return (
     <section className={`hero hero--${variant}`}>
       <div className="hero-photo">
-        {/* Видимо только видео текущей темы; без звука и по кругу, на iPhone — без полноэкранного режима */}
-        <video className="hero-photo-img only-light" src={profile.video.light} autoPlay muted loop playsInline aria-hidden />
-        <video className="hero-photo-img only-dark" src={profile.video.dark} autoPlay muted loop playsInline aria-hidden />
+        <HeroVideo key={theme} src={profile.video[theme]} poster={profile.poster[theme]} />
         {profile.badges.map((b) => (
           <span
             key={b.text}

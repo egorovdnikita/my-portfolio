@@ -15,6 +15,8 @@ export const profile = {
   ],
   /** Видео-портрет 1080×1080, 5 с по кругу: фон вшит в цвет страницы, поэтому своё видео на каждую тему */
   video: { light: asset('hero-video-light-v9.mp4'), dark: asset('hero-video-dark-v9.mp4') },
+  /** Первый кадр видео — виден, пока видео грузится или если телефон не разрешил автозапуск */
+  poster: { light: asset('hero-poster-light-v9.jpg'), dark: asset('hero-poster-dark-v9.jpg') },
   cvUrl: 'https://clck.ru/3THQuC',
   linkedinUrl: 'https://www.linkedin.com/in/egorovdnikita/',
   telegramUrl: 'https://t.me/egorov_d_nikita',

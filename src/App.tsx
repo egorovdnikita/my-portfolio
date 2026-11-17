@@ -243,7 +243,7 @@ export default function App() {
   const nodes: Record<NodeId, React.ReactNode> = {
     exp: <ExperienceCard />,
     vibe: <VibeCard />,
-    hero: <HeroCard variant={isMobile ? 'mobile' : view === 'canvas' ? 'canvas' : 'feed'} />,
+    hero: <HeroCard variant={isMobile ? 'mobile' : view === 'canvas' ? 'canvas' : 'feed'} theme={theme} />,
     p1: <ProjectCard project={projects[0]} onOpenCase={openCase} />,
     p2: <ProjectCard project={projects[1]} onOpenCase={openCase} />,
     p3: <ProjectCard project={projects[2]} onOpenCase={openCase} />,
