@@ -419,11 +419,10 @@ a {
 }
 .tools {
   display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
+  justify-content: space-between; /* всегда в одну строку, промежутки делят ширину поровну — как в макете */
+  gap: 4px; /* минимум: на узком телефоне четыре инструмента едва помещаются */
+  width: 100%;
 }
-/* В ленте карточка шире — между инструментами 24px, как в макете */
-.feed .tools { gap: 24px; }
 .tool {
   display: flex;
   align-items: center;
@@ -431,6 +430,10 @@ a {
   font-size: 16px;
   font-weight: 600;
   white-space: nowrap;
+}
+/* Самые узкие телефоны (360px): иначе четыре инструмента не помещаются в одну строку */
+@media (max-width: 379px) {
+  .tool { gap: 4px; font-size: 14px; }
 }
 
 /* Главная карточка 457px: без подложки, фото 315×315 с прозрачным фоном, ниже текст и кнопки по центру */
@@ -1593,8 +1596,6 @@ a {
   .case-scroll { scrollbar-gutter: auto; }
   .feed { padding: 88px 8px 112px; } /* у фото прозрачный верх — карточка ближе к шапке */
   .feed-column { --feed-w: 100%; }
-  /* Инструменты в «Вайбкодинге» — по всей ширине (auto в макете) */
-  .feed .tools { justify-content: space-between; gap: 12px 0; }
 
   /* Кейс: колонка во всю ширину, крестик внизу по центру */
   .case { --case-w: 100%; }
