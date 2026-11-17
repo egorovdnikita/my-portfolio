@@ -1640,14 +1640,12 @@ a {
 .repo-title { font-size: 16px; font-weight: 600; white-space: nowrap; }
 .repo-spacer { flex-shrink: 0; width: 32px; height: 32px; }
 
-/* Геометрия Triangle / Thinking из обновлённого блока Figma. */
+/* Геометрия Triangle / Thinking из блока Figma; без подложки — маскот выходит за слот 32px */
 .agent-pulse-logo {
   position: relative;
   flex-shrink: 0;
   width: 32px;
   height: 32px;
-  border-radius: 12px;
-  background: rgba(14, 63, 148, 0.16);
 }
 .agent-pulse-animation {
   position: absolute;
