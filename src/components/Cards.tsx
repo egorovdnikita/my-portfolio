@@ -231,6 +231,15 @@ export function HeroCard({ variant = 'canvas' }: { variant?: 'canvas' | 'feed' |
     <section className={`hero hero--${variant}`}>
       <div className="hero-photo">
         <Img src={profile.photo} className="hero-photo-img" />
+        {profile.badges.map((b) => (
+          <span
+            key={b.text}
+            className="hero-badge"
+            style={{ left: b.x, top: b.y, transform: `rotate(${b.angle}deg)` }}
+          >
+            {b.text}
+          </span>
+        ))}
       </div>
       <div className="hero-text">
         <div className="hero-title">
@@ -238,11 +247,6 @@ export function HeroCard({ variant = 'canvas' }: { variant?: 'canvas' | 'feed' |
           <p className="hero-role">{profile.role}</p>
         </div>
         <p className="muted hero-about">{profile.about}</p>
-        <div className="tag-list">
-          {profile.tags.map((t) => (
-            <Tag key={t}>{t}</Tag>
-          ))}
-        </div>
       </div>
       <div className="hero-actions">
         <LinkButton href={profile.cvUrl} variant="secondary">

@@ -429,9 +429,24 @@ a {
   width: 457px;
 }
 .hero-photo {
+  position: relative;
   width: 315px;
   height: 315px;
   flex-shrink: 0;
+}
+/* Ярлык на фото: наклон вокруг верхнего левого угла, как поворот в Figma */
+.hero-badge {
+  position: absolute;
+  padding: 8px 12px;
+  border: 1px solid var(--fill-6);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: normal;
+  white-space: nowrap;
+  transform-origin: 0 0;
 }
 .hero-photo-img {
   display: block;
@@ -446,7 +461,7 @@ a {
   align-items: center;
   gap: 16px;
   width: 100%;
-  padding: 16px;
+  padding: 16px 16px 32px; /* 32 до кнопок, как в макете */
   text-align: center;
 }
 .hero-title {
@@ -466,7 +481,6 @@ a {
   line-height: normal;
 }
 .hero-about { line-height: normal; }
-.hero .tag-list { justify-content: center; flex-wrap: wrap; }
 .hero-actions {
   display: flex;
   gap: 4px;

@@ -211,7 +211,7 @@ export function Canvas({ camera, setCamera, offsets, setOffset, tool, spaceHeld,
             const a = rects[edge.from];
             const b = rects[edge.to];
             if (!a || !b) return null;
-            const g = edgeGeometry(edge, a, b, heroLowY);
+            const g = edgeGeometry(edge, a, b, heroLowY, compact);
             const tip = g.end;
             const back = -g.dir * ARROW_LEN;
             return (

@@ -128,9 +128,11 @@ export const ARROW_LEN = 8; // длина наконечника
 // Линия обрывается у основания наконечника (с заходом 1px под него), чтобы не торчать на кончике
 
 /** Плавная связь с горизонтальными касательными, как у connector в Figma. */
-export function edgeGeometry(edge: Edge, from: Rect, to: Rect, lowY?: number) {
+export function edgeGeometry(edge: Edge, from: Rect, to: Rect, lowY?: number, compact = false) {
   const dir = edge.side === 'right' ? 1 : -1;
-  const sx = (dir === 1 ? from.right + START_GAP.right : from.left - START_GAP.left) + dir * (edge.dx ?? 0);
+  // На телефоне карточка уже и фото почти у края — внутрь точки не сдвигаем, чтобы не лечь на фото
+  const dx = compact ? Math.max(0, edge.dx ?? 0) : (edge.dx ?? 0);
+  const sx = (dir === 1 ? from.right + START_GAP.right : from.left - START_GAP.left) + dir * dx;
   const sy = edge.alignToTarget
     ? Math.min(from.bottom - 24, Math.max(from.top + 24, to.cy))
     : edge.low && lowY !== undefined
