@@ -137,10 +137,12 @@ function Block({ block }: { block: CaseBlock }) {
       );
     case 'steps':
       return (
-        <div className={`case-steps${block.size === 'lg' ? ' case-steps--lg' : ''}`}>
+        <div
+          className={`case-steps${block.size === 'lg' ? ' case-steps--lg' : ''}${block.items.length === 3 ? ' case-steps--3' : ''}`}
+        >
           {block.items.map((step) => (
             <div key={step.title} className="case-step">
-              {step.image ? <Themed image={step.image} className="case-shot" /> : <span className="case-cutout" aria-hidden />}
+              {step.image && <Themed image={step.image} className="case-shot" />}
               <div className="case-step-text">
                 <span className="case-step-title">{step.title}</span>
                 <span className="case-small">{step.text}</span>
@@ -167,6 +169,13 @@ function Block({ block }: { block: CaseBlock }) {
           ))}
         </div>
       );
+    case 'figure':
+      return (
+        <figure className="case-figure">
+          <img className="only-light" src={block.image.light} alt={block.alt} draggable={false} />
+          <img className="only-dark" src={block.image.dark} alt={block.alt} draggable={false} />
+        </figure>
+      );
   }
 }
 
@@ -188,7 +197,66 @@ function Media({ item }: { item: CaseMedia }) {
       </div>
     );
   }
+  if (item.media === 'compare') return <Compare item={item} />;
   return <Gallery background={item.background} slides={item.slides} />;
+}
+
+/** Сравнение: картинка «до» лежит поверх «после» и обрезается по разделителю, разделитель тянется мышью, пальцем и стрелками */
+function Compare({ item }: { item: Extract<CaseMedia, { media: 'compare' }> }) {
+  const boxRef = useRef<HTMLDivElement>(null);
+  const [pos, setPos] = useState(50);
+
+  const moveTo = (clientX: number) => {
+    const box = boxRef.current;
+    if (!box) return;
+    const rect = box.getBoundingClientRect();
+    setPos(Math.min(100, Math.max(0, ((clientX - rect.left) / rect.width) * 100)));
+  };
+
+  const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    e.currentTarget.setPointerCapture(e.pointerId);
+    moveTo(e.clientX);
+  };
+  const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.currentTarget.hasPointerCapture(e.pointerId)) moveTo(e.clientX);
+  };
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    const step = e.shiftKey ? 10 : 2;
+    if (e.key === 'ArrowLeft') setPos((p) => Math.max(0, p - step));
+    else if (e.key === 'ArrowRight') setPos((p) => Math.min(100, p + step));
+    else return;
+    e.preventDefault();
+  };
+
+  return (
+    <div
+      ref={boxRef}
+      className="case-compare"
+      style={{ aspectRatio: item.ratio, ['--pos' as string]: `${pos}%` }}
+      onPointerDown={onPointerDown}
+      onPointerMove={onPointerMove}
+    >
+      <img className="case-compare-img" src={item.after} alt={item.alt} draggable={false} />
+      <img className="case-compare-img case-compare-before" src={item.before} alt="" draggable={false} />
+      <span className="case-compare-line" aria-hidden />
+      <span
+        className="case-compare-handle"
+        role="slider"
+        tabIndex={0}
+        aria-label="Разделитель сравнения"
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={Math.round(pos)}
+        onKeyDown={onKeyDown}
+      >
+        <svg width="32" height="32" viewBox="0 0 32 32" aria-hidden>
+          <rect x="9.33" y="4.33" width="2" height="23.33" rx="1" />
+          <rect x="15" y="4.33" width="2" height="23.33" rx="1" />
+          <rect x="20.67" y="4.33" width="2" height="23.33" rx="1" />
+        </svg>
+      </span>
+    </div>
+  );
 }
 
 /** Галерея: фон неподвижен, листаются только телефоны — свайпом, прокруткой, стрелками и точками */

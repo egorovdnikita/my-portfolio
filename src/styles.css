@@ -1260,6 +1260,13 @@ a {
   gap: 4px;
 }
 .case-step-title { font-size: 16px; font-weight: 600; }
+.case-steps--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+/* Схема во всю ширину карточки: 836 в макете, 8px под карточками шагов */
+.case-figure { margin: 0 -16px; }
+.case-figure img { display: block; width: 100%; height: auto; }
+.case-section > .case-steps + .case-figure { margin-top: -12px; }
+.case-section > .case-figure:last-child { margin-bottom: -16px; }
 .case-steps--lg .case-small { font-size: 16px; }
 
 .case-columns { display: flex; flex-wrap: wrap; gap: 8px; --lh: 1.4; }
@@ -1321,7 +1328,7 @@ a {
   scrollbar-width: none;
 }
 .case-gallery-track::-webkit-scrollbar { display: none; }
-/* Фон трека не прокручивается вместе со слайдами; телефоны — как в кадре 2150×1280: x 114, y 164, ширина 1922 */
+/* Фон трека не прокручивается вместе со слайдами; слой слайда — прозрачный PNG размером с кадр, обрезается так же, как фон */
 .case-gallery-slide {
   position: relative;
   flex: 0 0 100%;
@@ -1332,10 +1339,10 @@ a {
 }
 .case-gallery-slide img {
   position: absolute;
-  left: 5.3023%;
-  top: 12.8125%;
-  width: 89.3953%;
-  height: auto;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 .case-gallery-arrow {
   position: absolute;
@@ -1380,6 +1387,55 @@ a {
   transition: width 0.25s ease, background-color 0.25s ease;
 }
 .case-gallery-dot.is-active { width: 32px; background: #ffffff; }
+
+/* Сравнение: «после» снизу, «до» сверху обрезано по разделителю; ручка 64px по центру высоты */
+.case-compare {
+  --compare-line: #ffffff;
+  position: relative;
+  overflow: hidden;
+  border-radius: 32px;
+  background: var(--fill-2);
+  cursor: ew-resize;
+  touch-action: pan-y;
+  user-select: none;
+}
+:root[data-theme='dark'] .case-compare { --compare-line: rgba(255, 255, 255, 0.16); }
+.case-compare-img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+.case-compare-before { clip-path: inset(0 calc(100% - var(--pos)) 0 0); }
+.case-compare-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--pos);
+  width: 2px;
+  margin-left: -1px;
+  background: var(--compare-line);
+  pointer-events: none;
+}
+.case-compare-handle {
+  position: absolute;
+  top: 50%;
+  left: var(--pos);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  margin: -32px 0 0 -32px;
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  fill: currentColor;
+}
+.case-compare-handle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 @media (prefers-reduced-motion: reduce) {
   .case-column,
