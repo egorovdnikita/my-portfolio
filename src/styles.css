@@ -808,7 +808,8 @@ a {
 .btn--share {
   gap: 8px;
   padding: 0 24px;
-  font-size: 16px;
+  font-size: 14px;
+  letter-spacing: -0.04em;
 }
 
 /* Смена подписи лентой: старая уходит вверх, новая въезжает снизу (как у референса) */
