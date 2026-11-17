@@ -469,14 +469,10 @@ a {
   height: 100%;
   object-fit: cover;
   object-position: top;
-  /* Снизу — тот же профиль прозрачности, что был у фото-вырезки: до 70% видно целиком, к низу до нуля.
-     По бокам и сверху — узкая растушёвка: браузер показывает фон видео чуть другим цветом, края квадрата не должны быть видны */
-  --fade-bottom: linear-gradient(to bottom, transparent, #000 4%, #000 70%, rgb(0 0 0 / 0.97) 75%, rgb(0 0 0 / 0.85) 80%, rgb(0 0 0 / 0.62) 85%, rgb(0 0 0 / 0.31) 90%, rgb(0 0 0 / 0.11) 95%, transparent);
-  --fade-sides: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
-  -webkit-mask-image: var(--fade-bottom), var(--fade-sides);
-  -webkit-mask-composite: source-in;
-  mask-image: var(--fade-bottom), var(--fade-sides);
-  mask-composite: intersect;
+  /* Растушёвка снизу — тот же профиль прозрачности, что был у фото-вырезки: до 70% видно целиком, к низу до нуля.
+     Фон видео совпадает с фоном страницы (в файлах заданы метки цвета), поэтому по краям маска не нужна */
+  -webkit-mask-image: linear-gradient(to bottom, #000 70%, rgb(0 0 0 / 0.97) 75%, rgb(0 0 0 / 0.85) 80%, rgb(0 0 0 / 0.62) 85%, rgb(0 0 0 / 0.31) 90%, rgb(0 0 0 / 0.11) 95%, transparent);
+  mask-image: linear-gradient(to bottom, #000 70%, rgb(0 0 0 / 0.97) 75%, rgb(0 0 0 / 0.85) 80%, rgb(0 0 0 / 0.62) 85%, rgb(0 0 0 / 0.31) 90%, rgb(0 0 0 / 0.11) 95%, transparent);
 }
 .hero-text {
   display: flex;
