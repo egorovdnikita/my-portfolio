@@ -139,6 +139,7 @@ p {
 
 button {
   font: inherit;
+  letter-spacing: inherit; /* кнопки по умолчанию сбрасывают общий интервал −4% */
   color: inherit;
   border: 0;
   background: none;
