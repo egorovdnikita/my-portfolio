@@ -1587,6 +1587,10 @@ a {
   /* Кейс: колонка во всю ширину, крестик внизу по центру */
   .case { --case-w: 100%; }
   .case-gallery-arrow { display: none; }
+  /* Точки галереи на мобильном: мельче и ближе к нижнему краю */
+  .case-gallery-dots { bottom: 12px; gap: 4px; padding: 3px; }
+  .case-gallery-dot { width: 6px; height: 6px; }
+  .case-gallery-dot.is-active { width: 24px; }
   .case-scroll { padding: 112px 8px 112px; }
   .case-close {
     top: auto;
