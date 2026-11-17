@@ -1296,9 +1296,11 @@ a {
 /* Иконка способа оплаты над заголовком колонки, 24px */
 .case-col-icon { display: block; width: 24px; height: 24px; }
 
-/* Вырезка интерфейса в карточке шага: элемент 210×114 по центру карточки, текст под ним тоже по центру */
+/* Вырезка интерфейса в карточке шага: элемент 210 из 374 по ширине карточки, по центру; текст под ним тоже по центру.
+   Ширина в процентах, чтобы пропорция совпадала с макетом при любой ширине колонки */
 .case-shot { display: flex; justify-content: center; }
-.case-shot img { display: block; width: 210px; height: auto; }
+.case-shot img { display: block; width: 56.15%; height: auto; }
+.case-step:has(> .case-shot) { gap: 20px; }
 .case-step:has(> .case-shot) .case-step-text { text-align: center; }
 .only-dark { display: none !important; }
 :root[data-theme='dark'] .only-dark { display: block !important; }
