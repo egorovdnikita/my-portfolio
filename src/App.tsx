@@ -284,19 +284,16 @@ export default function App() {
                 {flip('s2')}
               </>
             ) : (
+              // Парами по строкам, как в макете: в каждой паре карточки одной высоты
               <div className="feed-grid">
-                <div className="feed-col">
-                  {flip('exp')}
-                  {flip('p1')}
-                  {flip('p3')}
-                  {flip('s1')}
-                </div>
-                <div className="feed-col">
-                  {flip('vibe')}
-                  {flip('p2')}
-                  {flip('p4')}
-                  {flip('s2')}
-                </div>
+                {flip('exp')}
+                {flip('vibe')}
+                {flip('p1')}
+                {flip('p2')}
+                {flip('p3')}
+                {flip('p4')}
+                {flip('s1')}
+                {flip('s2')}
               </div>
             )}
             {isMobile && <p className="legal legal--feed">{profile.footerHandle} | {profile.footerNote}</p>}
