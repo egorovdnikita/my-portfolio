@@ -225,44 +225,36 @@ export function VibeCard() {
   );
 }
 
-const HERO_PHOTO = {
-  canvas: profile.photo,
-  feed: profile.photoFeed,
-  mobile: profile.photoMobile,
-};
-
-/** Карточка «обо мне». Кадрирование фото своё для холста, ленты и телефона — как в макетах. */
+/** Карточка «обо мне»: без подложки, фото-вырезка сверху, текст и кнопки по центру — как в макете. */
 export function HeroCard({ variant = 'canvas' }: { variant?: 'canvas' | 'feed' | 'mobile' }) {
   return (
-    <div className={`hero hero--${variant}`}>
+    <section className={`hero hero--${variant}`}>
       <div className="hero-photo">
-        <Img src={HERO_PHOTO[variant]} className="hero-photo-img" />
+        <Img src={profile.photo} className="hero-photo-img" />
       </div>
-      <section className="card card--hero">
-        <div className="hero-text">
-          <div className="hero-title">
-            <h1>{profile.name}</h1>
-            <p className="hero-role">{profile.role}</p>
-          </div>
-          <p className="muted hero-about">{profile.about}</p>
-          <div className="tag-list">
-            {profile.tags.map((t) => (
-              <Tag key={t}>{t}</Tag>
-            ))}
-          </div>
+      <div className="hero-text">
+        <div className="hero-title">
+          <h1>{profile.name}</h1>
+          <p className="hero-role">{profile.role}</p>
         </div>
-        <div className="hero-actions">
-          <LinkButton href={profile.cvUrl} variant="secondary">
-            Скачать CV
-            <Icon src={icons.download} size={24} className="icon--strong" />
-          </LinkButton>
-          <LinkButton href={profile.telegramUrl} variant="primary">
-            Написать TG
-            <img src={icons.telegram} alt="" width={24} height={24} draggable={false} />
-          </LinkButton>
+        <p className="muted hero-about">{profile.about}</p>
+        <div className="tag-list">
+          {profile.tags.map((t) => (
+            <Tag key={t}>{t}</Tag>
+          ))}
         </div>
-      </section>
-    </div>
+      </div>
+      <div className="hero-actions">
+        <LinkButton href={profile.cvUrl} variant="secondary">
+          Скачать CV
+          <Icon src={icons.download} size={24} className="icon--strong" />
+        </LinkButton>
+        <LinkButton href={profile.telegramUrl} variant="primary">
+          Написать TG
+          <img src={icons.telegram} alt="" width={24} height={24} draggable={false} />
+        </LinkButton>
+      </div>
+    </section>
   );
 }
 

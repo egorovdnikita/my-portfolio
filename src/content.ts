@@ -6,13 +6,11 @@ const asset = (name: string) => `${import.meta.env.BASE_URL}assets/${name}`;
 
 export const profile = {
   name: 'Егоров Никита',
-  role: 'Senior Product Designer / Продуктовый дизайнер (Design Systems)',
-  about:
-    'Работал с B2C-продуктами на 10+ млн пользователей, сложными B2B-интерфейсами и AI-инструментами. Веду задачи полным циклом, от исследований до контроля реализации.',
+  role: 'Продуктовый дизайнер (Design Systems)',
+  about: 'Работал с B2C-продуктами на 10+ млн пользователей, сложными B2B-интерфейсами и AI-инструментами.',
   tags: ['B2B', 'B2C', 'Web', 'Mobile'],
-  photo: asset('photo.jpg'),
-  photoFeed: asset('photo-feed.jpg'),
-  photoMobile: asset('photo-mobile.jpg'),
+  /** Вырезка с прозрачным фоном и растушёвкой снизу, 3x от 315px */
+  photo: asset('hero-photo.png'),
   cvUrl: 'https://clck.ru/3THQuC',
   telegramUrl: 'https://t.me/egorov_d_nikita',
   footerHandle: '@egorov.d.nikita',
