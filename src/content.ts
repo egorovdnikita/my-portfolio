@@ -72,7 +72,7 @@ export const projects: Project[] = [
     title: 'White Label для трёх брендов',
     description: 'Спроектировал библиотеку для трёх брендов.',
     tags: ['Design System', 'White-Label', 'RTL', 'Storybook'],
-    cover: asset('cover-card-ds-v4.jpg'),
+    cover: asset('cover-card-ds-v5.jpg'),
     action: { kind: 'case', caseId: '1win' },
   },
   {
