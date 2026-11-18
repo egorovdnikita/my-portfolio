@@ -1,6 +1,5 @@
 import { experience, icons, profile, vibecoding, type Project, type Shot } from '../content';
 import { useEffect, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
 import contributions from '../data/contributions.json';
 
 /** Иконка-маска: цвет задаётся через CSS (как Master Icon в макете). */
@@ -172,13 +171,12 @@ export function VibeCard() {
 /**
  * Видео-портрет без звука по кругу.
  * React не пишет атрибут muted в разметку, а Safari на iPhone без него не запускает автовоспроизведение — выставляем сами.
- * На холсте iPhone может «принять» запуск, но не показывать кадры: видео лежит в сдвинутом трансформом слое,
- * и Safari ошибочно считает его невидимым. Поэтому «играет» = время видео идёт, а не просто paused === false.
- * Если за 1,5 с кадры не пошли — пересоздаём элемент (Safari заново проверит видимость), при касании — перезапуск.
+ * Если браузер запрещает видео без касания (на iPhone — выключено автовоспроизведение видео в настройках,
+ * действует и в Safari, и в Chrome, и во встроенном браузере Telegram), play() отклоняется с NotAllowedError.
+ * Тогда показываем то же видео анимированной картинкой: картинки проигрываются всегда.
  */
-function HeroVideo({ src, poster }: { src: string; poster: string }) {
-  const [attempt, setAttempt] = useState(0);
-  const [log, setLog] = useState<string[]>([]);
+function HeroVideo({ src, poster, anim }: { src: string; poster: string; anim: string }) {
+  const [blocked, setBlocked] = useState(false);
   const ref = useRef<HTMLVideoElement>(null);
   useEffect(() => {
     const v = ref.current;
@@ -187,91 +185,29 @@ function HeroVideo({ src, poster }: { src: string; poster: string }) {
     v.defaultMuted = true;
     v.setAttribute('muted', '');
     v.setAttribute('playsinline', '');
-
-    let playing = false;
-    // ВРЕМЕННО: диагностика автозапуска на iPhone по ссылке ?vdebug
-    const dbg = VDEBUG ? (msg: string) => setLog((l) => [...l.slice(-14), `${(performance.now() / 1000).toFixed(1)} ${msg}`]) : null;
-    if (dbg) {
-      ['loadedmetadata', 'loadeddata', 'canplay', 'play', 'playing', 'pause', 'waiting', 'stalled', 'suspend', 'error'].forEach((ev) =>
-        v.addEventListener(ev, () => dbg(`${ev} rs=${v.readyState} ns=${v.networkState} t=${v.currentTime.toFixed(2)} p=${v.paused}`)),
-      );
-      dbg(`mount #${attempt} muted=${v.muted} attr=${v.hasAttribute('muted')} act=${(navigator as any).userActivation?.hasBeenActive}`);
-    }
-    const GESTURES = ['touchend', 'pointerup', 'click', 'keydown'] as const;
-    const removeGestures = () => GESTURES.forEach((g) => window.removeEventListener(g, onGesture, true));
-    const onTime = () => {
-      if (v.currentTime > 0.05 && !v.paused) {
-        playing = true;
-        removeGestures();
-      }
-    };
+    let alive = true;
     const tryPlay = () => {
-      if (!playing && v.paused) v.play().catch((e) => dbg?.(`play() отказ: ${e?.name} ${e?.message}`));
+      if (!v.paused) return;
+      v.play().catch((e: unknown) => {
+        if (alive && e instanceof DOMException && e.name === 'NotAllowedError') setBlocked(true);
+      });
     };
-    // В обработчике касания запуск разрешён всегда; «зависший» запуск сбрасываем паузой
-    function onGesture() {
-      if (playing) return removeGestures();
-      if (!v!.paused) v!.pause();
-      v!.play().catch((e) => dbg?.(`gesture play() отказ: ${e?.name}`));
-      dbg?.('касание → play()');
-    }
-
     tryPlay();
-    v.addEventListener('timeupdate', onTime);
     v.addEventListener('loadeddata', tryPlay);
-    GESTURES.forEach((g) => window.addEventListener(g, onGesture, { capture: true, passive: true }));
-    const io = new IntersectionObserver((entries) => {
-      dbg?.(`в кадре=${entries.some((e) => e.isIntersecting)}`);
-      if (entries.some((e) => e.isIntersecting)) tryPlay();
-    });
-    io.observe(v);
-    const onVisible = () => document.visibilityState === 'visible' && tryPlay();
-    document.addEventListener('visibilitychange', onVisible);
-    const retry = attempt < 2 ? window.setTimeout(() => !playing && setAttempt((a) => a + 1), 1500) : 0;
     return () => {
-      window.clearTimeout(retry);
-      v.removeEventListener('timeupdate', onTime);
+      alive = false;
       v.removeEventListener('loadeddata', tryPlay);
-      removeGestures();
-      io.disconnect();
-      document.removeEventListener('visibilitychange', onVisible);
     };
-  }, [src, attempt]);
-  const video = (
-    <video
-      key={attempt}
-      ref={ref}
-      className="hero-photo-img"
-      src={src}
-      poster={poster}
-      autoPlay
-      muted
-      loop
-      playsInline
-      preload="auto"
-      aria-hidden
-    />
-  );
-  if (!VDEBUG) return video;
-  return (
-    <>
-      {video}
-      {createPortal(
-        <pre style={{ position: 'fixed', left: 4, right: 4, top: 4, zIndex: 99999, margin: 0, padding: 6, font: '10px/1.3 monospace', background: 'rgb(0 0 0 / 0.8)', color: '#0f0', whiteSpace: 'pre-wrap', pointerEvents: 'none' }}>
-          {log.join('\n')}
-        </pre>,
-        document.body,
-      )}
-    </>
-  );
+  }, [src]);
+  if (blocked) return <img className="hero-photo-img" src={anim} alt="" draggable={false} aria-hidden />;
+  return <video ref={ref} className="hero-photo-img" src={src} poster={poster} autoPlay muted loop playsInline preload="auto" aria-hidden />;
 }
-const VDEBUG = typeof location !== 'undefined' && location.search.includes('vdebug');
 
 export function HeroCard({ variant = 'canvas', theme }: { variant?: 'canvas' | 'feed' | 'mobile'; theme: 'light' | 'dark' }) {
   return (
     <section className={`hero hero--${variant}`}>
       <div className="hero-photo">
-        <HeroVideo key={theme} src={profile.video[theme]} poster={profile.poster[theme]} />
+        <HeroVideo key={theme} src={profile.video[theme]} poster={profile.poster[theme]} anim={profile.anim[theme]} />
         {profile.badges.map((b) => (
           <span
             key={b.text}
