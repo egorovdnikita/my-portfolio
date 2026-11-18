@@ -171,10 +171,12 @@ export function VibeCard() {
 /**
  * Видео-портрет без звука по кругу.
  * React не пишет атрибут muted в разметку, а Safari на iPhone без него не запускает автовоспроизведение — выставляем сами.
- * Пробуем запустить сразу, после загрузки и когда видео попало в кадр. Если iPhone всё равно не разрешил
- * (режим энергосбережения, выключено автовоспроизведение) — запускаем при первом касании экрана.
+ * На холсте iPhone может «принять» запуск, но не показывать кадры: видео лежит в сдвинутом трансформом слое,
+ * и Safari ошибочно считает его невидимым. Поэтому «играет» = время видео идёт, а не просто paused === false.
+ * Если за 1,5 с кадры не пошли — пересоздаём элемент (Safari заново проверит видимость), при касании — перезапуск.
  */
 function HeroVideo({ src, poster }: { src: string; poster: string }) {
+  const [attempt, setAttempt] = useState(0);
   const ref = useRef<HTMLVideoElement>(null);
   useEffect(() => {
     const v = ref.current;
@@ -184,30 +186,58 @@ function HeroVideo({ src, poster }: { src: string; poster: string }) {
     v.setAttribute('muted', '');
     v.setAttribute('playsinline', '');
 
+    let playing = false;
     const GESTURES = ['touchend', 'pointerup', 'click', 'keydown'] as const;
-    const removeGestures = () => GESTURES.forEach((g) => window.removeEventListener(g, tryPlay, true));
-    function tryPlay() {
-      if (!v || !v.paused) return removeGestures();
-      v.play().then(removeGestures, () => {
-        /* не разрешили — ждём касания */
-      });
+    const removeGestures = () => GESTURES.forEach((g) => window.removeEventListener(g, onGesture, true));
+    const onTime = () => {
+      if (v.currentTime > 0.05 && !v.paused) {
+        playing = true;
+        removeGestures();
+      }
+    };
+    const tryPlay = () => {
+      if (!playing && v.paused) v.play().catch(() => {});
+    };
+    // В обработчике касания запуск разрешён всегда; «зависший» запуск сбрасываем паузой
+    function onGesture() {
+      if (playing) return removeGestures();
+      if (!v!.paused) v!.pause();
+      v!.play().catch(() => {});
     }
 
     tryPlay();
+    v.addEventListener('timeupdate', onTime);
     v.addEventListener('loadeddata', tryPlay);
-    GESTURES.forEach((g) => window.addEventListener(g, tryPlay, { capture: true, passive: true }));
+    GESTURES.forEach((g) => window.addEventListener(g, onGesture, { capture: true, passive: true }));
     const io = new IntersectionObserver((entries) => entries.some((e) => e.isIntersecting) && tryPlay());
     io.observe(v);
     const onVisible = () => document.visibilityState === 'visible' && tryPlay();
     document.addEventListener('visibilitychange', onVisible);
+    const retry = attempt < 2 ? window.setTimeout(() => !playing && setAttempt((a) => a + 1), 1500) : 0;
     return () => {
+      window.clearTimeout(retry);
+      v.removeEventListener('timeupdate', onTime);
       v.removeEventListener('loadeddata', tryPlay);
       removeGestures();
       io.disconnect();
       document.removeEventListener('visibilitychange', onVisible);
     };
-  }, [src]);
-  return <video ref={ref} className="hero-photo-img" src={src} poster={poster} autoPlay muted loop playsInline preload="auto" aria-hidden />;
+  }, [src, attempt]);
+  return (
+    <video
+      key={attempt}
+      ref={ref}
+      className="hero-photo-img"
+      src={src}
+      poster={poster}
+      autoPlay
+      muted
+      loop
+      playsInline
+      preload="auto"
+      aria-hidden
+    />
+  );
 }
 
 export function HeroCard({ variant = 'canvas', theme }: { variant?: 'canvas' | 'feed' | 'mobile'; theme: 'light' | 'dark' }) {
