@@ -1,5 +1,6 @@
 import { experience, icons, profile, vibecoding, type Project, type Shot } from '../content';
 import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import contributions from '../data/contributions.json';
 
 /** Иконка-маска: цвет задаётся через CSS (как Master Icon в макете). */
@@ -177,6 +178,7 @@ export function VibeCard() {
  */
 function HeroVideo({ src, poster }: { src: string; poster: string }) {
   const [attempt, setAttempt] = useState(0);
+  const [log, setLog] = useState<string[]>([]);
   const ref = useRef<HTMLVideoElement>(null);
   useEffect(() => {
     const v = ref.current;
@@ -187,6 +189,14 @@ function HeroVideo({ src, poster }: { src: string; poster: string }) {
     v.setAttribute('playsinline', '');
 
     let playing = false;
+    // ВРЕМЕННО: диагностика автозапуска на iPhone по ссылке ?vdebug
+    const dbg = VDEBUG ? (msg: string) => setLog((l) => [...l.slice(-14), `${(performance.now() / 1000).toFixed(1)} ${msg}`]) : null;
+    if (dbg) {
+      ['loadedmetadata', 'loadeddata', 'canplay', 'play', 'playing', 'pause', 'waiting', 'stalled', 'suspend', 'error'].forEach((ev) =>
+        v.addEventListener(ev, () => dbg(`${ev} rs=${v.readyState} ns=${v.networkState} t=${v.currentTime.toFixed(2)} p=${v.paused}`)),
+      );
+      dbg(`mount #${attempt} muted=${v.muted} attr=${v.hasAttribute('muted')} act=${(navigator as any).userActivation?.hasBeenActive}`);
+    }
     const GESTURES = ['touchend', 'pointerup', 'click', 'keydown'] as const;
     const removeGestures = () => GESTURES.forEach((g) => window.removeEventListener(g, onGesture, true));
     const onTime = () => {
@@ -196,20 +206,24 @@ function HeroVideo({ src, poster }: { src: string; poster: string }) {
       }
     };
     const tryPlay = () => {
-      if (!playing && v.paused) v.play().catch(() => {});
+      if (!playing && v.paused) v.play().catch((e) => dbg?.(`play() отказ: ${e?.name} ${e?.message}`));
     };
     // В обработчике касания запуск разрешён всегда; «зависший» запуск сбрасываем паузой
     function onGesture() {
       if (playing) return removeGestures();
       if (!v!.paused) v!.pause();
-      v!.play().catch(() => {});
+      v!.play().catch((e) => dbg?.(`gesture play() отказ: ${e?.name}`));
+      dbg?.('касание → play()');
     }
 
     tryPlay();
     v.addEventListener('timeupdate', onTime);
     v.addEventListener('loadeddata', tryPlay);
     GESTURES.forEach((g) => window.addEventListener(g, onGesture, { capture: true, passive: true }));
-    const io = new IntersectionObserver((entries) => entries.some((e) => e.isIntersecting) && tryPlay());
+    const io = new IntersectionObserver((entries) => {
+      dbg?.(`в кадре=${entries.some((e) => e.isIntersecting)}`);
+      if (entries.some((e) => e.isIntersecting)) tryPlay();
+    });
     io.observe(v);
     const onVisible = () => document.visibilityState === 'visible' && tryPlay();
     document.addEventListener('visibilitychange', onVisible);
@@ -223,7 +237,7 @@ function HeroVideo({ src, poster }: { src: string; poster: string }) {
       document.removeEventListener('visibilitychange', onVisible);
     };
   }, [src, attempt]);
-  return (
+  const video = (
     <video
       key={attempt}
       ref={ref}
@@ -238,7 +252,20 @@ function HeroVideo({ src, poster }: { src: string; poster: string }) {
       aria-hidden
     />
   );
+  if (!VDEBUG) return video;
+  return (
+    <>
+      {video}
+      {createPortal(
+        <pre style={{ position: 'fixed', left: 4, right: 4, top: 4, zIndex: 99999, margin: 0, padding: 6, font: '10px/1.3 monospace', background: 'rgb(0 0 0 / 0.8)', color: '#0f0', whiteSpace: 'pre-wrap', pointerEvents: 'none' }}>
+          {log.join('\n')}
+        </pre>,
+        document.body,
+      )}
+    </>
+  );
 }
+const VDEBUG = typeof location !== 'undefined' && location.search.includes('vdebug');
 
 export function HeroCard({ variant = 'canvas', theme }: { variant?: 'canvas' | 'feed' | 'mobile'; theme: 'light' | 'dark' }) {
   return (
