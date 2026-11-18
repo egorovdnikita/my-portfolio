@@ -18,7 +18,7 @@ export const profile = {
   /** Первый кадр видео — виден, пока видео грузится или если телефон не разрешил автозапуск */
   poster: { light: asset('hero-poster-light-v9.jpg'), dark: asset('hero-poster-dark-v9.jpg') },
   // То же видео анимированной картинкой — если браузер запрещает видео без касания
-  anim: { light: asset('hero-anim-light-v9.webp'), dark: asset('hero-anim-dark-v9.webp') },
+  anim: { light: asset('hero-anim-light-v10.webp'), dark: asset('hero-anim-dark-v10.webp') },
   cvUrl: 'https://clck.ru/3THQuC',
   linkedinUrl: 'https://www.linkedin.com/in/egorovdnikita/',
   telegramUrl: 'https://t.me/egorov_d_nikita',
