@@ -1088,9 +1088,14 @@ a {
   overflow: hidden;
 }
 .case-hero { gap: 8px; padding: 8px; }
-/* Галерея в шапке: 836×500, стрелки выступают за край карточки */
-.case-hero:has(.case-gallery) { overflow: visible; }
-.case-hero .case-gallery-track { aspect-ratio: 836 / 500; }
+/* Карточка с галереей: стрелки выступают за край карточки */
+.case-card:has(.case-gallery) { overflow: visible; }
+/* Картинка, галерея и сравнение внутри карточки — 836 по ширине, радиус 24 (32 карточки − 8 отступа) */
+.case-card .case-media,
+.case-card .case-gallery-track,
+.case-card .case-compare { border-radius: 24px; }
+/* В секции медиа сверху: 8px от краёв карточки, 24px до подписи (8 + 16 в макете) */
+.case-section-media { margin: -16px -16px 4px; }
 .case-panel { gap: 16px; padding: 24px; }
 .case-section { gap: 20px; }
 
@@ -1209,6 +1214,8 @@ a {
   font-size: 17px;
   --lh: 1.4;
 }
+/* Ссылка в тексте: цвет текста и подчёркивание, как в макете */
+.case-text a { color: inherit; text-decoration: underline; }
 .case-quote {
   padding: 20px 24px;
   border-radius: 24px;
@@ -1259,6 +1266,8 @@ a {
 .case-section > .case-columns { margin: 0 -16px; }
 .case-section > .case-steps:last-child,
 .case-section > .case-columns:last-child { margin-bottom: -16px; }
+/* Карточки под текстом: 24px от текста (16 отступа текста + 8 в макете) */
+.case-section > .case-text + .case-steps { margin-top: 4px; }
 .case-steps { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; --lh: 1.4; }
 /* Карточка шага: место под картинку сверху, ниже заголовок и текст */
 .case-step {
@@ -1619,6 +1628,7 @@ a {
   .case-section > .case-columns { margin: 0 -8px; }
   .case-section > .case-steps:last-child,
   .case-section > .case-columns:last-child { margin-bottom: -8px; }
+  .case-section-media { margin: -8px -8px 4px; }
   .case-h2 { font-size: 24px; }
   .case-text { font-size: 15px; }
   /* Мета под описанием — по две в ряд */

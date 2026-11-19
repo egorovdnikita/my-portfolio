@@ -66,16 +66,16 @@ export type Project = {
 export const projects: Project[] = [
   {
     id: 'p1',
-    title: 'Как понять, дошёл ли платёж',
-    description: 'Спроектировал кассу с понятным статусом платежа.',
+    title: 'Касса казино: пополнение и вывод',
+    description: 'Связал пополнение, вывод и историю в один путь с понятными условиями и статусами операций.',
     tags: ['iGaming', 'B2C', 'B2B', 'Payments'],
     cover: asset('cover-card-product.jpg'),
     action: { kind: 'case', caseId: '1win-product' },
   },
   {
     id: 'p2',
-    title: 'White Label для четырёх брендов',
-    description: 'Спроектировал библиотеку для четырёх брендов.',
+    title: 'Дизайн-система для White Label',
+    description: 'Объединил четыре бренда в одной системе, сохранив общие правила и продуктовые различия.',
     tags: ['Design System', 'White-Label', 'RTL', 'Storybook'],
     cover: asset('cover-card-ds-v5.jpg'),
     action: { kind: 'case', caseId: '1win' },

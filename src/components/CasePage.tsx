@@ -57,6 +57,11 @@ export function CasePage({ study, zoom, closing, onClose }: Props) {
               <Media key={i} item={section} />
             ) : (
             <section key={section.label} className="case-card case-panel case-section">
+              {section.media && (
+                <div className="case-section-media">
+                  <Media item={section.media} />
+                </div>
+              )}
               <Header label={section.label} />
               <h2 className="case-h2">{section.title}</h2>
               {section.blocks.map((block, i) => (
@@ -104,7 +109,7 @@ function Bullets({ items, plain }: { items: string[]; plain?: boolean }) {
 function Block({ block }: { block: CaseBlock }) {
   switch (block.type) {
     case 'text':
-      return <p className="case-text">{block.text}</p>;
+      return <p className="case-text">{block.links ? <Linked text={block.text} links={block.links} /> : block.text}</p>;
     case 'bullets':
       return <Bullets items={block.items} plain={block.plain} />;
     case 'quote':
@@ -183,6 +188,25 @@ function Block({ block }: { block: CaseBlock }) {
   }
 }
 
+/** Текст со ссылками: слова из links подчёркнуты и открываются в новой вкладке */
+function Linked({ text, links }: { text: string; links: Record<string, string> }) {
+  const words = Object.keys(links).sort((a, b) => b.length - a.length);
+  const pattern = new RegExp(`(${words.map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})`);
+  return (
+    <>
+      {text.split(pattern).map((part, i) =>
+        links[part] ? (
+          <a key={i} href={links[part]} target="_blank" rel="noreferrer">
+            {part}
+          </a>
+        ) : (
+          part
+        ),
+      )}
+    </>
+  );
+}
+
 /** Вырезка интерфейса: картинка своей темы, вторая скрыта стилями */
 function Themed({ image, className }: { image: ThemedImage; className: string }) {
   return (
@@ -196,13 +220,13 @@ function Themed({ image, className }: { image: ThemedImage; className: string })
 function Media({ item }: { item: CaseMedia }) {
   if (item.media === 'image') {
     return (
-      <div className="case-media">
+      <div className="case-media" style={item.ratio ? { aspectRatio: item.ratio } : undefined}>
         <img src={item.src} alt={item.alt} draggable={false} />
       </div>
     );
   }
   if (item.media === 'compare') return <Compare item={item} />;
-  return <Gallery background={item.background} slides={item.slides} />;
+  return <Gallery background={item.background} slides={item.slides} ratio={item.ratio} />;
 }
 
 /** Сравнение: картинка «до» лежит поверх «после» и обрезается по разделителю, разделитель тянется мышью, пальцем и стрелками */
@@ -264,7 +288,7 @@ function Compare({ item }: { item: Extract<CaseMedia, { media: 'compare' }> }) {
 }
 
 /** Галерея: фон неподвижен, листаются только телефоны — свайпом, прокруткой, стрелками и точками */
-function Gallery({ background, slides }: { background: string; slides: { src: string; alt: string }[] }) {
+function Gallery({ background, slides, ratio }: { background: string; slides: { src: string; alt: string }[]; ratio?: string }) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
 
@@ -285,7 +309,7 @@ function Gallery({ background, slides }: { background: string; slides: { src: st
       <div
         ref={trackRef}
         className="case-gallery-track"
-        style={{ backgroundImage: `url(${background})` }}
+        style={{ backgroundImage: `url(${background})`, aspectRatio: ratio }}
         onScroll={onScroll}
       >
         {slides.map((slide) => (
