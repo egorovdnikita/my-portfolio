@@ -43,8 +43,8 @@ export const cases: CaseStudy[] = [
     id: '1win',
     heroMedia: {
       media: 'compare',
-      before: asset('case-ds-compare-A2.jpg'),
-      after: asset('case-ds-compare-B2.jpg'),
+      before: asset('case-ds-compare-A2.webp'),
+      after: asset('case-ds-compare-B2.webp'),
       alt: 'Обложки продуктовых библиотек в двух брендах',
       ratio: '836 / 500',
     },
@@ -149,8 +149,8 @@ export const cases: CaseStudy[] = [
       {
         media: {
           media: 'compare',
-          before: asset('case-ds-compare-A1.jpg'),
-          after: asset('case-ds-compare-B1.jpg'),
+          before: asset('case-ds-compare-A1.webp'),
+          after: asset('case-ds-compare-B1.webp'),
           alt: 'Одни и те же экраны в двух брендах',
           ratio: '836 / 428',
         },
