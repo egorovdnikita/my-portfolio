@@ -179,7 +179,7 @@ export const cases: CaseStudy[] = [
   },
   {
     id: '1win-product',
-    heroMedia: { media: 'image', src: asset('case-product-hero.jpg'), alt: 'Кошелёк кассы', ratio: '836 / 500' },
+    heroMedia: { media: 'image', src: asset('case-product-hero.webp'), alt: 'Кошелёк кассы', ratio: '836 / 500' },
     title: 'Касса казино: пополнение и вывод',
     lead: 'Связал пополнение, вывод и историю в один путь с понятными условиями и статусами операций. Разделил банковские и криптовалютные сценарии.',
     meta: [
@@ -260,7 +260,7 @@ export const cases: CaseStudy[] = [
         ],
       },
       {
-        media: { media: 'image', src: asset('case-product-history.jpg'), alt: 'История операций', ratio: '836 / 420' },
+        media: { media: 'image', src: asset('case-product-history.webp'), alt: 'История операций', ratio: '836 / 420' },
         label: 'История операций',
         title: 'Не искать перевод заново',
         blocks: [
