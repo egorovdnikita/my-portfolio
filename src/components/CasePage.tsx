@@ -24,7 +24,7 @@ export function CasePage({ study, zoom, closing, onClose }: Props) {
       <div ref={scrollRef} className="case-scroll">
         <article key={study.id} className="case-column" style={{ zoom }}>
           <section className="case-card case-hero">
-            <Media item={study.heroMedia} />
+            <Media item={study.heroMedia} loading="eager" />
             <div className="case-intro">
               <h1 className="case-title">{study.title}</h1>
               <p className="case-lead">{study.lead}</p>
@@ -50,7 +50,7 @@ export function CasePage({ study, zoom, closing, onClose }: Props) {
             <section key={section.label} className="case-card case-panel case-section">
               {section.media && (
                 <div className="case-section-media">
-                  <Media item={section.media} />
+                  <Media item={section.media} loading="lazy" />
                 </div>
               )}
               <Header label={section.label} />
@@ -137,20 +137,23 @@ function Linked({ text, links }: { text: string; links: Record<string, string> }
   );
 }
 
-function Media({ item }: { item: CaseMedia }) {
+type Loading = 'eager' | 'lazy';
+
+/** loading: шапка грузится сразу, картинки секций — когда подходят к экрану */
+function Media({ item, loading }: { item: CaseMedia; loading: Loading }) {
   if (item.media === 'image') {
     return (
       <div className="case-media" style={{ aspectRatio: item.ratio }}>
-        <img src={item.src} alt={item.alt} draggable={false} />
+        <img src={item.src} alt={item.alt} loading={loading} decoding="async" draggable={false} />
       </div>
     );
   }
-  if (item.media === 'compare') return <Compare item={item} />;
-  return <Gallery background={item.background} slides={item.slides} ratio={item.ratio} />;
+  if (item.media === 'compare') return <Compare item={item} loading={loading} />;
+  return <Gallery background={item.background} slides={item.slides} ratio={item.ratio} loading={loading} />;
 }
 
 /** Сравнение: картинка «до» лежит поверх «после» и обрезается по разделителю, разделитель тянется мышью, пальцем и стрелками */
-function Compare({ item }: { item: Extract<CaseMedia, { media: 'compare' }> }) {
+function Compare({ item, loading }: { item: Extract<CaseMedia, { media: 'compare' }>; loading: Loading }) {
   const boxRef = useRef<HTMLDivElement>(null);
   const [pos, setPos] = useState(50);
 
@@ -184,8 +187,8 @@ function Compare({ item }: { item: Extract<CaseMedia, { media: 'compare' }> }) {
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
     >
-      <img className="case-compare-img" src={item.after} alt={item.alt} draggable={false} />
-      <img className="case-compare-img case-compare-before" src={item.before} alt="" draggable={false} />
+      <img className="case-compare-img" src={item.after} alt={item.alt} loading={loading} decoding="async" draggable={false} />
+      <img className="case-compare-img case-compare-before" src={item.before} alt="" loading={loading} decoding="async" draggable={false} />
       <span className="case-compare-line" aria-hidden />
       <span
         className="case-compare-handle"
@@ -208,7 +211,17 @@ function Compare({ item }: { item: Extract<CaseMedia, { media: 'compare' }> }) {
 }
 
 /** Галерея: фон неподвижен, листаются только телефоны — свайпом, прокруткой, стрелками и точками */
-function Gallery({ background, slides, ratio }: { background: string; slides: { src: string; alt: string }[]; ratio: string }) {
+function Gallery({
+  background,
+  slides,
+  ratio,
+  loading,
+}: {
+  background: string;
+  slides: { src: string; alt: string }[];
+  ratio: string;
+  loading: Loading;
+}) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
 
@@ -232,9 +245,10 @@ function Gallery({ background, slides, ratio }: { background: string; slides: { 
         style={{ backgroundImage: `url(${background})`, aspectRatio: ratio }}
         onScroll={onScroll}
       >
-        {slides.map((slide) => (
+        {slides.map((slide, i) => (
           <div key={slide.src} className="case-gallery-slide">
-            <img src={slide.src} alt={slide.alt} draggable={false} />
+            {/* Следующие слайды не видны до перелистывания — грузятся по мере приближения */}
+            <img src={slide.src} alt={slide.alt} loading={i === 0 ? loading : 'lazy'} decoding="async" draggable={false} />
           </div>
         ))}
       </div>
