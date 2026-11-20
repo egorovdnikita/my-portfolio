@@ -29,9 +29,6 @@ type Props = {
 };
 
 const INTERACTIVE = 'a, button, input, select, textarea, [role="menu"]';
-// Точечная сетка масштабируется вместе с холстом, как у референса:
-// шаг, радиус точки и её мягкий край умножаются на масштаб, поэтому при отдалении
-// точки становятся мельче и бледнее, а не сливаются в серую массу
 
 type Drag =
   | { kind: 'pan'; id: number; sx: number; sy: number; cam: Camera; moved: boolean }
@@ -193,9 +190,7 @@ export function Canvas({ camera, setCamera, offsets, setOffset, tool, spaceHeld,
     <div
       ref={viewportRef}
       className={`viewport${drag?.moved ? ' is-dragging' : ''}`}
-      style={{
-        cursor,
-      }}
+      style={{ cursor }}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={endDrag}
