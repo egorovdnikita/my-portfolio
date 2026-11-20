@@ -1,12 +1,6 @@
 /* Значения сняты из макета Figma (кадр «Wireframe - 1», 1920×1080). */
 
-@font-face {
-  font-family: 'Iosevka';
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-  src: url('/fonts/Iosevka-Medium.woff2') format('woff2');
-}
+/* Iosevka — только жирный, для ярлыка NDA на обложках */
 @font-face {
   font-family: 'Iosevka';
   font-weight: 600;
@@ -127,7 +121,7 @@ body,
 body {
   background: var(--bg-page);
   color: var(--text-primary);
-  /* Тест: Inter с межбуквенным −4%. Откат — вернуть 'Iosevka', ui-monospace, monospace и убрать letter-spacing */
+  /* Основной шрифт — Inter с межбуквенным −4%, как в макете */
   font-family: 'Inter', system-ui, sans-serif;
   letter-spacing: -0.04em;
   font-weight: 500;
