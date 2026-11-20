@@ -1180,10 +1180,8 @@ a {
   --lh: 1.4;
   color: var(--text-primary);
 }
-.case-bullets li { display: flex; gap: 12px; }
-.case-bullets--plain li { gap: 4px; }
-.case-bullets--plain .case-dash { flex-shrink: 0; width: 24px; padding-left: 5px; }
-.case-dash { color: var(--accent-base); white-space: nowrap; }
+.case-bullets li { display: flex; gap: 4px; }
+.case-dash { flex-shrink: 0; width: 24px; padding-left: 5px; color: var(--accent-base); }
 
 .case-h2 {
   font-size: 32px;

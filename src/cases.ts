@@ -3,8 +3,8 @@
 export type CaseBlock =
   /** links — слова из текста, которые становятся ссылками (подчёркнуты, цвет текста), как в макете */
   | { type: 'text'; text: string; links?: Record<string, string> }
-  /** plain — точка вместо прочерка (блок «Итог») */
-  | { type: 'bullets'; items: string[]; plain?: boolean }
+  /** Пункты с синей точкой */
+  | { type: 'bullets'; items: string[] }
   /** Карточки по две в ряд: заголовок и пояснение */
   | { type: 'steps'; items: { title: string; text: string }[] };
 
@@ -169,7 +169,6 @@ export const cases: CaseStudy[] = [
           },
           {
             type: 'bullets',
-            plain: true,
             items: [
               'Общая база и продуктовые расширения развиваются независимо.',
               'Breaking Changes требуют отдельного плана перехода.',
@@ -284,7 +283,6 @@ export const cases: CaseStudy[] = [
           },
           {
             type: 'bullets',
-            plain: true,
             items: [
               'Условия видны до подтверждения перевода.',
               'К операции можно вернуться через историю.',
