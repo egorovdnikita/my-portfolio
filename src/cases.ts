@@ -78,8 +78,8 @@ export const cases: CaseStudy[] = [
       {
         media: {
           media: 'gallery',
-          background: asset('case-ds-gallery-bg.jpg'),
-          slides: [1, 2, 3, 4].map((i) => ({ src: asset(`case-ds-gallery-${i}.png`), alt: `Основа дизайн-системы, слайд ${i}` })),
+          background: asset('case-ds-gallery-bg.webp'),
+          slides: [1, 2, 3, 4].map((i) => ({ src: asset(`case-ds-gallery-${i}.webp`), alt: `Основа дизайн-системы, слайд ${i}` })),
           ratio: '836 / 507',
         },
         label: 'Архитектурное решение',
