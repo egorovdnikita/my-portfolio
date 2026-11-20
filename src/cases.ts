@@ -7,8 +7,6 @@ export type CaseBlock =
   | { type: 'bullets'; items: string[]; plain?: boolean }
   /** Карточки 2×2; lg — текст 16px вместо 14. image — вырезка интерфейса для светлой и тёмной темы; \n в тексте — перенос строки как в макете */
   | { type: 'steps'; items: { title: string; text: string; image?: ThemedImage }[]; size?: 'lg' }
-  /** icon — иконка над заголовком; bare — без иконки и без пунктирной заглушки */
-  | { type: 'columns'; items: { title: string; text: string; icon?: string }[]; bare?: boolean }
   /** Схема во всю ширину карточки — своя картинка для светлой и тёмной темы */
   | { type: 'figure'; image: ThemedImage; alt: string };
 

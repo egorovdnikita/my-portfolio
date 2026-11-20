@@ -118,24 +118,6 @@ function Block({ block }: { block: CaseBlock }) {
           ))}
         </div>
       );
-    case 'columns':
-      return (
-        <div className="case-columns">
-          {block.items.map((col) => (
-            <div key={col.title} className="case-col">
-              {col.icon ? (
-                <img className="case-col-icon" src={col.icon} alt="" draggable={false} />
-              ) : (
-                !block.bare && (
-                  <span className={`case-cutout${block.items.length < 4 ? ' case-cutout--round' : ''}`} aria-hidden />
-                )
-              )}
-              <span className="case-col-title">{col.title}</span>
-              <span className="case-small">{col.text}</span>
-            </div>
-          ))}
-        </div>
-      );
     case 'figure':
       return (
         <figure className="case-figure">
