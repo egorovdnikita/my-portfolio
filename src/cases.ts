@@ -31,10 +31,8 @@ export type CaseMedia =
 export type CaseStudy = {
   id: string;
   tags: string[];
-  /** Обложка в шапке кейса — картинка из макета */
-  cover?: string;
-  /** Галерея или сравнение в шапке вместо обложки */
-  heroMedia?: CaseMedia;
+  /** Картинка, галерея или сравнение в шапке кейса */
+  heroMedia: CaseMedia;
   title: string;
   lead: string;
   meta: { label: string; value: string }[];
