@@ -210,10 +210,10 @@ export const cases: CaseStudy[] = [
       {
         media: {
           media: 'gallery',
-          background: asset('case-product-cashier-bg.jpg'),
+          background: asset('case-product-cashier-bg.webp'),
           slides: [
-            { src: asset('case-product-deposit-1.png'), alt: 'Пополнение банковской картой' },
-            { src: asset('case-product-deposit-2.png'), alt: 'Пополнение криптовалютой' },
+            { src: asset('case-product-deposit-1.webp'), alt: 'Пополнение банковской картой' },
+            { src: asset('case-product-deposit-2.webp'), alt: 'Пополнение криптовалютой' },
           ],
           ratio: '836 / 500',
         },
@@ -236,10 +236,10 @@ export const cases: CaseStudy[] = [
       {
         media: {
           media: 'gallery',
-          background: asset('case-product-cashier-bg.jpg'),
+          background: asset('case-product-cashier-bg.webp'),
           slides: [
-            { src: asset('case-product-withdraw-1.png'), alt: 'Вывод на банковскую карту' },
-            { src: asset('case-product-withdraw-2.png'), alt: 'Вывод в криптовалюте' },
+            { src: asset('case-product-withdraw-1.webp'), alt: 'Вывод на банковскую карту' },
+            { src: asset('case-product-withdraw-2.webp'), alt: 'Вывод в криптовалюте' },
           ],
           ratio: '836 / 500',
         },
