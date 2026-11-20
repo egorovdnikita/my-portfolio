@@ -1099,12 +1099,6 @@ a {
   gap: 16px;
   padding: 24px 24px 16px;
 }
-.case-eyebrow {
-  color: var(--accent-base);
-  font-size: 14px;
-  font-weight: 600;
-  --lh: 1.4;
-}
 .case-title {
   font-size: 44px;
   font-weight: 600;
@@ -1149,24 +1143,6 @@ a {
   display: flex;
   align-items: center;
   gap: 12px;
-}
-
-.case-stats { display: flex; gap: 8px; }
-.case-stat {
-  flex: 1 0 0;
-  min-width: 1px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 20px;
-  border-radius: 24px;
-  background: var(--fill-2);
-}
-.case-stat-value {
-  color: var(--accent-base);
-  font-size: 40px;
-  font-weight: 600;
-  --lh: 1.15;
 }
 
 .case-bullets {
@@ -1516,9 +1492,6 @@ a {
   /* Мета под описанием — по две в ряд */
   .case-meta { flex-wrap: wrap; }
   .case-meta-item { flex: 1 1 calc(50% - 4px); }
-  .case-stats { flex-wrap: wrap; }
-  .case-stat { flex: 1 1 calc(50% - 4px); }
-  .case-stat-value { font-size: 32px; }
   .case-steps { grid-template-columns: minmax(0, 1fr); }
 }
 
