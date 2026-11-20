@@ -1167,19 +1167,14 @@ a {
 /* Карточки под текстом: 24px от текста (16 отступа текста + 8 в макете) */
 .case-section > .case-text + .case-steps { margin-top: 4px; }
 .case-steps { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; --lh: 1.4; }
-/* Карточка шага: место под картинку сверху, ниже заголовок и текст */
+/* Карточка шага: заголовок 16 и пояснение 14, 4px между ними, как в макете */
 .case-step {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 4px;
   padding: 20px;
   border-radius: 24px;
   background: var(--fill-2);
-}
-.case-step-text {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
 }
 .case-step-title { font-size: 16px; font-weight: 600; }
 

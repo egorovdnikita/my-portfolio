@@ -98,10 +98,8 @@ function Block({ block }: { block: CaseBlock }) {
         <div className="case-steps">
           {block.items.map((step) => (
             <div key={step.title} className="case-step">
-              <div className="case-step-text">
-                <span className="case-step-title">{step.title}</span>
-                <span className="case-small">{step.text}</span>
-              </div>
+              <span className="case-step-title">{step.title}</span>
+              <span className="case-small">{step.text}</span>
             </div>
           ))}
         </div>
