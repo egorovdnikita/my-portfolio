@@ -21,7 +21,6 @@ export type CaseMedia =
 
 export type CaseStudy = {
   id: string;
-  tags: string[];
   /** Картинка, галерея или сравнение в шапке кейса */
   heroMedia: CaseMedia;
   title: string;
@@ -49,7 +48,6 @@ export const cases: CaseStudy[] = [
       alt: 'Обложки продуктовых библиотек в двух брендах',
       ratio: '836 / 500',
     },
-    tags: ['Design System', 'White-Label', 'Variables', 'Slots', 'RTL', 'Storybook', 'DesignOps'],
     title: 'Дизайн-система для White Label',
     lead: 'Объединил четыре бренда в одной системе, сохранив общие правила и продуктовые различия. С AI подготовил проверки состояний и Handoff.',
     meta: [
@@ -182,7 +180,6 @@ export const cases: CaseStudy[] = [
   {
     id: '1win-product',
     heroMedia: { media: 'image', src: asset('case-product-hero.jpg'), alt: 'Кошелёк кассы', ratio: '836 / 500' },
-    tags: ['iGaming', 'B2C', 'B2B', 'Payments', 'Casino', 'Локализация', 'Web'],
     title: 'Касса казино: пополнение и вывод',
     lead: 'Связал пополнение, вывод и историю в один путь с понятными условиями и статусами операций. Разделил банковские и криптовалютные сценарии.',
     meta: [
