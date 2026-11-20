@@ -69,7 +69,7 @@ export const projects: Project[] = [
     title: 'Касса казино: пополнение и вывод',
     description: 'Связал пополнение, вывод и историю в один путь с понятными условиями и статусами операций.',
     tags: ['iGaming', 'B2C', 'B2B', 'Payments'],
-    cover: asset('cover-card-product.jpg'),
+    cover: asset('cover-card-product.webp'),
     action: { kind: 'case', caseId: '1win-product' },
   },
   {
@@ -77,7 +77,7 @@ export const projects: Project[] = [
     title: 'Дизайн-система для White Label',
     description: 'Объединил четыре бренда в одной системе, сохранив общие правила и продуктовые различия.',
     tags: ['Design System', 'White-Label', 'RTL', 'Storybook'],
-    cover: asset('cover-card-ds-v5.jpg'),
+    cover: asset('cover-card-ds-v5.webp'),
     action: { kind: 'case', caseId: '1win' },
   },
   {
