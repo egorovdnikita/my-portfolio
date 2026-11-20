@@ -1133,11 +1133,6 @@ a {
   font-size: 14px;
   --lh: 1.4;
 }
-.case-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
 
 .case-bullets {
   display: flex;

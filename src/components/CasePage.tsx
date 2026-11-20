@@ -41,7 +41,7 @@ export function CasePage({ study, zoom, closing, onClose }: Props) {
 
           {study.role && (
             <section className="case-card case-panel">
-              <Header label={study.role.label} />
+              <span className="case-label">{study.role.label}</span>
               <Bullets items={study.role.items} />
             </section>
           )}
@@ -53,7 +53,7 @@ export function CasePage({ study, zoom, closing, onClose }: Props) {
                   <Media item={section.media} loading="lazy" />
                 </div>
               )}
-              <Header label={section.label} />
+              <span className="case-label">{section.label}</span>
               <h2 className="case-h2">{section.title}</h2>
               {section.blocks.map((block, i) => (
                 <Block key={i} block={block} />
@@ -67,15 +67,6 @@ export function CasePage({ study, zoom, closing, onClose }: Props) {
       <button type="button" className="case-close" aria-label="Закрыть кейс" onClick={onClose}>
         <Icon src={icons.close} size={32} className="icon--strong" />
       </button>
-    </div>
-  );
-}
-
-/** Заголовок блока — только подпись, как в макете */
-function Header({ label }: { label: string }) {
-  return (
-    <div className="case-header">
-      <span className="case-label">{label}</span>
     </div>
   );
 }
