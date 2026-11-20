@@ -5,12 +5,8 @@ export type CaseBlock =
   | { type: 'text'; text: string; links?: Record<string, string> }
   /** plain — точка вместо прочерка (блок «Итог») */
   | { type: 'bullets'; items: string[]; plain?: boolean }
-  /** Карточки 2×2; lg — текст 16px вместо 14. image — вырезка интерфейса для светлой и тёмной темы; \n в тексте — перенос строки как в макете */
-  | { type: 'steps'; items: { title: string; text: string; image?: ThemedImage }[]; size?: 'lg' }
-  /** Схема во всю ширину карточки — своя картинка для светлой и тёмной темы */
-  | { type: 'figure'; image: ThemedImage; alt: string };
-
-export type ThemedImage = { light: string; dark: string };
+  /** Карточки по две в ряд: заголовок и пояснение */
+  | { type: 'steps'; items: { title: string; text: string }[] };
 
 /** media — картинка, галерея или сравнение в верхней части карточки секции, над подписью */
 export type CaseSection = { label: string; title: string; media?: CaseMedia; blocks: CaseBlock[] };

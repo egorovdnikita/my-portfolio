@@ -1219,26 +1219,6 @@ a {
   gap: 4px;
 }
 .case-step-title { font-size: 16px; font-weight: 600; }
-.case-steps--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-
-/* Схема во всю ширину карточки: 836 в макете, 8px под карточками шагов */
-.case-figure { margin: 0 -16px; }
-.case-figure img { display: block; width: 100%; height: auto; }
-.case-section > .case-steps + .case-figure { margin-top: -12px; }
-.case-section > .case-figure:last-child { margin-bottom: -16px; }
-.case-steps--lg .case-small { font-size: 16px; }
-
-/* Вырезка интерфейса в карточке шага: элемент 210 из 374 по ширине карточки, по центру; текст под ним тоже по центру.
-   Ширина в процентах, чтобы пропорция совпадала с макетом при любой ширине колонки */
-.case-shot { display: flex; justify-content: center; }
-.case-shot img { display: block; width: 56.15%; height: auto; }
-.case-step:has(> .case-shot) { gap: 20px; }
-.case-step:has(> .case-shot) .case-step-text { text-align: center; }
-/* Переносы строк из макета (\n в тексте); на узких экранах строка дополнительно переносится сама */
-.case-step-text .case-small { white-space: pre-line; }
-.only-dark { display: none !important; }
-:root[data-theme='dark'] .only-dark { display: block !important; }
-:root[data-theme='dark'] .only-light { display: none !important; }
 
 /* Картинка: пропорция задаётся из данных кейса */
 .case-media {

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { type CaseBlock, type CaseMedia, type CaseStudy, type ThemedImage } from '../cases';
+import { type CaseBlock, type CaseMedia, type CaseStudy } from '../cases';
 import { icons } from '../content';
 import { Icon } from './Cards';
 
@@ -104,12 +104,9 @@ function Block({ block }: { block: CaseBlock }) {
       return <Bullets items={block.items} plain={block.plain} />;
     case 'steps':
       return (
-        <div
-          className={`case-steps${block.size === 'lg' ? ' case-steps--lg' : ''}${block.items.length === 3 ? ' case-steps--3' : ''}`}
-        >
+        <div className="case-steps">
           {block.items.map((step) => (
             <div key={step.title} className="case-step">
-              {step.image && <Themed image={step.image} className="case-shot" />}
               <div className="case-step-text">
                 <span className="case-step-title">{step.title}</span>
                 <span className="case-small">{step.text}</span>
@@ -117,13 +114,6 @@ function Block({ block }: { block: CaseBlock }) {
             </div>
           ))}
         </div>
-      );
-    case 'figure':
-      return (
-        <figure className="case-figure">
-          <img className="only-light" src={block.image.light} alt={block.alt} draggable={false} />
-          <img className="only-dark" src={block.image.dark} alt={block.alt} draggable={false} />
-        </figure>
       );
   }
 }
@@ -144,16 +134,6 @@ function Linked({ text, links }: { text: string; links: Record<string, string> }
         ),
       )}
     </>
-  );
-}
-
-/** Вырезка интерфейса: картинка своей темы, вторая скрыта стилями */
-function Themed({ image, className }: { image: ThemedImage; className: string }) {
-  return (
-    <span className={className}>
-      <img className="only-light" src={image.light} alt="" draggable={false} />
-      <img className="only-dark" src={image.dark} alt="" draggable={false} />
-    </span>
   );
 }
 
