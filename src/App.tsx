@@ -18,6 +18,9 @@ const ZERO_OFFSETS = Object.fromEntries(Object.keys(NODES).map((id) => [id, { x:
 const ZOOM_PRESETS = [0.25, 0.5, 0.75, 1, 1.5, 2];
 const ZOOM_STEP = 1.25;
 
+// Порядок карточек в ленте под главной: на телефоне столбиком, на десктопе парами
+const FEED_ORDER: NodeId[] = ['exp', 'vibe', 'p1', 'p2', 'p3', 'p4', 's1', 's2'];
+
 const PAGE_ZOOM_PRESETS = [0.5, 0.75, 1, 1.25, 1.5];
 const CASE_CLOSE_MS = 200;
 
@@ -251,7 +254,11 @@ export default function App() {
     s1: <ShotCard shot={shots[0]} />,
     s2: <ShotCard shot={shots[1]} />,
   };
-  const flip = (id: NodeId) => <div data-flip={id}>{nodes[id]}</div>;
+  const flip = (id: NodeId) => (
+    <div key={id} data-flip={id}>
+      {nodes[id]}
+    </div>
+  );
   const caseOpen = Boolean(study) && !caseClosing;
 
   return (
@@ -273,28 +280,10 @@ export default function App() {
           <div className="feed-column" style={{ zoom: pageZoom }}>
             {flip('hero')}
             {isMobile ? (
-              <>
-                {flip('exp')}
-                {flip('vibe')}
-                {flip('p1')}
-                {flip('p2')}
-                {flip('p3')}
-                {flip('p4')}
-                {flip('s1')}
-                {flip('s2')}
-              </>
+              FEED_ORDER.map(flip)
             ) : (
               // Парами по строкам, как в макете: в каждой паре карточки одной высоты
-              <div className="feed-grid">
-                {flip('exp')}
-                {flip('vibe')}
-                {flip('p1')}
-                {flip('p2')}
-                {flip('p3')}
-                {flip('p4')}
-                {flip('s1')}
-                {flip('s2')}
-              </div>
+              <div className="feed-grid">{FEED_ORDER.map(flip)}</div>
             )}
             {isMobile && <p className="legal legal--feed">{profile.footerHandle} | {profile.footerNote}</p>}
           </div>
