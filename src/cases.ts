@@ -20,17 +20,13 @@ export type ThemedImage = { light: string; dark: string };
 /** media — картинка, галерея или сравнение в верхней части карточки секции, над подписью */
 export type CaseSection = { label: string; title: string; media?: CaseMedia; blocks: CaseBlock[] };
 
-/** Картинка, галерея или сравнение во всю ширину колонки — отдельной карточкой между секциями */
+/** Картинка, галерея или сравнение в шапке кейса или вверху карточки секции; ratio — пропорция кадра из макета, например '836 / 500' */
 export type CaseMedia =
-  /** ratio — пропорция кадра из макета, например '836 / 500' */
-  | { media: 'image'; src: string; alt: string; ratio?: string }
+  | { media: 'image'; src: string; alt: string; ratio: string }
   /** background — общий неподвижный фон; слайды — прозрачные PNG размером с кадр, листаются поверх фона */
-  | { media: 'gallery'; background: string; slides: { src: string; alt: string }[]; ratio?: string }
+  | { media: 'gallery'; background: string; slides: { src: string; alt: string }[]; ratio: string }
   /** Две картинки друг на друге: before слева от разделителя, after справа; разделитель перетаскивается */
   | { media: 'compare'; before: string; after: string; alt: string; ratio: string };
-
-// У секции поле media — объект (картинка над подписью), у отдельной карточки медиа — строка-тип
-export const isMedia = (item: CaseSection | CaseMedia): item is CaseMedia => typeof item.media === 'string';
 
 export type CaseStudy = {
   id: string;
@@ -44,7 +40,7 @@ export type CaseStudy = {
   meta: { label: string; value: string }[];
   /** Блок «Моя роль» после шапки: подпись слева, пояснение справа, пункты */
   role?: { label: string; items: string[] };
-  sections: (CaseSection | CaseMedia)[];
+  sections: CaseSection[];
 };
 
 const asset = (name: string) => `${import.meta.env.BASE_URL}assets/${name}`;

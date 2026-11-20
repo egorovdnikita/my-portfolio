@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useRef, useState } from 'react';
-import { isMedia, type CaseBlock, type CaseMedia, type CaseStudy, type ThemedImage } from '../cases';
+import { type CaseBlock, type CaseMedia, type CaseStudy, type ThemedImage } from '../cases';
 import { icons } from '../content';
 import { Icon } from './Cards';
 
@@ -52,10 +52,7 @@ export function CasePage({ study, zoom, closing, onClose }: Props) {
             </section>
           )}
 
-          {study.sections.map((section, i) =>
-            isMedia(section) ? (
-              <Media key={i} item={section} />
-            ) : (
+          {study.sections.map((section) => (
             <section key={section.label} className="case-card case-panel case-section">
               {section.media && (
                 <div className="case-section-media">
@@ -68,8 +65,7 @@ export function CasePage({ study, zoom, closing, onClose }: Props) {
                 <Block key={i} block={block} />
               ))}
             </section>
-            ),
-          )}
+          ))}
 
         </article>
       </div>
@@ -220,7 +216,7 @@ function Themed({ image, className }: { image: ThemedImage; className: string })
 function Media({ item }: { item: CaseMedia }) {
   if (item.media === 'image') {
     return (
-      <div className="case-media" style={item.ratio ? { aspectRatio: item.ratio } : undefined}>
+      <div className="case-media" style={{ aspectRatio: item.ratio }}>
         <img src={item.src} alt={item.alt} draggable={false} />
       </div>
     );
@@ -288,7 +284,7 @@ function Compare({ item }: { item: Extract<CaseMedia, { media: 'compare' }> }) {
 }
 
 /** Галерея: фон неподвижен, листаются только телефоны — свайпом, прокруткой, стрелками и точками */
-function Gallery({ background, slides, ratio }: { background: string; slides: { src: string; alt: string }[]; ratio?: string }) {
+function Gallery({ background, slides, ratio }: { background: string; slides: { src: string; alt: string }[]; ratio: string }) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
 
