@@ -676,7 +676,6 @@ a {
 .feed-grid .project-text { flex: 1 0 auto; }
 .feed .card { width: 100%; }
 
-
 /* Главная карточка в ленте — по центру колонки 920, как в макете; на телефоне во всю ширину */
 .feed .hero--feed { width: 456px; margin: 0 auto 24px; } /* 8 общего зазора + 24 = 32, как в макете */
 .hero--mobile { width: 100%; }
@@ -1199,51 +1198,6 @@ a {
 }
 /* Ссылка в тексте: цвет текста и подчёркивание, как в макете */
 .case-text a { color: inherit; text-decoration: underline; }
-.case-quote {
-  padding: 20px 24px;
-  border-radius: 24px;
-  background: var(--accent-soft);
-  color: var(--accent-base);
-  font-size: 17px;
-  font-weight: 500;
-  --lh: 1.4;
-}
-.case-image {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 24px;
-  background: var(--fill-2);
-  color: var(--text-muted);
-  font-size: 14px;
-  --lh: 1.4;
-}
-
-.case-hr {
-  display: block;
-  height: 1px;
-  background: var(--fill-6);
-}
-.case-table {
-  display: flex;
-  flex-direction: column;
-  padding: 8px 20px;
-  border-radius: 24px;
-  background: var(--fill-2);
-}
-.case-tr {
-  display: flex;
-  gap: 16px;
-  padding: 12px 0;
-  font-size: 15px;
-  --lh: 1.4;
-}
-.case-tr > * { flex: 1 0 0; min-width: 1px; }
-/* Колонки: название — основной цвет, «до» — серый, «после» — акцент */
-.case-tr > :nth-child(2) { color: var(--text-muted); }
-.case-tr > :nth-child(3) { color: var(--accent-base); }
-.case-tr > :first-child { color: var(--text-primary); font-weight: 600; }
-.case-tr.case-th > * { color: var(--text-muted); font-size: 14px; font-weight: 500; }
 
 .case-section > .case-steps,
 .case-section > .case-columns { margin: 0 -16px; }
@@ -1623,9 +1577,6 @@ a {
   .case-stat { flex: 1 1 calc(50% - 4px); }
   .case-stat-value { font-size: 32px; }
   .case-steps { grid-template-columns: minmax(0, 1fr); }
-  .case-table { padding: 4px 12px; }
-  .case-tr { gap: 8px; font-size: 13px; }
-  .case-image { height: 220px !important; padding: 0 16px; text-align: center; }
 }
 
 /* На мобильном холсте главная карточка вертикальная, как в мобильной ленте (ширина колонки 375 − 2×8) */

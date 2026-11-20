@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { type CaseBlock, type CaseMedia, type CaseStudy, type ThemedImage } from '../cases';
 import { icons } from '../content';
 import { Icon } from './Cards';
@@ -102,38 +102,6 @@ function Block({ block }: { block: CaseBlock }) {
       return <p className="case-text">{block.links ? <Linked text={block.text} links={block.links} /> : block.text}</p>;
     case 'bullets':
       return <Bullets items={block.items} plain={block.plain} />;
-    case 'quote':
-      return <p className="case-quote">{block.text}</p>;
-    case 'image':
-      return (
-        <div className="case-image" style={{ height: block.height }}>
-          <span>{block.caption}</span>
-        </div>
-      );
-    case 'table':
-      return (
-        <div className="case-table" role="table">
-          <div className="case-tr case-th" role="row">
-            {block.head.map((h, i) => (
-              <span key={i} role="columnheader">
-                {h || '​'}
-              </span>
-            ))}
-          </div>
-          {block.rows.map((row) => (
-            <Fragment key={row[0]}>
-              <span className="case-hr" aria-hidden />
-              <div className="case-tr" role="row">
-                {row.map((cell, i) => (
-                  <span key={i} role="cell">
-                    {cell}
-                  </span>
-                ))}
-              </div>
-            </Fragment>
-          ))}
-        </div>
-      );
     case 'steps':
       return (
         <div

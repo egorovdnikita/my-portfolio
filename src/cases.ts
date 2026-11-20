@@ -5,9 +5,6 @@ export type CaseBlock =
   | { type: 'text'; text: string; links?: Record<string, string> }
   /** plain — точка вместо прочерка (блок «Итог») */
   | { type: 'bullets'; items: string[]; plain?: boolean }
-  | { type: 'table'; head: [string, string, string]; rows: [string, string, string][] }
-  | { type: 'quote'; text: string }
-  | { type: 'image'; caption: string; height: number }
   /** Карточки 2×2; lg — текст 16px вместо 14. image — вырезка интерфейса для светлой и тёмной темы; \n в тексте — перенос строки как в макете */
   | { type: 'steps'; items: { title: string; text: string; image?: ThemedImage }[]; size?: 'lg' }
   /** icon — иконка над заголовком; bare — без иконки и без пунктирной заглушки */
