@@ -573,15 +573,15 @@ a {
 .shot-surface { position: absolute; inset: 0; border-radius: calc(32 * var(--shot-unit)); background-size: cover; background-position: center; }
 /* На холсте шоты лежат внахлёст — обводка цвета фона отделяет их */
 .node .shot-card--outlined .shot-surface { outline: 4px solid var(--bg-page); }
-.shot-header { position: absolute; top: 0; left: 0; width: 100%; display: flex; align-items: center; gap: calc(8 * var(--shot-unit)); padding: calc(24 * var(--shot-unit)); border-radius: calc(32 * var(--shot-unit)) calc(32 * var(--shot-unit)) 0 0; background: linear-gradient(to bottom, rgb(0 0 0 / var(--shot-shade)), transparent); }
+.shot-header { position: absolute; bottom: 0; left: 0; width: 100%; display: flex; align-items: center; gap: calc(8 * var(--shot-unit)); padding: calc(48 * var(--shot-unit)) calc(24 * var(--shot-unit)) calc(24 * var(--shot-unit)); border-radius: 0 0 calc(32 * var(--shot-unit)) calc(32 * var(--shot-unit)); background: linear-gradient(to top, rgb(0 0 0 / var(--shot-shade)), rgb(0 0 0 / calc(var(--shot-shade) - 0.1)) 60%, transparent); }
 .shot-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: calc(8 * var(--shot-unit)); }
 .shot-text h2 { font-size: calc(24 * var(--shot-unit)); line-height: calc(29 * var(--shot-unit)); font-weight: 600; letter-spacing: -0.05em; }
 .shot-text p { font-size: calc(14 * var(--shot-unit)); line-height: calc(17 * var(--shot-unit)); white-space: pre-line; }
 .shot-lock { flex-shrink: 0; width: calc(64 * var(--shot-unit)); height: calc(64 * var(--shot-unit)); display: grid; place-items: center; background: var(--static-white); border-radius: 50%; }
 .shot-lock img { width: calc(24 * var(--shot-unit)); height: calc(24 * var(--shot-unit)); }
 /* Метка NDA: наклон 15° вокруг верхнего левого угла, как поворот в Figma */
-.shot-badge { position: absolute; left: calc(388 * var(--shot-unit)); top: calc(-19 * var(--shot-unit)); padding: calc(8 * var(--shot-unit)) calc(12 * var(--shot-unit)); transform: rotate(15deg); transform-origin: 0 0; background: #ff0090; color: var(--static-white); font-family: 'Iosevka', monospace; font-size: calc(32 * var(--shot-unit)); line-height: calc(40 * var(--shot-unit)); font-weight: 700; letter-spacing: -0.04em; }
-.shot-tags { position: absolute; bottom: 0; left: 0; display: flex; gap: calc(4 * var(--shot-unit)); padding: calc(24 * var(--shot-unit)); }
+.shot-badge { position: absolute; left: calc(388 * var(--shot-unit)); top: calc(0.23 * var(--shot-unit)); padding: calc(8 * var(--shot-unit)) calc(12 * var(--shot-unit)); transform: rotate(15deg); transform-origin: 0 0; background: #ff0090; color: var(--static-white); font-family: 'Iosevka', monospace; font-size: calc(32 * var(--shot-unit)); line-height: calc(40 * var(--shot-unit)); font-weight: 700; letter-spacing: -0.04em; }
+.shot-tags { position: absolute; top: 0; left: 0; display: flex; gap: calc(4 * var(--shot-unit)); padding: calc(24 * var(--shot-unit)); }
 .shot-tags span { padding: calc(4 * var(--shot-unit)) calc(8 * var(--shot-unit)); border-radius: calc(10 * var(--shot-unit)); background: var(--static-white); color: var(--static-black); font-size: calc(14 * var(--shot-unit)); line-height: calc(17 * var(--shot-unit)); }
 .feed .shot-card { width: 100%; }
 

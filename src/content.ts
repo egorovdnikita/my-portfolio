@@ -105,7 +105,7 @@ export type Shot = {
   description: string;
   image: string;
   tags: string[];
-  /** Затемнение под заголовком (непрозрачность низа градиента в макете) */
+  /** Затемнение под заголовком внизу обложки (непрозрачность низа градиента в макете) */
   shade: number;
   rotation: number;
   outlined?: boolean;
@@ -113,8 +113,8 @@ export type Shot = {
 
 // Кейсы под NDA: только обложка, без страницы кейса
 export const shots: Shot[] = [
-  { id: 's1', title: 'Wink Музыка', description: 'Стриминговый сервис внутри\nэкосистемы онлайн-кинотеатра WINK', image: asset('shot-wink-v2.webp'), tags: ['iOS', 'Android', 'Apple TV', 'SmartTV'], shade: 0.5, rotation: -3.944458232017951 },
-  { id: 's2', title: 'ReelView', description: 'Сервис коротких видео сериалов\nдля американского рынка', image: asset('shot-reelview-v2.webp'), tags: ['iOS', 'Android'], shade: 0.3, rotation: 3.7976093910559716, outlined: true },
+  { id: 's1', title: 'Wink Музыка', description: 'Стриминговый сервис внутри\nэкосистемы онлайн-кинотеатра WINK', image: asset('shot-wink-v2.webp'), tags: ['MediaTech', 'B2C'], shade: 0.4, rotation: -3.944458232017951 },
+  { id: 's2', title: 'Promminer Pool', description: 'Первый в России и самый популярный\nмайнинг-пул для добычи криптовалюты', image: asset('shot-promminer.webp'), tags: ['FinTech', 'B2B'], shade: 0.5, rotation: 3.7976093910559716, outlined: true },
 ];
 
 export const icons = {
