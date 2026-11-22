@@ -235,6 +235,31 @@
 }
 .reaction-dot--m { left: 28px; top: 28px; width: 14px; height: 14px; }
 .reaction-dot--s { left: 40px; top: 40px; width: 6px; height: 6px; }
+/* Появление по мере прокрутки, как реакции в iMessage: сначала пузырьки, затем кружок с пружиной */
+.reaction-dot,
+.reaction-face {
+  opacity: 0;
+  transform: scale(0.3);
+}
+.reaction-dot--s { transform-origin: 0 0; }
+.reaction-dot--m { transform-origin: 0 0; }
+.reaction-face { transform-origin: 70% 70%; }
+.reaction.is-shown .reaction-dot,
+.reaction.is-shown .reaction-face {
+  animation: reaction-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+.reaction.is-shown .reaction-dot--s { animation-delay: 0.15s; }
+.reaction.is-shown .reaction-dot--m { animation-delay: 0.25s; }
+.reaction.is-shown .reaction-face { animation-delay: 0.35s; }
+@keyframes reaction-pop {
+  to { opacity: 1; transform: scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .reaction-dot,
+  .reaction-face { opacity: 1; transform: none; }
+  .reaction.is-shown .reaction-dot,
+  .reaction.is-shown .reaction-face { animation: none; }
+}
 .reaction-face {
   left: 0;
   top: 0;

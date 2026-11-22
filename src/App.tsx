@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import { CasePage } from './components/CasePage';
 import { Icon } from './components/Cards';
 import { calendar, commitsWord, dayLabel } from './contrib';
@@ -45,8 +45,26 @@ function dayTitle(daysAgo: number, today: Date) {
 
 /** Реакция на сообщение: синий кружок с эмодзи и два «пузырька мысли», как в макете. */
 function Reaction({ emoji, right = -23, top = -23 }: { emoji: string; right?: number; top?: number }) {
+  // Появляется один раз, когда сообщение целиком видно между шапкой и кнопкой «Написать»
+  const ref = useRef<HTMLSpanElement>(null);
+  const [shown, setShown] = useState(false);
+  useEffect(() => {
+    const el = ref.current?.parentElement;
+    if (!el || shown) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShown(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin: '-120px 0px -100px 0px', threshold: 1 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [shown]);
   return (
-    <span className="reaction" style={{ right, top }} aria-hidden>
+    <span ref={ref} className={`reaction${shown ? ' is-shown' : ''}`} style={{ right, top }} aria-hidden>
       <span className="reaction-dot reaction-dot--m" />
       <span className="reaction-dot reaction-dot--s" />
       <span className="reaction-face">{emoji}</span>
