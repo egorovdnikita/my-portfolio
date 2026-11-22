@@ -259,7 +259,7 @@ export default function App() {
               <span className="job-period">{job.period}</span>
             </Bubble>
           ))}
-          <Bubble reaction={<Reaction emoji="👀" />}>Четыре года в продуктовом дизайне.</Bubble>
+          <Bubble reaction={<Reaction emoji="🫡" />}>Четыре года в продуктовом дизайне.</Bubble>
           <Bubble>
             Сейчас — <Fx kind="ripple">ведущий дизайнер</Fx>.
           </Bubble>
@@ -280,7 +280,7 @@ export default function App() {
           <Bubble>
             Увлёкся созданием <Fx kind="swing">приложений с AI</Fx>.
           </Bubble>
-          <Bubble>Нравится сразу пробовать свои идеи.</Bubble>
+          <Bubble reaction={<Reaction emoji="🤖" top={-23.31} />}>Нравится сразу пробовать свои идеи.</Bubble>
         </Day>
 
         <Day daysAgo={4} today={today}>
@@ -300,7 +300,7 @@ export default function App() {
         </Day>
 
         <Day daysAgo={2} today={today}>
-          <Bubble className="bubble--links" reaction={<Reaction emoji="👀" right={-19} top={-20.75} />}>
+          <Bubble className="bubble--links">
             <span>А ещё делал сайт</span>
             <InlineLink link={links.basis} variant="basis" />
           </Bubble>
@@ -308,7 +308,7 @@ export default function App() {
             <span>И раздел с экзаменами в</span>
             <InlineLink link={links.lyceum} variant="lyceum" />
           </Bubble>
-          <Bubble>
+          <Bubble reaction={<Reaction emoji="👀" top={-23.49} />}>
             Оба кейса можно найти на <Fx kind="flip">Behance</Fx>.
           </Bubble>
         </Day>
@@ -326,7 +326,7 @@ export default function App() {
 
         <Day daysAgo={0} today={today}>
           <Bubble>Буду рад познакомиться.</Bubble>
-          <Bubble reaction={<Reaction emoji="🤝" top={-20.75} />}>
+          <Bubble reaction={<Reaction emoji="🤝" top={-23.49} />}>
             Расскажете о своей <Fx kind="ripple">команде</Fx>?
           </Bubble>
         </Day>
