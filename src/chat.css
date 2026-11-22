@@ -231,7 +231,7 @@
 .reaction-face {
   position: absolute;
   border-radius: 999px;
-  background: #0074f0; /* как в макете, без токена */
+  background: var(--accent-base);
 }
 .reaction-dot--m { left: 28px; top: 28px; width: 14px; height: 14px; }
 .reaction-dot--s { left: 40px; top: 40px; width: 6px; height: 6px; }
@@ -300,8 +300,6 @@
   pointer-events: none;
 }
 .compose-btn {
-  /* Цвета основной кнопки Telegram Web A, отдельно от акцента ссылок сайта. */
-  --compose-fill: #3390ec;
   --compose-hover: #4a95d6;
   position: relative;
   overflow: hidden;
@@ -314,13 +312,27 @@
   padding: 0 16px;
   border-radius: 42px;
   border: 0;
-  background: var(--compose-fill);
+  background: var(--accent-base);
   color: var(--static-white);
   font-size: 16px;
   font-weight: 600;
   line-height: 19px;
   pointer-events: auto;
   transition: background-color 0.2s;
+}
+/* Обводка из Figma: 1.5px внутрь, белый → прозрачный → белый, 50%. */
+.compose-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1.5px;
+  border-radius: inherit;
+  background: linear-gradient(82.405deg, #ffffff, rgba(255, 255, 255, 0) 50%, #ffffff);
+  opacity: 0.5;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  pointer-events: none;
 }
 @media (hover: hover) {
   .compose-btn:hover { background-color: var(--compose-hover); }
