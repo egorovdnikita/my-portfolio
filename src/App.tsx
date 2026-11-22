@@ -256,7 +256,9 @@ export default function App() {
           <Bubble>Привет! Я Никита, продуктовый дизайнер 👋</Bubble>
           <Bubble>Рад, что заглянули 🙂</Bubble>
           <Bubble>Расскажу о себе коротко, как в чате</Bubble>
-          <Bubble>Давайте начнём 👇</Bubble>
+          <Bubble>
+            <Fx kind="ripple">Давайте начнём</Fx> 👇
+          </Bubble>
         </Day>
 
         <Day daysAgo={6} today={today}>
@@ -309,9 +311,7 @@ export default function App() {
         </Day>
 
         <Day daysAgo={4} today={today}>
-          <Bubble>
-            <Fx kind="ripple">Давайте покажу</Fx>, что делаю сейчас 👇
-          </Bubble>
+          <Bubble>Давайте покажу, что делаю сейчас 👇</Bubble>
           <PreviewCard item={previews.cashier} onOpenCase={openCase} className="preview--case" />
           <Bubble>Это касса: пополнение и вывод</Bubble>
           <Bubble>
