@@ -4,6 +4,8 @@
 /* ---------- Раскладка: переписка уезжает влево, панель занимает правую половину ---------- */
 
 .chat-app { --chat-area: 100%; }
+.chat-app.sheet-active { --bg-page: var(--bg-page-case); }
+html.is-locked body { background: var(--bg-page-case); }
 .chat-surface { display: contents; }
 .chat-head,
 .compose { right: calc(100% - var(--chat-area)); transition: right 0.45s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease; }
@@ -488,7 +490,7 @@
 .case-close { top: 16px; right: 16px; }
 .case-section { display: flex; flex-direction: column; gap: 12px; }
 .case-section-label { padding-bottom: 8px; text-align: center; color: var(--text-muted); font-size: 13px; font-weight: 600; line-height: 15px; }
-.case-scroll .case-question { align-self: flex-end; position: relative; max-width: 100%; width: fit-content; margin: 0; padding: 12px 16px; border-radius: 20px; background: #3390ec; color: white; font-size: 16px; font-weight: 500; line-height: 22px; letter-spacing: -0.04em; }
+.case-scroll .case-question { align-self: flex-end; position: relative; max-width: 100%; width: fit-content; margin: 0; padding: 12px 16px; border-radius: 20px; background: var(--accent-base); color: var(--static-white); font-size: 16px; font-weight: 500; line-height: 22px; letter-spacing: -0.04em; }
 .case-answers { display: flex; flex-direction: column; gap: 4px; margin: 0; padding: 0; list-style: none; }
 .case-answers li { position: relative; width: fit-content; max-width: 100%; padding: 12px 16px; border-radius: 20px; background: var(--bg-bubble); color: var(--text-primary); font-size: 16px; font-weight: 500; line-height: 22px; }
 .case-scroll .case-answers li, .case-scroll .case-answers li span { letter-spacing: -0.04em; }

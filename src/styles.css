@@ -4,6 +4,8 @@
    группа/имя в Figma = --группа-имя здесь. Светлая тема — :root, тёмная — data-theme="dark" */
 :root {
   --bg-page: #f5f5f5;
+  --bg-page-case: rgb(234.3, 234.3, 234.3);
+  --bg-preview-label: rgba(0, 0, 0, 0.32);
   --bg-bubble: #ffffff; /* подложка сообщений и карточек: в светлой теме белые на сером, в тёмной — как у sasi.codes */
   --bg-nav: rgba(255, 255, 255, 0.5); /* стеклянная плашка с именем */
   --border-nav: #ffffff;
@@ -21,10 +23,10 @@
   --contrib-3: #65dc4d;
   --contrib-4: #3dd51e;
   /* Панель кейса */
-  --bg-panel: #ffffff;
+  --bg-panel: #f5f5f5;
   --bg-card: rgba(0, 0, 0, 0.06); /* карточки фактов и шагов */
   --card-tint: #000000; /* оттенок карточек для сплошного варианта на телефоне */
-  --bg-control: rgba(0, 0, 0, 0.06); /* круглая кнопка «закрыть» */
+  --bg-control: #ffffff; /* круглая кнопка «закрыть» */
   --border-divider: rgba(0, 0, 0, 0.08);
   --border-media: rgba(0, 0, 0, 0.06); /* обводка картинок и галерей */
 
@@ -39,6 +41,8 @@
 /* Тёмная тема: атрибут data-theme на <html> ставят скрипт в index.html и useTheme */
 :root[data-theme='dark'] {
   --bg-page: #000000;
+  --bg-page-case: #000000;
+  --bg-preview-label: rgba(26, 26, 26, 0.5);
   --bg-bubble: #26252a;
   --bg-nav: rgba(26, 26, 26, 0.5);
   --border-nav: rgba(255, 255, 255, 0.08);

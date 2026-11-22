@@ -301,10 +301,10 @@
   max-width: calc(100% - 16px);
   padding: 8px 12px;
   border-radius: 20px;
-  background: var(--bg-nav);
+  background: var(--bg-preview-label);
   -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
-  color: var(--text-primary);
+  color: var(--static-white);
   font-size: 13px;
   line-height: 18px;
 }
