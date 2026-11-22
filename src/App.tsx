@@ -1,27 +1,11 @@
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { Canvas, type Tool } from './components/Canvas';
+import { useCallback, useEffect, useState, type ReactNode } from 'react';
 import { CasePage } from './components/CasePage';
-import { ShareButton } from './components/ShareButton';
-import { Avatars } from './components/Avatars';
-import { usePresence } from './presence';
-import { useIsMobile } from './useMedia';
-import { useTheme } from './theme';
-import { MobileShare } from './components/MobileShare';
-import { ExperienceCard, HeroCard, Icon, ProjectCard, ShotCard, VibeCard } from './components/Cards';
-import { initialCamera, zoomAt, NODES, type Camera, type NodeId, type Vec } from './canvas/layout';
-import { icons, profile, projects, shots } from './content';
+import { Icon } from './components/Cards';
+import { calendar, commitsWord, dayLabel } from './contrib';
+import { icons, jobs, links, previews, profile, tools, type Preview } from './content';
 import { findCase } from './cases';
+import { useTheme } from './theme';
 
-type View = 'canvas' | 'feed';
-
-const ZERO_OFFSETS = Object.fromEntries(Object.keys(NODES).map((id) => [id, { x: 0, y: 0 }])) as Record<NodeId, Vec>;
-const ZOOM_PRESETS = [0.25, 0.5, 0.75, 1, 1.5, 2];
-const ZOOM_STEP = 1.25;
-
-// Порядок карточек в ленте под главной: на телефоне столбиком, на десктопе парами
-const FEED_ORDER: NodeId[] = ['exp', 'vibe', 'p1', 'p2', 'p3', 'p4', 's1', 's2'];
-
-const PAGE_ZOOM_PRESETS = [0.5, 0.75, 1, 1.25, 1.5];
 const CASE_CLOSE_MS = 200;
 
 // Кейс открывается по адресу #/case/<id>: ссылку можно скопировать и отправить
@@ -30,64 +14,155 @@ const caseFromHash = () => {
   return findCase(m ? m[1] : null)?.id ?? null;
 };
 
-const viewportSize = () => ({ w: window.innerWidth, h: window.innerHeight });
-const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
-const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+/** Сегодняшняя дата; обновляется в полночь и при возврате на вкладку, чтобы подписи дней не устаревали. */
+function useToday() {
+  const [today, setToday] = useState(() => new Date());
+  useEffect(() => {
+    const sync = () => setToday((prev) => (prev.toDateString() === new Date().toDateString() ? prev : new Date()));
+    const now = new Date();
+    const midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1).getTime() - now.getTime();
+    const timer = window.setTimeout(sync, midnight + 1000);
+    document.addEventListener('visibilitychange', sync);
+    return () => {
+      window.clearTimeout(timer);
+      document.removeEventListener('visibilitychange', sync);
+    };
+  }, [today]);
+  return today;
+}
+
+const weekday = new Intl.DateTimeFormat('ru-RU', { weekday: 'short' });
+const dayMonth = new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'short' });
+
+/** Подпись дня: «Сегодня», «Вчера», дальше «Пт, 20 нояб.» — отсчёт от сегодняшнего дня. */
+function dayTitle(daysAgo: number, today: Date) {
+  if (daysAgo === 0) return 'Сегодня';
+  if (daysAgo === 1) return 'Вчера';
+  const d = new Date(today.getFullYear(), today.getMonth(), today.getDate() - daysAgo);
+  const wd = weekday.format(d);
+  return `${wd.charAt(0).toUpperCase()}${wd.slice(1)}, ${dayMonth.format(d)}`;
+}
+
+/** Реакция на сообщение: синий кружок с эмодзи и два «пузырька мысли», как в макете. */
+function Reaction({ emoji, right = -23, top = -23 }: { emoji: string; right?: number; top?: number }) {
+  return (
+    <span className="reaction" style={{ right, top }} aria-hidden>
+      <span className="reaction-dot reaction-dot--m" />
+      <span className="reaction-dot reaction-dot--s" />
+      <span className="reaction-face">{emoji}</span>
+    </span>
+  );
+}
+
+function Bubble({ children, reaction, className = '' }: { children: ReactNode; reaction?: ReactNode; className?: string }) {
+  return (
+    <div className={`bubble${reaction ? ' has-reaction' : ''} ${className}`}>
+      {children}
+      {reaction}
+    </div>
+  );
+}
+
+/** День переписки: подпись даты и сообщения. Хвостик — у последнего сообщения дня (через CSS). */
+function Day({ daysAgo, today, children }: { daysAgo: number; today: Date; children: ReactNode }) {
+  return (
+    <section className="day">
+      <p className="day-title">{dayTitle(daysAgo, today)}</p>
+      {children}
+    </section>
+  );
+}
+
+function PreviewCard({ item, onOpenCase, className = '' }: { item: Preview; onOpenCase: (id: string) => void; className?: string }) {
+  const body = (
+    <>
+      <img className="preview-img" src={item.image} alt="" draggable={false} loading="lazy" />
+      <span className="preview-text">
+        <span className="preview-title">{item.title}</span>
+        <span className="preview-sub">{item.subtitle}</span>
+      </span>
+    </>
+  );
+  if ('caseId' in item.open) {
+    const id = item.open.caseId;
+    return (
+      <a className={`preview ${className}`} href={`#/case/${id}`} onClick={(e) => (e.preventDefault(), onOpenCase(id))}>
+        {body}
+      </a>
+    );
+  }
+  return (
+    <a className={`preview ${className}`} href={item.open.url} target="_blank" rel="noreferrer">
+      {body}
+    </a>
+  );
+}
+
+function Contributions() {
+  // Подсказка над клеткой: число коммитов и дата
+  const [tip, setTip] = useState<{ i: number; x: number; y: number } | null>(null);
+  const onOver = (e: React.PointerEvent) => {
+    const el = (e.target as HTMLElement).closest<HTMLElement>('[data-i]');
+    if (!el) return setTip(null);
+    const i = Number(el.dataset.i);
+    if (calendar.cells[i].future) return setTip(null);
+    setTip({ i, x: el.offsetLeft + el.offsetWidth / 2, y: el.offsetTop });
+  };
+  const tipCell = tip && calendar.cells[tip.i];
+  return (
+    <div
+      className="contrib"
+      style={{ '--weeks': calendar.weeks } as React.CSSProperties}
+      role="img"
+      aria-label={`Вклады на GitHub за полгода: ${calendar.total}`}
+    >
+      <div className="contrib-months" aria-hidden>
+        {calendar.months.map((m) => (
+          <span key={`${m.label}-${m.col}`} style={{ gridColumn: m.col }}>
+            {m.label}
+          </span>
+        ))}
+      </div>
+      <div className="contrib-grid" aria-hidden onPointerOver={onOver} onPointerLeave={() => setTip(null)}>
+        {calendar.cells.map((c, i) => (
+          <span
+            key={i}
+            data-i={i}
+            className={`contrib-cell${c.future ? ' is-future' : ''}${tip?.i === i ? ' is-hover' : ''}`}
+            data-level={c.level}
+            style={{ '--col': c.week } as React.CSSProperties}
+          />
+        ))}
+      </div>
+      {tipCell && (
+        <span className="contrib-tip" style={{ left: tip.x, top: tip.y }} aria-hidden>
+          {tipCell.count ? `${tipCell.count} ${commitsWord(tipCell.count)}` : 'Нет коммитов'} · {dayLabel(tipCell.date)}
+        </span>
+      )}
+    </div>
+  );
+}
+
+/** Ссылка с логотипом перед ней; логотип и слово не разрываются переносом. */
+function InlineLink({ link, variant }: { link: { label: string; url: string; icon: string }; variant: 'basis' | 'lyceum' }) {
+  return (
+    <span className="inline-link">
+      <span className={`inline-logo inline-logo--${variant}`} aria-hidden>
+        <img src={link.icon} alt="" draggable={false} />
+      </span>
+      <a href={link.url} target="_blank" rel="noreferrer">
+        {link.label}
+      </a>
+    </span>
+  );
+}
 
 export default function App() {
-  const [view, setView] = useState<View>('canvas');
-  const [tool, setTool] = useState<Tool>('hand');
-  const [spaceHeld, setSpaceHeld] = useState(false);
-  const [camera, setCamera] = useState<Camera>(() => {
-    const { w, h } = viewportSize();
-    return initialCamera(w, h);
-  });
-  const [offsets, setOffsets] = useState<Record<NodeId, Vec>>(ZERO_OFFSETS);
-  const [zoomMenu, setZoomMenu] = useState(false);
+  const today = useToday();
+  useTheme();
   const [caseId, setCaseId] = useState<string | null>(caseFromHash);
   const [caseClosing, setCaseClosing] = useState(false);
-  // Масштаб страницы для ленты и кейса (на холсте масштаб — это камера)
-  const [pageZoom, setPageZoom] = useState(1);
-  const [shareOpen, setShareOpen] = useState(false);
   const study = findCase(caseId);
-  const presence = usePresence();
-  const isMobile = useIsMobile();
-  const { theme, toggle: toggleTheme } = useTheme();
-  const themeLabel = theme === 'dark' ? 'Светлая тема' : 'Тёмная тема';
-  const themeIcon = theme === 'dark' ? icons.sun : icons.moon;
-
-  // Пока пользователь не трогал холст, при изменении окна кадр подстраивается
-  const touched = useRef(false);
-  const anim = useRef(0);
-
-  const stopAnimation = useCallback(() => cancelAnimationFrame(anim.current), []);
-  const onInteract = useCallback(() => {
-    touched.current = true;
-    stopAnimation();
-  }, [stopAnimation]);
-
-  const animate = useCallback(
-    (toCam: Camera, toOffsets?: Record<NodeId, Vec>, duration = 450) => {
-      stopAnimation();
-      const fromCam = camera;
-      const fromOffsets = offsets;
-      const t0 = performance.now();
-      const step = (now: number) => {
-        const t = easeOut(Math.min(1, (now - t0) / duration));
-        setCamera({ x: lerp(fromCam.x, toCam.x, t), y: lerp(fromCam.y, toCam.y, t), z: lerp(fromCam.z, toCam.z, t) });
-        if (toOffsets) {
-          const next = {} as Record<NodeId, Vec>;
-          for (const id of Object.keys(toOffsets) as NodeId[]) {
-            next[id] = { x: lerp(fromOffsets[id].x, toOffsets[id].x, t), y: lerp(fromOffsets[id].y, toOffsets[id].y, t) };
-          }
-          setOffsets(next);
-        }
-        if (t < 1) anim.current = requestAnimationFrame(step);
-      };
-      anim.current = requestAnimationFrame(step);
-    },
-    [camera, offsets, stopAnimation],
-  );
 
   // Адрес и кнопка «Назад» в браузере управляют открытым кейсом
   useEffect(() => {
@@ -104,329 +179,120 @@ export default function App() {
   }, []);
 
   const openCase = useCallback((id: string) => {
-    setZoomMenu(false);
     setCaseClosing(false);
-    setPageZoom(1);
     if (caseFromHash() !== id) window.history.pushState(null, '', `#/case/${id}`);
     setCaseId(id);
   }, []);
 
-  const closeTimer = useRef(0);
   const closeCase = useCallback(() => {
-    setZoomMenu(false);
     setCaseClosing(true);
-    window.clearTimeout(closeTimer.current);
-    closeTimer.current = window.setTimeout(() => {
+    window.setTimeout(() => {
       window.history.pushState(null, '', window.location.pathname + window.location.search);
       setCaseId(null);
       setCaseClosing(false);
     }, CASE_CLOSE_MS);
   }, []);
 
-  // Меню масштаба закрывается кликом в любом месте вне панели масштаба
   useEffect(() => {
-    if (!zoomMenu) return;
-    const onDown = (e: PointerEvent) => {
-      if (!(e.target as HTMLElement).closest('.zoom')) setZoomMenu(false);
-    };
-    document.addEventListener('pointerdown', onDown, true);
-    return () => document.removeEventListener('pointerdown', onDown, true);
-  }, [zoomMenu]);
+    if (!study) return;
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && closeCase();
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [study, closeCase]);
 
-  useEffect(() => {
-    const onResize = () => {
-      if (touched.current) return;
-      setCamera(focusHero());
-    };
-    window.addEventListener('resize', onResize);
-    return () => window.removeEventListener('resize', onResize);
-  }, []);
-
-  const zoomTo = useCallback(
-    (z: number) => {
-      // В кейсе и ленте масштаб меняет размер страницы, на холсте — камеру
-      if (caseId || view === 'feed') {
-        setPageZoom(Math.min(2, Math.max(0.5, Math.round(z * 100) / 100)));
-        return;
-      }
-      touched.current = true;
-      const { w, h } = viewportSize();
-      animate(zoomAt(camera, z, w / 2, h / 2), undefined, 220);
-    },
-    [animate, camera, caseId, view],
-  );
-  const pageMode = Boolean(caseId) || view === 'feed';
-  const zoomValue = pageMode ? pageZoom : camera.z;
-  const zoomPresets = pageMode ? PAGE_ZOOM_PRESETS : ZOOM_PRESETS;
-  // Переключение холст ⇄ лента: карточки плавно переезжают со старых мест на новые (FLIP)
-  const flipFrom = useRef<Map<string, DOMRect> | null>(null);
-  const switchView = (next: View) => {
-    if (next === view) return;
-    const rects = new Map<string, DOMRect>();
-    document.querySelectorAll<HTMLElement>('[data-flip]').forEach((el) => rects.set(el.dataset.flip!, el.getBoundingClientRect()));
-    flipFrom.current = rects;
-    setView(next);
-    setPageZoom(1);
-    setZoomMenu(false);
-  };
-  useLayoutEffect(() => {
-    const from = flipFrom.current;
-    if (!from) return;
-    flipFrom.current = null;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    document.querySelectorAll<HTMLElement>('[data-flip]').forEach((el) => {
-      const o = from.get(el.dataset.flip!);
-      const n = el.getBoundingClientRect();
-      if (!o || !n.width || !el.offsetWidth) return;
-      // Внутри холста элемент масштабирован камерой: сдвиг переводим в его собственные координаты
-      const k = n.width / el.offsetWidth;
-      const tx = (o.left - n.left) / k;
-      const ty = (o.top - n.top) / k;
-      el.animate(
-        [
-          { transformOrigin: '0 0', transform: `translate(${tx}px, ${ty}px) scale(${o.width / n.width}, ${o.height / n.height})` },
-          { transformOrigin: '0 0', transform: 'none' },
-        ],
-        { duration: 560, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' },
-      );
-    });
-  }, [view]);
-
-  // На телефоне стартовый кадр зависит от высоты вертикальной карточки — меряем её после отрисовки
-  const focusHero = useCallback(() => {
-    const { w, h } = viewportSize();
-    const el = document.querySelector<HTMLElement>('[data-node="hero"]');
-    return initialCamera(w, h, el ? { w: el.offsetWidth, h: el.offsetHeight } : undefined);
-  }, []);
-  useLayoutEffect(() => {
-    if (view === 'canvas' && !touched.current) setCamera(focusHero());
-  }, [focusHero, isMobile, view]);
-
-  const reset = useCallback(() => {
-    touched.current = false;
-    animate(focusHero(), ZERO_OFFSETS);
-  }, [animate, focusHero]);
-
-  // Клавиши как в Figma: V — стрелка, H — рука, пробел — временная рука, +/− — масштаб, Esc — закрыть
-  useEffect(() => {
-    const isTyping = (e: KeyboardEvent) => (e.target as HTMLElement).closest('input, textarea, [contenteditable]');
-    const onDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        if (zoomMenu) setZoomMenu(false);
-        else if (caseId) closeCase();
-        return;
-      }
-      if (isTyping(e) || caseId || view !== 'canvas') return;
-      if (e.code === 'Space') {
-        e.preventDefault();
-        setSpaceHeld(true);
-      } else if (e.metaKey || e.ctrlKey) {
-        if (e.key === '=' || e.key === '+') (e.preventDefault(), zoomTo(camera.z * ZOOM_STEP));
-        else if (e.key === '-') (e.preventDefault(), zoomTo(camera.z / ZOOM_STEP));
-        else if (e.key === '0') (e.preventDefault(), zoomTo(1));
-      } else if (e.key === 'v' || e.key === 'V' || e.key === 'м' || e.key === 'М') setTool('select');
-      else if (e.key === 'h' || e.key === 'H' || e.key === 'р' || e.key === 'Р') setTool('hand');
-    };
-    const onUp = (e: KeyboardEvent) => {
-      if (e.code === 'Space') setSpaceHeld(false);
-    };
-    const onBlur = () => setSpaceHeld(false);
-    window.addEventListener('keydown', onDown);
-    window.addEventListener('keyup', onUp);
-    window.addEventListener('blur', onBlur);
-    return () => {
-      window.removeEventListener('keydown', onDown);
-      window.removeEventListener('keyup', onUp);
-      window.removeEventListener('blur', onBlur);
-    };
-  }, [camera.z, caseId, closeCase, view, zoomMenu, zoomTo]);
-
-  const setOffset = useCallback((id: NodeId, v: Vec) => setOffsets((prev) => ({ ...prev, [id]: v })), []);
-
-  const nodes: Record<NodeId, React.ReactNode> = {
-    exp: <ExperienceCard />,
-    vibe: <VibeCard />,
-    hero: <HeroCard variant={isMobile ? 'mobile' : view === 'canvas' ? 'canvas' : 'feed'} theme={theme} />,
-    p1: <ProjectCard project={projects[0]} onOpenCase={openCase} />,
-    p2: <ProjectCard project={projects[1]} onOpenCase={openCase} />,
-    p3: <ProjectCard project={projects[2]} onOpenCase={openCase} />,
-    p4: <ProjectCard project={projects[3]} onOpenCase={openCase} />,
-    s1: <ShotCard shot={shots[0]} />,
-    s2: <ShotCard shot={shots[1]} />,
-  };
-  const flip = (id: NodeId) => (
-    <div key={id} data-flip={id}>
-      {nodes[id]}
-    </div>
-  );
   const caseOpen = Boolean(study) && !caseClosing;
+  // Под открытым кейсом страница не прокручивается
+  useEffect(() => {
+    document.documentElement.classList.toggle('is-locked', Boolean(study));
+  }, [study]);
 
   return (
-    <div className={`app app--${view}${caseOpen ? ' has-case' : ''}${caseOpen || view === 'feed' ? ' has-page' : ''}`}>
-      {view === 'canvas' ? (
-        <Canvas
-          camera={camera}
-          setCamera={setCamera}
-          offsets={offsets}
-          setOffset={setOffset}
-          tool={tool}
-          spaceHeld={spaceHeld}
-          onInteract={onInteract}
-          nodes={nodes}
-          compact={isMobile}
-        />
-      ) : (
-        <main className="feed">
-          <div className="feed-column" style={{ zoom: pageZoom }}>
-            {flip('hero')}
-            {isMobile ? (
-              FEED_ORDER.map(flip)
-            ) : (
-              // Парами по строкам, как в макете: в каждой паре карточки одной высоты
-              <div className="feed-grid">{FEED_ORDER.map(flip)}</div>
-            )}
-            {isMobile && <p className="legal legal--feed">{profile.footerHandle} | {profile.footerNote}</p>}
-          </div>
-        </main>
-      )}
-
-      <header className="topbar">
-        <div className="panel panel--crumbs">
-          <span className="crumb">{profile.name}</span>
-          <span className="tag">Pro</span>
-          <Icon src={icons.chevronRight} className="icon--subtle" />
-          {study ? (
-            <button type="button" className="crumb crumb--link" onClick={closeCase}>
-              Портфолио
-            </button>
-          ) : (
-            <span className="crumb crumb--page">Портфолио</span>
-          )}
-          {isMobile && (
-            <button
-              type="button"
-              className="btn btn--primary share-icon-btn"
-              aria-label="Поделиться"
-              aria-expanded={shareOpen}
-              onClick={() => setShareOpen((v) => !v)}
-            >
-              <Icon src={icons.link} className="icon--white" />
-            </button>
-          )}
-        </div>
-        {!isMobile && (
-          <div className="panel panel--share">
-            <Avatars self={presence.self} others={presence.others} />
-            <ShareButton />
-          </div>
-        )}
+    <div className={`chat-app${caseOpen ? ' has-case' : ''}`}>
+      <div className="edge edge--top" aria-hidden />
+      <div className="edge edge--bottom" aria-hidden />
+      <header className="chat-head">
+        <a className="contact" href={profile.telegramUrl} target="_blank" rel="noreferrer" aria-label="Написать в Telegram">
+          <span className="contact-photo">
+            <img src={profile.portrait} alt="" draggable={false} />
+          </span>
+          <span className="contact-pill">
+            {profile.name}
+            <Icon src={icons.chevronRight} className="icon--subtle" />
+          </span>
+        </a>
       </header>
-      {isMobile && <MobileShare open={shareOpen} onClose={() => setShareOpen(false)} presence={presence} />}
 
-      <footer className="bottombar">
-        <div className="bottombar-side">
-          {!isMobile && (
-            <div className="panel panel--tools zoom">
-              <button type="button" className="tool-btn" aria-label="Приблизить" onClick={() => zoomTo(zoomValue * ZOOM_STEP)}>
-                <Icon src={icons.zoomIn} className="icon--strong" />
-              </button>
-              <button
-                type="button"
-                className="tool-btn zoom-value"
-                aria-haspopup="menu"
-                aria-expanded={zoomMenu}
-                onClick={() => setZoomMenu((v) => !v)}
-              >
-                {Math.round(zoomValue * 100)}%
-              </button>
-              <button type="button" className="tool-btn" aria-label="Отдалить" onClick={() => zoomTo(zoomValue / ZOOM_STEP)}>
-                <Icon src={icons.zoomOut} className="icon--strong" />
-              </button>
-              <div className={`menu${zoomMenu ? ' is-open' : ''}`} role="menu" aria-hidden={!zoomMenu}>
-                    {zoomPresets.map((z) => (
-                      <button
-                        key={z}
-                        type="button"
-                        role="menuitem"
-                        className="menu-item"
-                        onClick={() => {
-                          zoomTo(z);
-                          setZoomMenu(false);
-                        }}
-                      >
-                        {z * 100}%
-                      </button>
-                    ))}
-              </div>
-            </div>
-          )}
-          {!isMobile && (
-            <div className="panel panel--tools">
-              <button type="button" className="tool-btn" aria-label={themeLabel} title={themeLabel} onClick={toggleTheme}>
-                <Icon src={themeIcon} className="icon--strong" />
-              </button>
-            </div>
-          )}
-        </div>
+      <main className="chat">
+        <Day daysAgo={6} today={today}>
+          <Bubble>Привет, я Никита 👋 Продуктовый дизайнер.</Bubble>
+          {jobs.map((job) => (
+            <Bubble key={job.company} className="bubble--job">
+              <img className="job-logo" src={job.logo} alt="" draggable={false} />
+              <span className="job-name">{job.company}</span>
+              <span className="job-period">{job.period}</span>
+            </Bubble>
+          ))}
+          <Bubble reaction={<Reaction emoji="👀" />}>Четыре года в продуктовом дизайне.</Bubble>
+          <Bubble>Сейчас — ведущий дизайнер.</Bubble>
+        </Day>
 
-        <div className="bottombar-center" hidden={Boolean(study)}>
-          {view === 'canvas' && (
-            <div className="panel panel--tools">
-              <button
-                type="button"
-                className={`tool-btn${tool === 'select' && !spaceHeld ? ' is-active' : ''}`}
-                aria-label="Перемещать карточки (V)"
-                aria-pressed={tool === 'select'}
-                onClick={() => setTool('select')}
-              >
-                <Icon src={icons.move} size={28} className={tool === 'select' && !spaceHeld ? 'icon--white' : 'icon--strong'} />
-              </button>
-              <button
-                type="button"
-                className={`tool-btn${tool === 'hand' || spaceHeld ? ' is-active' : ''}`}
-                aria-label="Двигать холст (H)"
-                aria-pressed={tool === 'hand'}
-                onClick={() => setTool('hand')}
-              >
-                <Icon src={icons.hand} size={28} className={tool === 'hand' || spaceHeld ? 'icon--white' : 'icon--strong'} />
-              </button>
-              <button type="button" className="tool-btn" aria-label="Вернуть как было" onClick={reset}>
-                <Icon src={icons.reset} className="icon--strong" />
-              </button>
-            </div>
-          )}
-          <div className="panel panel--segment">
-            <div className="segment">
-              <button
-                type="button"
-                className={`segment-btn${view === 'canvas' ? ' is-active' : ''}`}
-                aria-label="Холст"
-                aria-pressed={view === 'canvas'}
-                onClick={() => switchView('canvas')}
-              >
-                <Icon src={icons.canvas} className={view === 'canvas' ? 'icon--strong' : 'icon--subtle'} />
-              </button>
-              <button
-                type="button"
-                className={`segment-btn${view === 'feed' ? ' is-active' : ''}`}
-                aria-label="Лента"
-                aria-pressed={view === 'feed'}
-                onClick={() => switchView('feed')}
-              >
-                <Icon src={icons.rows} className={view === 'feed' ? 'icon--strong' : 'icon--subtle'} />
-              </button>
-            </div>
+        <Day daysAgo={5} today={today}>
+          <Bubble className="bubble--contrib">
+            <Contributions />
+          </Bubble>
+          <Bubble className="bubble--tools">
+            {tools.map((tool) => (
+              <span key={tool.name} className="tool">
+                <img className="tool-logo" src={tool.icon} alt="" draggable={false} />
+                {tool.name}
+              </span>
+            ))}
+          </Bubble>
+          <Bubble>В последнее время увлёкся приложениями с AI.</Bubble>
+          <Bubble>Нравится, что идею можно сразу попробовать.</Bubble>
+        </Day>
+
+        <Day daysAgo={4} today={today}>
+          <PreviewCard item={previews.cashier} onOpenCase={openCase} className="preview--case" />
+          <Bubble>Покажу одну из последних задач — кассу.</Bubble>
+          <Bubble>Оказалось, банк и крипта требуют разных шагов.</Bubble>
+        </Day>
+
+        <Day daysAgo={3} today={today}>
+          <PreviewCard item={previews.ds} onOpenCase={openCase} className="preview--case" />
+          <Bubble>А вот задача уже про четыре бренда.</Bubble>
+          <Bubble>Собирал общую систему и искал, где оставить свободу.</Bubble>
+        </Day>
+
+        <Day daysAgo={2} today={today}>
+          <Bubble reaction={<Reaction emoji="👀" right={-19} top={-20.75} />}>
+            А ещё — сайт <InlineLink link={links.basis} variant="basis" /> и раздел экзаменов в{' '}
+            <InlineLink link={links.lyceum} variant="lyceum" />
+          </Bubble>
+        </Day>
+
+        <Day daysAgo={1} today={today}>
+          <div className="preview-row">
+            <PreviewCard item={previews.wink} onOpenCase={openCase} className="preview--nda" />
+            <PreviewCard item={previews.promminer} onOpenCase={openCase} className="preview--nda" />
           </div>
-        </div>
+          <Bubble>Ещё проектировал музыкальный сервис и майнинг-пул.</Bubble>
+          <Bubble>Подробности этих проектов — под NDA.</Bubble>
+        </Day>
 
-        <div className="bottombar-side bottombar-side--right">
-          <p className="legal">{profile.footerHandle} | {profile.footerNote}</p>
-        </div>
-      </footer>
+        <Day daysAgo={0} today={today}>
+          <Bubble reaction={<Reaction emoji="🤝" top={-20.75} />}>Буду рад познакомиться. Расскажете о своей команде?</Bubble>
+        </Day>
+      </main>
 
-      {study && (
-        <CasePage study={study} zoom={pageZoom} closing={caseClosing} onClose={closeCase} />
-      )}
+      <div className="compose">
+        <a className="compose-btn" href={profile.telegramUrl} target="_blank" rel="noreferrer">
+          Написать
+          <img src={icons.send} alt="" width={20} height={20} draggable={false} />
+        </a>
+      </div>
+
+      {study && <CasePage study={study} zoom={1} closing={caseClosing} onClose={closeCase} />}
     </div>
   );
 }

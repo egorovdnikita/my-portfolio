@@ -13,13 +13,6 @@
         try { t = localStorage.getItem('theme'); } catch (e) {}
         if (t !== 'light' && t !== 'dark') t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
         document.documentElement.dataset.theme = t;
-        // Постер видео-портрета — первая картинка на экране: грузим сразу, не дожидаясь скрипта сайта.
-        // Имя файла совпадает с profile.poster в src/content.ts
-        var l = document.createElement('link');
-        l.rel = 'preload';
-        l.as = 'image';
-        l.href = '/assets/hero-poster-' + t + '-v9.jpg';
-        document.head.appendChild(l);
       })();
     </script>
     <meta name="description" content="Senior Product Designer / Продуктовый дизайнер (Design Systems)" />

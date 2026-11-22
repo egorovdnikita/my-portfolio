@@ -1,0 +1,386 @@
+/* Главная в виде переписки. Значения сняты из макета Figma «Новый сайт» (кадры «Портфолио», 1920px).
+   Шапка и кнопка «Написать» закреплены, под ними сообщения уходят в размытие — как у sasi.codes. */
+
+:root {
+  /* Подложка сообщения — bg-nav (50%) поверх фона страницы, сведённая в сплошной цвет:
+     так хвостик не просвечивает в месте, где заходит на сообщение */
+  --bg-bubble: #fafafa;
+  --reaction: #0074f0;
+}
+:root[data-theme='dark'] {
+  --bg-bubble: #151515;
+}
+
+html.is-locked { overflow: hidden; }
+
+/* ---------- Шапка: фото и имя ---------- */
+
+.chat-head {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  display: flex;
+  justify-content: center;
+  padding-top: 24px;
+  pointer-events: none;
+}
+.contact {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: auto;
+}
+.contact-photo {
+  position: relative;
+  display: block;
+  width: 96px;
+  height: 96px;
+  margin-bottom: -20px;
+  overflow: hidden;
+  border-radius: 999px;
+}
+/* Кадрирование как в Figma: картинка 117.57%, сдвиг −8.79% / −8.4% */
+.contact-photo img {
+  position: absolute;
+  left: -8.79%;
+  top: -8.4%;
+  width: 117.57%;
+  height: 117.57%;
+  max-width: none;
+}
+.contact-pill {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 40px;
+  padding: 0 8px 0 16px;
+  border: 1px solid var(--border-nav);
+  border-radius: 41px;
+  background: var(--bg-nav);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  color: var(--text-primary);
+  font-size: 16px;
+  transition: background-color 0.15s ease;
+}
+.contact:hover .contact-pill { background: var(--bg-nav-hover); }
+
+/* ---------- Переписка ---------- */
+
+.chat {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  width: min(460px, 100% - 32px);
+  margin: 0 auto;
+  padding: 172px 0 96px; /* сверху — под шапку, снизу — 16 до кнопки «Написать» (56 + 24) */
+}
+.day {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+.day-title {
+  align-self: stretch;
+  padding-bottom: 24px;
+  color: var(--text-muted);
+  font-size: 16px;
+  line-height: 19px;
+  text-align: center;
+}
+
+.bubble {
+  position: relative;
+  max-width: 100%;
+  padding: 16px;
+  border-radius: 20px;
+  background: var(--bg-bubble);
+  color: var(--text-primary);
+  font-size: 16px;
+  line-height: 19px; /* как в Figma: Inter 16, высота строки «auto» округлена до 19 */
+}
+
+/* Хвостик у последнего сообщения дня — как у референса: выступ цвета сообщения
+   и вырез цвета фона, который скругляет его снаружи */
+.day > .bubble:last-child::before,
+.day > .bubble:last-child::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  height: 20px;
+}
+.day > .bubble:last-child::before {
+  left: -7px;
+  width: 20px;
+  border-radius: 0 0 16px 4px / 0 0 14px 4px;
+  background: var(--bg-bubble);
+}
+.day > .bubble:last-child::after {
+  left: -26px;
+  width: 26px;
+  border-bottom-right-radius: 10px;
+  background: var(--bg-page);
+}
+
+/* Опыт: логотип, компания, годы */
+.bubble--job {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 270px;
+  padding: 14px 16px;
+}
+.job-logo,
+.tool-logo {
+  display: block;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--chat-logo-border, #ffffff);
+  object-fit: cover;
+}
+.job-logo { border-radius: 16px; }
+.job-name { flex: 1 0 0; min-width: 1px; }
+.job-period { color: var(--text-muted); font-size: 14px; line-height: 17px; white-space: nowrap; }
+
+/* Календарь вкладов: 26 недель на 408px, клетка 13.77 со скруглением 4 */
+.bubble--contrib {
+  width: 440px;
+  border-radius: 24px;
+}
+.bubble--contrib .contrib-cell { border-radius: 4px; }
+
+/* Инструменты */
+.bubble--tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  padding: 14px 16px;
+}
+.tool {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.tool-logo { border-radius: 8px; }
+
+/* Ссылки с логотипом в тексте */
+.inline-link { white-space: nowrap; }
+.inline-logo {
+  position: relative;
+  display: inline-block;
+  height: 13px;
+  margin-right: 4px;
+  vertical-align: -1px;
+}
+.inline-logo img {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  display: block;
+}
+.inline-logo--basis { width: 19px; }
+.inline-logo--basis img { width: 19px; height: 20.248px; }
+.inline-logo--lyceum { width: 12px; }
+.inline-logo--lyceum img { width: 12px; height: 20.5px; }
+.bubble a {
+  color: var(--accent-base);
+  text-decoration: underline;
+  text-underline-position: from-font;
+}
+.bubble a:hover { color: var(--accent-hover); }
+
+/* Реакция: кружок 40 с эмодзи и два «пузырька» 14 и 6 */
+.reaction {
+  position: absolute;
+  width: 46px;
+  height: 46px;
+  pointer-events: none;
+}
+.reaction-dot,
+.reaction-face {
+  position: absolute;
+  border-radius: 999px;
+  background: var(--reaction);
+}
+.reaction-dot--m { left: 28px; top: 28px; width: 14px; height: 14px; }
+.reaction-dot--s { left: 40px; top: 40px; width: 6px; height: 6px; }
+.reaction-face {
+  left: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  color: var(--static-white);
+  font-size: 20px;
+  line-height: 24px;
+  letter-spacing: -0.04em;
+}
+
+/* Карточки-превью проектов */
+.preview {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 24px;
+  background: var(--bg-bubble);
+}
+.preview-img {
+  display: block;
+  width: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+.preview:hover .preview-img { transform: scale(1.03); }
+.preview-text {
+  position: relative; /* текст над картинкой, когда она увеличивается при наведении */
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px;
+  background: var(--bg-bubble);
+}
+.preview-title { color: var(--text-primary); font-size: 16px; line-height: 19px; }
+.preview-sub { color: var(--text-muted); font-size: 14px; line-height: 17px; }
+
+.preview--case { width: 300px; max-width: 100%; }
+.preview--case .preview-img { aspect-ratio: 440 / 320; }
+
+.preview-row {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}
+.preview--nda { flex: 1 0 0; min-width: 1px; }
+.preview--nda .preview-img { height: 246px; }
+
+/* ---------- Кнопка «Написать» ---------- */
+
+.compose {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 20;
+  display: flex;
+  justify-content: center;
+  padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  pointer-events: none;
+}
+.compose-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: min(480px, 100% - 12px);
+  height: 56px;
+  padding: 0 16px;
+  border-radius: 42px;
+  background: var(--accent-base);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  color: var(--static-white);
+  font-size: 16px;
+  font-weight: 600;
+  pointer-events: auto;
+  transition: background-color 0.15s ease;
+}
+.compose-btn::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border: 1.5px solid var(--accent-base);
+  border-radius: 999px;
+  opacity: 0.32;
+  pointer-events: none;
+}
+.compose-btn:hover { background: var(--accent-hover); }
+.compose-btn img { display: block; flex-shrink: 0; }
+
+/* ---------- Размытие у краёв экрана (по мотивам sasi.codes) ----------
+   Под шапкой и под кнопкой сообщения уходят в прогрессивный блюр и растворяются в фоне:
+   цветовой градиент + два слоя backdrop-filter с разной силой размытия и своими масками */
+
+.edge {
+  position: fixed;
+  left: 0;
+  right: 0;
+  z-index: 15;
+  pointer-events: none;
+}
+.edge::before,
+.edge::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+.edge--top {
+  top: 0;
+  height: 172px; /* до первой подписи даты */
+  background: linear-gradient(to bottom, var(--bg-page) 0%, color-mix(in srgb, var(--bg-page) 80%, transparent) 45%, transparent 100%);
+}
+.edge--bottom {
+  bottom: 0;
+  height: 96px; /* до низа последнего сообщения в конце страницы */
+  background: linear-gradient(to top, var(--bg-page) 0%, color-mix(in srgb, var(--bg-page) 80%, transparent) 40%, transparent 100%);
+}
+.edge::before {
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+}
+.edge::after {
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+.edge--top::before {
+  -webkit-mask-image: linear-gradient(to bottom, #000 40%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 40%, transparent 100%);
+}
+.edge--top::after {
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, transparent 60%);
+  mask-image: linear-gradient(to bottom, #000 0%, transparent 60%);
+}
+.edge--bottom::before {
+  -webkit-mask-image: linear-gradient(to top, #000 40%, transparent 100%);
+  mask-image: linear-gradient(to top, #000 40%, transparent 100%);
+}
+.edge--bottom::after {
+  -webkit-mask-image: linear-gradient(to top, #000 0%, transparent 60%);
+  mask-image: linear-gradient(to top, #000 0%, transparent 60%);
+}
+@media (prefers-reduced-motion: reduce) {
+  .preview-img { transition: none; }
+}
+
+/* ---------- Под открытым кейсом переписка прячется ---------- */
+
+.chat-head,
+.chat,
+.edge,
+.compose { transition: opacity 0.2s ease; }
+.has-case .chat-head,
+.has-case .chat,
+.has-case .edge,
+.has-case .compose {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ---------- Телефон ---------- */
+
+@media (max-width: 520px) {
+  /* Реакция выступает за правый край на 23px — на узком экране оставляем ей место */
+  .bubble.has-reaction { max-width: calc(100% - 24px); }
+  .bubble--contrib { width: 100%; }
+  .bubble--tools { gap: 8px 16px; }
+  .preview--nda .preview-img { height: auto; aspect-ratio: 226 / 246; }
+}
