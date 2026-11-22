@@ -412,6 +412,9 @@
     --bg-panel: var(--bg-page);
     background: var(--bg-panel);
   }
+  .case-close {
+    background: linear-gradient(var(--bg-control), var(--bg-control)), var(--panel-desktop);
+  }
   .case-group { padding: 24px 16px; }
   .case-title,
   .case-h2 { font-size: 26px; }
