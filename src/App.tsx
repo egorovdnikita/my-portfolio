@@ -295,7 +295,7 @@ export default function App() {
         </Day>
 
         <Day daysAgo={5} today={today}>
-          <Bubble reaction={<Reaction emoji="🤖" top={-23.31} />}>
+          <Bubble>
             По вечерам собираю <Fx kind="flip">приложения с AI</Fx>
           </Bubble>
           {/* Календарь шириной с сообщение об инструментах: обёртка по ширине инструментов, календарь тянется на неё */}
@@ -318,7 +318,7 @@ export default function App() {
               {links.github.label}
             </a>
           </Bubble>
-          <Bubble>А ещё люблю участвовать в хакатонах</Bubble>
+          <Bubble reaction={<Reaction emoji="🤖" right={-19} top={-22.95} />}>А ещё люблю участвовать в хакатонах</Bubble>
           <Bubble>Кстати</Bubble>
           <Bubble>
             Выигрывал дизайн-конкурс{' '}
