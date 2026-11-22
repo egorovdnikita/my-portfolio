@@ -5,6 +5,7 @@ import { calendar, commitsWord, dayLabel } from './contrib';
 import { icons, jobs, links, previews, profile, tools, type Preview } from './content';
 import { findCase } from './cases';
 import { useTheme } from './theme';
+import { useMessageWidth } from './useMessageWidth';
 
 const CASE_CLOSE_MS = 200;
 
@@ -217,6 +218,7 @@ export default function App() {
   const [caseId, setCaseId] = useState<string | null>(caseFromHash);
   const [caseClosing, setCaseClosing] = useState(false);
   const study = findCase(caseId);
+  useMessageWidth(caseId);
 
   // Адрес и кнопка «Назад» в браузере управляют открытым кейсом
   useEffect(() => {
