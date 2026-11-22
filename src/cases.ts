@@ -152,7 +152,7 @@ const cashier: CaseStudy = {
 
 const designSystem: CaseStudy = {
   id: '1win',
-  cover: { media: 'emoji', src: asset('emoji-dividers.webp'), alt: 'Разделители картотеки' },
+  cover: { media: 'emoji', src: asset('emoji-robot.webp'), alt: 'Робот' },
   title: 'Одна система для четырёх брендов',
   lead: 'Вместе с дизайн-лидом перестроил дизайн-систему White-Label продуктов: общий Foundation, брендовые библиотеки поверх него и процесс от задачи до Storybook.',
   meta: [
