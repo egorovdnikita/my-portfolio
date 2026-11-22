@@ -429,8 +429,22 @@
 .case-section-label { padding-bottom: 8px; text-align: center; color: var(--text-muted); font-size: 13px; font-weight: 600; line-height: 15px; }
 .case-scroll .case-question { align-self: flex-end; position: relative; max-width: 100%; width: fit-content; margin: 0; padding: 12px 16px; border-radius: 20px; background: #3390ec; color: white; font-size: 16px; font-weight: 500; line-height: 22px; letter-spacing: -0.04em; }
 .case-answers { display: flex; flex-direction: column; gap: 4px; margin: 0; padding: 0; list-style: none; }
-.case-answers li { position: relative; width: fit-content; max-width: 100%; padding: 12px 16px; border-radius: 20px; background: var(--bg-bubble); color: var(--text-primary); font-size: 17px; font-weight: 500; line-height: 24px; }
-.case-scroll .case-answers li, .case-scroll .case-answers li span { letter-spacing: -0.02em; }
-.case-question::after, .case-answers li:last-child::after { content: ''; position: absolute; bottom: 0; width: 10px; height: 12px; background: inherit; }
-.case-question::after { right: -3px; border-radius: 0 0 0 12px; transform: skewX(25deg); }
-.case-answers li:last-child::after { left: -3px; border-radius: 0 0 12px 0; transform: skewX(-25deg); }
+.case-answers li { position: relative; width: fit-content; max-width: 100%; padding: 12px 16px; border-radius: 20px; background: var(--bg-bubble); color: var(--text-primary); font-size: 16px; font-weight: 500; line-height: 22px; }
+.case-scroll .case-answers li, .case-scroll .case-answers li span { letter-spacing: -0.04em; }
+.case-scroll .case-question { border-bottom-right-radius: 0; }
+.case-answers li:last-child { border-bottom-left-radius: 0; }
+.case-question::after,
+.case-answers li:last-child::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  width: 20px;
+  height: 20px;
+  background: inherit;
+  pointer-events: none;
+  /* Перекрытие с пузырём: единый контур без фоновой заплатки и швов. */
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M7 0H20V20H0C6 17 7 12 7 0Z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M7 0H20V20H0C6 17 7 12 7 0Z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+}
+.case-question::after { right: -7px; transform: scaleX(-1); }
+.case-answers li:last-child::after { left: -7px; }
