@@ -44,7 +44,7 @@ function dayTitle(daysAgo: number, today: Date) {
   return `${wd.charAt(0).toUpperCase()}${wd.slice(1)}, ${dayMonth.format(d)}`;
 }
 
-const emojiAssets: Record<string, string> = { '🫡': 'salute', '🤖': 'robot', '👀': 'eyes', '🤝': 'handshake', '👋': 'wave' };
+const emojiAssets: Record<string, string> = { '🫡': 'salute', '🤖': 'robot', '👀': 'eyes', '🤝': 'handshake' };
 function AnimatedEmoji({ emoji }: { emoji: string }) {
   return <img className="animated-emoji" src={`${import.meta.env.BASE_URL}assets/emoji-${emojiAssets[emoji]}.webp`} alt={emoji} width={20} height={20} />;
 }
@@ -282,8 +282,8 @@ export default function App() {
 
       <main className="chat">
         <Day daysAgo={7} today={today}>
-          <Bubble>Привет! Я Никита, продуктовый дизайнер <AnimatedEmoji emoji="👋" /></Bubble>
-          <Bubble>Рад, что заглянули 🙂</Bubble>
+          <Bubble>Привет! Я Никита, продуктовый дизайнер 👋</Bubble>
+          <Bubble>Рад, что заглянули</Bubble>
           <Bubble>Расскажу о себе коротко, как в чате</Bubble>
           <Bubble>
             <Fx kind="ripple">Давайте начнём</Fx> 👇
