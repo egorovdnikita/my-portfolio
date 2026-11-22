@@ -40,14 +40,16 @@ export type Preview = {
   /** Подпись на плашке, как в макете */
   label: string;
   image: string;
+  /** Карточка под основной: повёрнута на 2° и полупрозрачна, как в макете */
+  back: string;
   open: { caseId: string } | { url: string };
 };
 
 export const previews = {
-  cashier: { title: 'Касса казино', label: 'igaming.com', image: asset('chat-cashier-v4.webp'), open: { caseId: '1win-product' } },
-  ds: { title: 'Дизайн-система', label: 'whitelabel.com', image: asset('chat-ds-v3.webp'), open: { caseId: '1win' } },
-  wink: { title: 'Wink Музыка', label: 'wink.ru', image: asset('chat-wink-v3.webp'), open: { url: 'https://wink.ru' } },
-  promminer: { title: 'Promminer Pool', label: 'promminer.ru', image: asset('chat-promminer-v3.webp'), open: { url: 'https://promminer.ru' } },
+  cashier: { title: 'Касса казино', label: 'igaming.com', image: asset('chat-cashier-v5.webp'), back: asset('chat-cashier-back.webp'), open: { caseId: '1win-product' } },
+  ds: { title: 'Дизайн-система', label: 'whitelabel.com', image: asset('chat-ds-v5.webp'), back: asset('chat-ds-back.webp'), open: { caseId: '1win' } },
+  wink: { title: 'Wink Музыка', label: 'wink.ru', image: asset('chat-wink-v5.webp'), back: asset('chat-wink-back.webp'), open: { url: 'https://wink.ru' } },
+  promminer: { title: 'Promminer Pool', label: 'promminer.ru', image: asset('chat-promminer-v5.webp'), back: asset('chat-promminer-back.webp'), open: { url: 'https://promminer.ru' } },
 } satisfies Record<string, Preview>;
 
 export const links = {

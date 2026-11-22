@@ -132,10 +132,13 @@ function PreviewCard({ item, onOpenCase, className = '' }: { item: Preview; onOp
   const body = (
     <>
       {/* Грузятся сразу: на медленной сети ленивая загрузка показывала пустые карточки при прокрутке */}
-      <img className="preview-img" src={item.image} alt={item.title} draggable={false} decoding="async" />
-      <span className="preview-label">
-        {item.label}
-        {external && <Icon src={icons.external} size={12} className="icon--white" />}
+      <img className="preview-back" src={item.back} alt="" draggable={false} decoding="async" />
+      <span className="preview-card">
+        <img className="preview-img" src={item.image} alt={item.title} draggable={false} decoding="async" />
+        <span className="preview-label">
+          {item.label}
+          {external && <Icon src={icons.external} size={12} className="icon--white" />}
+        </span>
       </span>
     </>
   );

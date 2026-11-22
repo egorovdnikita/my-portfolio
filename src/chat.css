@@ -273,12 +273,31 @@
   letter-spacing: -0.04em;
 }
 
-/* Карточки-превью проектов: картинка 300×300 со скруглением 24, внизу стеклянная плашка с подписью */
+/* Карточки-превью проектов — стопка 300×320, как в макете: сверху картинка 300×300 (отступ 15) со скруглением 24
+   и стеклянной плашкой с подписью, под ней вторая картинка, повёрнутая на 2° и полупрозрачная */
 .preview {
   position: relative;
   display: block;
   width: 300px;
   max-width: 100%;
+  padding-top: 15px;
+  padding-bottom: 5px;
+}
+.preview-back {
+  position: absolute;
+  top: 15.5px;
+  left: 13.14px;
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 24px;
+  object-fit: cover;
+  opacity: 0.5;
+  transform: rotate(2deg);
+  transition: transform 0.3s ease;
+}
+.preview-card {
+  position: relative;
+  display: block;
   overflow: hidden;
   border-radius: 24px;
   background: var(--bg-bubble);
@@ -311,8 +330,10 @@
 
 .preview-row {
   display: flex;
-  flex-direction: column; /* Wink и Promminer друг под другом через 4 */
-  gap: 4px;
+  flex-direction: column; /* Wink и Promminer друг под другом: стопки 320 внахлёст на 8, как в макете */
+  gap: 0;
+}
+.preview-row > .preview + .preview { margin-top: -8px;
 }
 
 /* ---------- Кнопка «Написать» ---------- */
