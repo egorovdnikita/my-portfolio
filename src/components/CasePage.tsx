@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, type ReactNode } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import { type CaseBlock, type CaseMedia, type CaseSection, type CaseStudy } from '../cases';
 import { icons } from '../content';
 import { Icon } from './Cards';
@@ -218,14 +218,119 @@ function Linked({ text, links }: { text: string; links: Record<string, string> }
   );
 }
 
-/** Картинка секции: прозрачная, грузится, когда подходит к экрану; затемнение снизу — в цвет панели */
+/** Картинки секций грузятся, когда подходят к экрану */
 function Media({ item }: { item: CaseMedia }) {
+  if (item.media === 'image') {
+    return (
+      <div className="case-media" style={{ aspectRatio: item.ratio, borderRadius: item.radius }}>
+        <img src={item.src} alt={item.alt} loading="lazy" decoding="async" draggable={false} />
+      </div>
+    );
+  }
+  if (item.media === 'compare') return <Compare item={item} />;
+  return <Gallery background={item.background} slides={item.slides} ratio={item.ratio} />;
+}
+
+/** Сравнение: картинка «до» лежит поверх «после» и обрезается по разделителю, разделитель тянется мышью, пальцем и стрелками */
+function Compare({ item }: { item: Extract<CaseMedia, { media: 'compare' }> }) {
+  const boxRef = useRef<HTMLDivElement>(null);
+  const [pos, setPos] = useState(50);
+
+  const moveTo = (clientX: number) => {
+    const box = boxRef.current;
+    if (!box) return;
+    const rect = box.getBoundingClientRect();
+    setPos(Math.min(100, Math.max(0, ((clientX - rect.left) / rect.width) * 100)));
+  };
+
+  const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    e.currentTarget.setPointerCapture(e.pointerId);
+    moveTo(e.clientX);
+  };
+  const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.currentTarget.hasPointerCapture(e.pointerId)) moveTo(e.clientX);
+  };
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    const step = e.shiftKey ? 10 : 2;
+    if (e.key === 'ArrowLeft') setPos((p) => Math.max(0, p - step));
+    else if (e.key === 'ArrowRight') setPos((p) => Math.min(100, p + step));
+    else return;
+    e.preventDefault();
+  };
+
   return (
     <div
-      className={`case-media${item.radius ? ' is-rounded' : ''}`}
-      style={{ aspectRatio: item.ratio, borderRadius: item.radius, ['--shade' as string]: item.shade ? `${item.shade * 100}%` : undefined }}
+      ref={boxRef}
+      className="case-media case-compare"
+      style={{ aspectRatio: item.ratio, ['--pos' as string]: `${pos}%` }}
+      onPointerDown={onPointerDown}
+      onPointerMove={onPointerMove}
     >
-      <img src={item.src} alt={item.alt} loading="lazy" decoding="async" draggable={false} />
+      <img className="case-compare-img" src={item.after} alt={item.alt} loading="lazy" decoding="async" draggable={false} />
+      <img className="case-compare-img case-compare-before" src={item.before} alt="" loading="lazy" decoding="async" draggable={false} />
+      <span className="case-compare-line" aria-hidden />
+      <span
+        className="case-compare-handle"
+        role="slider"
+        tabIndex={0}
+        aria-label="Разделитель сравнения"
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={Math.round(pos)}
+        onKeyDown={onKeyDown}
+      >
+        <svg width="32" height="32" viewBox="0 0 32 32" aria-hidden>
+          <rect x="9.33" y="4.33" width="2" height="23.33" rx="1" />
+          <rect x="15" y="4.33" width="2" height="23.33" rx="1" />
+          <rect x="20.67" y="4.33" width="2" height="23.33" rx="1" />
+        </svg>
+      </span>
+    </div>
+  );
+}
+
+/** Галерея: фон неподвижен, листаются только телефоны — свайпом, прокруткой и точками внизу, как в макете */
+function Gallery({ background, slides, ratio }: { background: string; slides: { src: string; alt: string }[]; ratio: string }) {
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [active, setActive] = useState(0);
+
+  const goTo = (i: number) => {
+    const track = trackRef.current;
+    if (!track) return;
+    track.scrollTo({ left: i * track.clientWidth, behavior: 'smooth' });
+  };
+
+  const onScroll = () => {
+    const track = trackRef.current;
+    if (track) setActive(Math.round(track.scrollLeft / track.clientWidth));
+  };
+
+  return (
+    <div className="case-media case-gallery" role="group" aria-roledescription="галерея">
+      <div
+        ref={trackRef}
+        className="case-gallery-track"
+        style={{ backgroundImage: `url(${background})`, aspectRatio: ratio }}
+        onScroll={onScroll}
+      >
+        {slides.map((slide) => (
+          <div key={slide.src} className="case-gallery-slide">
+            <img src={slide.src} alt={slide.alt} loading="lazy" decoding="async" draggable={false} />
+          </div>
+        ))}
+      </div>
+      <div className="case-gallery-dots">
+        {slides.map((slide, i) => (
+          <button
+            key={slide.src}
+            type="button"
+            className={`case-gallery-dot${i === active ? ' is-active' : ''}`}
+            aria-label={`Слайд ${i + 1}`}
+            aria-current={i === active}
+            onClick={() => goTo(i)}
+          />
+        ))}
+      </div>
     </div>
   );
 }
