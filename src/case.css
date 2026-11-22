@@ -395,8 +395,15 @@
 @media (max-width: 767px) {
   .case { padding: 0; }
   /* На весь экран: панель цвета страницы, чтобы шапка кейса сливалась с шапкой браузера (Telegram, Safari) */
-  /* Цвета те же, что на десктопе; шапку браузера под цвет панели перекрашивает App (theme-color) */
-  .case-card { border-radius: 0; }
+  /* На весь экран: фон кейса цвета страницы — шапка кейса сливается с шапкой браузера (Telegram, Safari).
+     Подложки блоков — сплошной цвет того же оттенка, что на десктопе (3% поверх цвета панели) */
+  .case { --panel-desktop: var(--bg-panel); }
+  .case-card {
+    border-radius: 0;
+    --bg-card: color-mix(in srgb, var(--panel-desktop), var(--card-tint) 3%);
+    --bg-panel: var(--bg-page);
+    background: var(--bg-panel);
+  }
   .case-group { padding: 24px 16px; }
   .case-title,
   .case-h2 { font-size: 26px; }

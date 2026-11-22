@@ -237,15 +237,6 @@ export default function App() {
     document.documentElement.classList.toggle('is-locked', Boolean(study));
   }, [study]);
 
-  // На телефоне кейс открыт на весь экран: шапка браузера (Safari, Telegram) берёт цвет панели, после закрытия — цвет страницы
-  useEffect(() => {
-    const meta = document.querySelector('meta[name="theme-color"]');
-    if (!meta) return;
-    const css = getComputedStyle(document.documentElement);
-    const full = study && window.matchMedia('(max-width: 767px)').matches;
-    meta.setAttribute('content', css.getPropertyValue(full ? '--bg-panel' : '--bg-page').trim());
-  }, [study]);
-
   return (
     <div className={`chat-app${caseOpen ? ' has-case' : ''}`}>
       <header className="chat-head">
