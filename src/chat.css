@@ -300,6 +300,9 @@
   pointer-events: none;
 }
 .compose-btn {
+  /* Цвета основной кнопки Telegram Web A, отдельно от акцента ссылок сайта. */
+  --compose-fill: #3390ec;
+  --compose-hover: #4a95d6;
   position: relative;
   overflow: hidden;
   display: flex;
@@ -310,31 +313,23 @@
   height: 56px;
   padding: 0 16px;
   border-radius: 42px;
-  background: var(--accent-base);
-  -webkit-backdrop-filter: blur(16px);
-  backdrop-filter: blur(16px);
+  border: 0;
+  background: var(--compose-fill);
   color: var(--static-white);
   font-size: 16px;
   font-weight: 600;
   line-height: 19px;
   pointer-events: auto;
-  transition: filter 0.15s ease;
+  transition: background-color 0.2s;
 }
-/* Обводка 1.5px внутрь, как в макете: белый градиент слева направо (белый → прозрачный к середине → белый), 50% */
-.compose-btn::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  padding: 1.5px;
-  border-radius: inherit;
-  background: linear-gradient(to right, #ffffff, rgba(255, 255, 255, 0) 50%, #ffffff);
-  opacity: 0.5;
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
-  pointer-events: none;
+:root[data-theme='dark'] .compose-btn {
+  --compose-fill: #8774e1;
+  --compose-hover: #7b71c6;
 }
-.compose-btn:hover { filter: brightness(1.08); }
+@media (hover: hover) {
+  .compose-btn:hover { background-color: var(--compose-hover); }
+}
+.compose-btn:active { background-color: var(--compose-hover); }
 .compose-btn img { display: block; flex-shrink: 0; }
 
 /* Мягкий проходящий блик: эффект shiny из Telegram Web. */
