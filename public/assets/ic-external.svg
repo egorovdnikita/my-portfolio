@@ -1,0 +1,13 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Wrapper">
+<g id="UI icons / Arrows Action / Square Top Down" clip-path="url(#clip0_0_4)">
+<path id="Vector" d="M6.5 5.5L11 1M11 3.67188V1H8.32813" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" stroke="#000"/>
+<path id="Vector_2" d="M11 6C11 8.35702 11 9.53553 10.2678 10.2678C9.53553 11 8.35702 11 6 11C3.64298 11 2.46447 11 1.73223 10.2678C1 9.53553 1 8.35702 1 6C1 3.64298 1 2.46447 1.73223 1.73223C2.46447 1 3.64298 1 6 1" stroke-width="1.2" stroke-linecap="round" stroke="#000"/>
+</g>
+</g>
+<defs>
+<clipPath id="clip0_0_4">
+<rect width="12" height="12" fill="white"/>
+</clipPath>
+</defs>
+</svg>

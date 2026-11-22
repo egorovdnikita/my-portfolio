@@ -349,7 +349,7 @@
   left: var(--pos);
   width: 2px;
   margin-left: -1px;
-  background: #ffffff;
+  background: var(--bg-panel); /* линия цвета панели, как в макете */
   pointer-events: none;
 }
 .case-compare-handle {

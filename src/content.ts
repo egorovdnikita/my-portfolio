@@ -14,6 +14,7 @@ export const icons = {
   chevronRight: asset('ic-chevron-right.svg'),
   close: asset('ic-close.svg'),
   send: asset('chat-send.svg'),
+  external: asset('ic-external.svg'),
 };
 
 export const jobs = [
@@ -30,18 +31,24 @@ export const tools = [
 ];
 
 /** Карточка-превью в чате: кейс открывается на сайте, проекты под NDA ведут на сайт продукта. */
+/**
+ * Карточка-превью в чате: квадратная картинка, внизу плашка с подписью (домен).
+ * Кейс открывается на сайте; у внешних ссылок рядом с подписью значок «открыть в новой вкладке».
+ */
 export type Preview = {
+  /** Название проекта — для подписи картинки (alt) */
   title: string;
-  subtitle: string;
+  /** Подпись на плашке, как в макете */
+  label: string;
   image: string;
   open: { caseId: string } | { url: string };
 };
 
 export const previews = {
-  cashier: { title: 'Касса казино', subtitle: 'Пополнение, вывод и история', image: asset('chat-cashier-v2.webp'), open: { caseId: '1win-product' } },
-  ds: { title: 'Дизайн-система', subtitle: 'Четыре бренда на общей основе', image: asset('chat-ds-v2.webp'), open: { caseId: '1win' } },
-  wink: { title: 'Wink Музыка', subtitle: 'wink.ru', image: asset('chat-wink-v2.webp'), open: { url: 'https://wink.ru' } },
-  promminer: { title: 'Promminer Pool', subtitle: 'promminer.ru', image: asset('chat-promminer-v2.webp'), open: { url: 'https://promminer.ru' } },
+  cashier: { title: 'Касса казино', label: 'igaming.com', image: asset('chat-cashier-v3.webp'), open: { caseId: '1win-product' } },
+  ds: { title: 'Дизайн-система', label: 'whitelabel.com', image: asset('chat-ds-v3.webp'), open: { caseId: '1win' } },
+  wink: { title: 'Wink Музыка', label: 'wink.ru', image: asset('chat-wink-v3.webp'), open: { url: 'https://wink.ru' } },
+  promminer: { title: 'Promminer Pool', label: 'promminer.ru', image: asset('chat-promminer-v3.webp'), open: { url: 'https://promminer.ru' } },
 } satisfies Record<string, Preview>;
 
 export const links = {

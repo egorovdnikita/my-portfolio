@@ -103,12 +103,13 @@ function Day({ daysAgo, today, children }: { daysAgo: number; today: Date; child
 }
 
 function PreviewCard({ item, onOpenCase, className = '' }: { item: Preview; onOpenCase: (id: string) => void; className?: string }) {
+  const external = !('caseId' in item.open);
   const body = (
     <>
-      <img className="preview-img" src={item.image} alt="" draggable={false} loading="lazy" />
-      <span className="preview-text">
-        <span className="preview-title">{item.title}</span>
-        <span className="preview-sub">{item.subtitle}</span>
+      <img className="preview-img" src={item.image} alt={item.title} draggable={false} loading="lazy" />
+      <span className="preview-label">
+        {item.label}
+        {external && <Icon src={icons.external} size={12} className="icon--white" />}
       </span>
     </>
   );
