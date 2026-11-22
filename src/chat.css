@@ -142,18 +142,27 @@ html.is-locked { overflow: hidden; }
 .job-name { flex: 1 0 0; min-width: 1px; }
 .job-period { color: var(--text-muted); font-size: 14px; white-space: nowrap; }
 
-/* Календарь вкладов: 26 недель на 376px — клетка 11.58, зазор 3, скругление 3 */
+/* Календарь вкладов: последние 4 месяца (17 недель), клетка 10.62, зазор 4, скругление 3; пузырь по ширине сетки */
 .bubble--contrib {
-  width: 100%;
   padding: 12px;
   border-radius: 16px;
 }
-.bubble--contrib .contrib-months,
-.bubble--contrib .contrib-grid { gap: 3px; }
-.bubble--contrib .contrib-months { line-height: 15px; }
-/* Подписи месяцев — на равных расстояниях, как в макете, а не над неделей с 1-м числом */
-.bubble--contrib .contrib-months { display: flex; }
-.bubble--contrib .contrib-months span { flex: 1 0 0; text-align: center; }
+.bubble--contrib .contrib {
+  --cell: 10.62px;
+}
+.bubble--contrib .contrib-grid {
+  grid-template-columns: repeat(var(--weeks), var(--cell));
+  gap: 4px;
+}
+.bubble--contrib .contrib-cell { width: var(--cell); }
+/* Подписи месяцев — на равных расстояниях, как в макете: по краям 16px, между — поровну */
+.bubble--contrib .contrib-months {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 16px;
+  font-weight: 600;
+  line-height: 15px;
+}
 
 /* Инструменты */
 .bubble--tools {

@@ -5,24 +5,29 @@ const MONTHS = ['янв', 'февр', 'март', 'апр', 'май', 'июнь'
 const MONTHS_OF = ['янв.', 'февр.', 'марта', 'апр.', 'мая', 'июня', 'июля', 'авг.', 'сент.', 'окт.', 'нояб.', 'дек.'];
 const DAY_MS = 86_400_000;
 
+const MONTHS_SHOWN = 4;
+
 // Сетка как у GitHub, но неделя с понедельника: столбец — неделя, строка — день.
-// Дни после «сегодня» (на момент сборки) приглушены. Подпись месяца — над неделей, где лежит 1-е число.
+// Показываем последние 4 месяца: с недели, где лежит 1-е число месяца три месяца назад, до текущей.
+// Дни после «сегодня» (на момент сборки) приглушены.
 export const calendar = (() => {
   const start = Date.parse(`${contributions.start}T00:00:00Z`);
   const today = Date.parse(`${contributions.today}T00:00:00Z`);
-  const weeks = Math.ceil((today - start) / DAY_MS / 7 + 1 / 7);
-  const cells = Array.from({ length: weeks * 7 }, (_, i) => {
+  const allWeeks = Math.ceil((today - start) / DAY_MS / 7 + 1 / 7);
+  const t = new Date(today);
+  const from = Date.UTC(t.getUTCFullYear(), t.getUTCMonth() - (MONTHS_SHOWN - 1), 1);
+  const firstWeek = Math.max(0, Math.floor((from - start) / DAY_MS / 7));
+  const weeks = allWeeks - firstWeek;
+  const cells = Array.from({ length: weeks * 7 }, (_, j) => {
+    const i = firstWeek * 7 + j;
     const [count, level] = contributions.days[i] ?? [0, 0];
     const date = new Date(start + i * DAY_MS);
-    return { week: Math.floor(i / 7), count, level, date, future: date.getTime() > today };
+    return { week: Math.floor(j / 7), count, level, date, future: date.getTime() > today };
   });
-  const months: { label: string; col: number }[] = [];
-  for (let w = 0; w < weeks; w++) {
-    for (let d = 0; d < 7; d++) {
-      const date = new Date(start + (w * 7 + d) * DAY_MS);
-      if (date.getUTCDate() === 1) months.push({ label: MONTHS[date.getUTCMonth()], col: w + 1 });
-    }
-  }
+  const months = Array.from({ length: MONTHS_SHOWN }, (_, k) => {
+    const m = new Date(Date.UTC(t.getUTCFullYear(), t.getUTCMonth() - (MONTHS_SHOWN - 1) + k, 1)).getUTCMonth();
+    return { label: MONTHS[m], col: k + 1 };
+  });
   return { weeks, cells, months, total: contributions.total };
 })();
 

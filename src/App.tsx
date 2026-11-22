@@ -143,7 +143,7 @@ function Contributions() {
       className="contrib"
       style={{ '--weeks': calendar.weeks } as React.CSSProperties}
       role="img"
-      aria-label={`Вклады на GitHub за полгода: ${calendar.total}`}
+      aria-label={`Вклады на GitHub за 4 месяца: ${calendar.total}`}
     >
       <div className="contrib-months" aria-hidden>
         {calendar.months.map((m) => (
