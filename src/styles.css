@@ -22,9 +22,7 @@
   --bg-panel: #ffffff;
   --bg-card: rgba(0, 0, 0, 0.03); /* карточки фактов и шагов */
   --bg-control: rgba(0, 0, 0, 0.06); /* круглая кнопка «закрыть» */
-  --border-panel: rgba(0, 0, 0, 0.04);
   --border-divider: rgba(0, 0, 0, 0.08);
-  --border-media: rgba(0, 0, 0, 0.06); /* обводка картинок и галерей */
 
   /* Только на сайте: эффекты, которых нет в макете */
   --shimmer: rgba(255, 255, 255, 0.45);
@@ -52,9 +50,7 @@
   --bg-panel: #141414;
   --bg-card: rgba(255, 255, 255, 0.03);
   --bg-control: rgba(255, 255, 255, 0.08);
-  --border-panel: #000000;
   --border-divider: rgba(255, 255, 255, 0.12);
-  --border-media: rgba(255, 255, 255, 0.16);
 
   --shimmer: rgba(255, 255, 255, 0.22);
   --tooltip-bg: rgba(64, 64, 62, 0.96);
