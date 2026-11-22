@@ -299,6 +299,7 @@ html.is-locked { overflow: hidden; }
   width: min(420px, 100% - 32px); /* на телефоне 16px от краёв, как колонка */
   height: 56px;
   padding: 0 16px;
+  border: 1.5px solid var(--static-white); /* в макете белая в обеих темах */
   border-radius: 42px;
   background: var(--accent-base);
   -webkit-backdrop-filter: blur(16px);
@@ -309,15 +310,6 @@ html.is-locked { overflow: hidden; }
   line-height: 19px;
   pointer-events: auto;
   transition: filter 0.15s ease;
-}
-.compose-btn::after {
-  content: '';
-  position: absolute;
-  inset: -4px;
-  border: 1.5px solid var(--accent-base);
-  border-radius: 999px;
-  opacity: 0.32;
-  pointer-events: none;
 }
 .compose-btn:hover { filter: brightness(1.08); }
 .compose-btn img { display: block; flex-shrink: 0; }
