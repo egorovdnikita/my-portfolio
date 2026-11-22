@@ -283,7 +283,12 @@ export default function App() {
           <Bubble>
             Увлёкся созданием <Fx kind="swing">приложений с AI</Fx>.
           </Bubble>
-          <Bubble reaction={<Reaction emoji="🤖" top={-23.31} />}>Нравится сразу пробовать свои идеи.</Bubble>
+          <Bubble reaction={<Reaction emoji="🤖" top={-23.31} />}>
+            Свои эксперименты выкладываю на{' '}
+            <a href={links.github.url} target="_blank" rel="noreferrer">
+              {links.github.label}
+            </a>
+          </Bubble>
         </Day>
 
         <Day daysAgo={4} today={today}>
