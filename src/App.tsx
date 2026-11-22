@@ -63,14 +63,13 @@ function Bubble({ children, reaction, className = '' }: { children: ReactNode; r
   );
 }
 
-type FxKind = 'ripple' | 'explode' | 'swing' | 'jelly' | 'flip' | 'shake' | 'hop';
+type FxKind = 'ripple' | 'swing' | 'flip';
 
 /**
  * Живые слова, как у sasi.codes: каждая буква анимируется со своей задержкой (--i),
- * для «взрыва» — со своим направлением от центра (--d, от −1 до 1). Слова не разрываются переносом.
+ * Три мягких эффекта повторяются по странице. Слова не разрываются переносом.
  */
 function Fx({ kind, children }: { kind: FxKind; children: string }) {
-  const letters = children.replace(/ /g, '').length;
   let i = 0;
   return (
     <span className={`fx fx--${kind}`} aria-label={children}>
@@ -80,9 +79,8 @@ function Fx({ kind, children }: { kind: FxKind; children: string }) {
           <span className="fx-word" aria-hidden>
             {[...word].map((ch) => {
               const n = i++;
-              const d = letters > 1 ? (n / (letters - 1)) * 2 - 1 : 0;
               return (
-                <span key={n} className="fx-letter" style={{ '--i': n, '--d': d.toFixed(2) } as React.CSSProperties}>
+                <span key={n} className="fx-letter" style={{ '--i': n } as React.CSSProperties}>
                   {ch}
                 </span>
               );
@@ -280,7 +278,7 @@ export default function App() {
             ))}
           </Bubble>
           <Bubble>
-            Увлёкся созданием <Fx kind="explode">приложений с AI</Fx>.
+            Увлёкся созданием <Fx kind="swing">приложений с AI</Fx>.
           </Bubble>
           <Bubble>Нравится сразу пробовать свои идеи.</Bubble>
         </Day>
@@ -289,7 +287,7 @@ export default function App() {
           <PreviewCard item={previews.cashier} onOpenCase={openCase} className="preview--case" />
           <Bubble>Покажу недавнюю задачу — кассу.</Bubble>
           <Bubble>
-            Собрал общий путь для <Fx kind="swing">банка и крипты</Fx>.
+            Собрал общий путь для <Fx kind="flip">банка и крипты</Fx>.
           </Bubble>
         </Day>
 
@@ -297,7 +295,7 @@ export default function App() {
           <PreviewCard item={previews.ds} onOpenCase={openCase} className="preview--case" />
           <Bubble>А здесь — система для четырёх брендов.</Bubble>
           <Bubble>
-            Искал баланс общих <Fx kind="jelly">правил и свободы</Fx>.
+            Искал баланс общих <Fx kind="ripple">правил и свободы</Fx>.
           </Bubble>
         </Day>
 
@@ -322,14 +320,14 @@ export default function App() {
           </div>
           <Bubble>Ещё работал с музыкой и майнингом.</Bubble>
           <Bubble>
-            Детали этих проектов — <Fx kind="shake">под NDA</Fx>.
+            Детали этих проектов — <Fx kind="swing">под NDA</Fx>.
           </Bubble>
         </Day>
 
         <Day daysAgo={0} today={today}>
           <Bubble>Буду рад познакомиться.</Bubble>
           <Bubble reaction={<Reaction emoji="🤝" top={-20.75} />}>
-            Расскажете о своей <Fx kind="hop">команде</Fx>?
+            Расскажете о своей <Fx kind="ripple">команде</Fx>?
           </Bubble>
         </Day>
       </main>

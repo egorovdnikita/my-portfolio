@@ -340,67 +340,31 @@ html.is-locked { overflow: hidden; }
   .preview { animation-name: edge-fade; }
 }
 
-/* ---------- Живые слова (как у sasi.codes: волна и взрыв, плюс свои варианты) ---------- */
+/* ---------- Живые слова: три мягких эффекта по мотивам sasi.codes, повторяются по странице ---------- */
 .fx-word { white-space: nowrap; }
 .fx-letter {
   display: inline-block;
   transform-origin: 50% 78%;
-  animation: 3s cubic-bezier(0.22, 1, 0.36, 1) calc(1s + var(--i) * var(--fx-stagger, 45ms)) infinite;
+  animation: 4s cubic-bezier(0.22, 1, 0.36, 1) calc(1s + var(--i) * var(--fx-stagger, 45ms)) infinite;
 }
-/* Волна: буквы по очереди подпрыгивают на 7px (референс) */
+/* Волна: буквы по очереди чуть приподнимаются */
 .fx--ripple .fx-letter { --fx-stagger: 55ms; animation-name: fx-ripple; }
 @keyframes fx-ripple {
-  0%, 33.3%, 100% { transform: translateY(0); }
-  11.7% { transform: translateY(-7px); }
+  0%, 25%, 100% { transform: translateY(0); }
+  9% { transform: translateY(-3px); }
 }
-/* Взрыв: буквы разлетаются от центра и возвращаются (референс) */
-.fx--explode .fx-letter {
-  --fx-stagger: 26ms;
-  animation-name: fx-explode;
-  animation-duration: 2.4s;
-  animation-timing-function: cubic-bezier(0.3, 1.4, 0.5, 1);
-}
-@keyframes fx-explode {
-  0%, 46.2%, 100% { transform: translate(0) scale(1); }
-  10.5% { transform: translate(calc(var(--d) * 12px), -6px) scale(1.22); }
-  25.2% { transform: translate(calc(var(--d) * -2px), 2px) scale(0.98); }
-}
-/* Качели: буквы покачиваются вокруг основания */
-.fx--swing .fx-letter { --fx-stagger: 40ms; animation-name: fx-swing; animation-duration: 3.2s; }
+/* Покачивание: буквы слегка наклоняются туда-обратно */
+.fx--swing .fx-letter { --fx-stagger: 45ms; animation-name: fx-swing; }
 @keyframes fx-swing {
-  0%, 36%, 100% { transform: rotate(0); }
-  9% { transform: rotate(-14deg); }
-  18% { transform: rotate(10deg); }
-  27% { transform: rotate(-4deg); }
-}
-/* Желе: буквы сплющиваются и пружинят */
-.fx--jelly .fx-letter { --fx-stagger: 35ms; animation-name: fx-jelly; animation-duration: 3.4s; }
-@keyframes fx-jelly {
-  0%, 34%, 100% { transform: scale(1, 1); }
-  8% { transform: scale(1.25, 0.75); }
-  16% { transform: scale(0.85, 1.2) translateY(-3px); }
-  25% { transform: scale(1.06, 0.95); }
+  0%, 27%, 100% { transform: rotate(0); }
+  8% { transform: rotate(-6deg); }
+  17% { transform: rotate(4deg); }
 }
 /* Переворот: буквы по очереди переворачиваются */
-.fx--flip .fx-letter { --fx-stagger: 70ms; animation-name: fx-flip; animation-duration: 3.6s; transform-origin: 50% 55%; }
+.fx--flip .fx-letter { --fx-stagger: 70ms; animation-name: fx-flip; animation-duration: 4.5s; transform-origin: 50% 55%; }
 @keyframes fx-flip {
-  0%, 22%, 100% { transform: rotateX(0); }
-  14% { transform: rotateX(360deg); }
-}
-/* Дрожь: «секретная» надпись нервно подрагивает */
-.fx--shake .fx-letter { --fx-stagger: 0ms; animation-name: fx-shake; animation-duration: 3s; animation-timing-function: linear; }
-@keyframes fx-shake {
-  0%, 20%, 100% { transform: translate(0); }
-  2%, 10%, 18% { transform: translate(-1.5px, 0.5px) rotate(-3deg); }
-  6%, 14% { transform: translate(1.5px, -0.5px) rotate(3deg); }
-}
-/* Прыжок: буквы подпрыгивают с приземлением */
-.fx--hop .fx-letter { --fx-stagger: 60ms; animation-name: fx-hop; animation-duration: 2.8s; }
-@keyframes fx-hop {
-  0%, 40%, 100% { transform: translateY(0) scale(1, 1); }
-  8% { transform: translateY(1px) scale(1.15, 0.85); }
-  18% { transform: translateY(-9px) scale(0.9, 1.1); }
-  30% { transform: translateY(0) scale(1.1, 0.9); }
+  0%, 18%, 100% { transform: rotateX(0); }
+  12% { transform: rotateX(360deg); }
 }
 
 @media (prefers-reduced-motion: reduce) {
