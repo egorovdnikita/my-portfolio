@@ -325,7 +325,8 @@ export default function App() {
         </Day>
 
         <Day daysAgo={0} today={today}>
-          <Bubble reaction={<Reaction emoji="🤝" top={-20.75} />}>Буду рад познакомиться. Расскажете о своей команде?</Bubble>
+          <Bubble>Буду рад познакомиться.</Bubble>
+          <Bubble reaction={<Reaction emoji="🤝" top={-20.75} />}>Расскажете о своей команде?</Bubble>
         </Day>
       </main>
 

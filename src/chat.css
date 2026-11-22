@@ -4,6 +4,12 @@
 
 html.is-locked { overflow: hidden; }
 
+/* Межбуквенный −4%, как в Figma, от размера шрифта каждого элемента
+   (с body наследуется уже посчитанное от 14px значение) */
+.chat-head *,
+.chat *,
+.compose * { letter-spacing: -0.04em; }
+
 /* ---------- Шапка: фото и имя ---------- */
 
 .chat-head {
@@ -78,12 +84,13 @@ html.is-locked { overflow: hidden; }
   align-self: stretch;
   padding-bottom: 24px;
   color: var(--text-muted);
-  font-size: 14px;
-  line-height: 17px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 15px;
   text-align: center;
 }
 
-/* Высота строки — как в Figma: Inter, «auto» округлено до целых (14 → 17, 12 → 15) */
+/* Размеры шрифта — как у sasi.codes: сообщение 16/22, дата 11/15, карточка 14/19 и 13/18 */
 .bubble {
   position: relative;
   max-width: 100%;
@@ -91,8 +98,8 @@ html.is-locked { overflow: hidden; }
   border-radius: 20px;
   background: var(--bg-bubble);
   color: var(--text-primary);
-  font-size: 14px;
-  line-height: 17px;
+  font-size: 16px;
+  line-height: 22px;
 }
 
 /* Хвостик у последнего сообщения дня — как у референса: выступ цвета сообщения
@@ -133,7 +140,7 @@ html.is-locked { overflow: hidden; }
 }
 .job-logo { width: 24px; height: 24px; border-radius: 16px; }
 .job-name { flex: 1 0 0; min-width: 1px; }
-.job-period { color: var(--text-muted); white-space: nowrap; }
+.job-period { color: var(--text-muted); font-size: 14px; white-space: nowrap; }
 
 /* Календарь вкладов: 26 недель на 376px — клетка 11.58, зазор 3, скругление 3 */
 .bubble--contrib {
@@ -164,9 +171,8 @@ html.is-locked { overflow: hidden; }
 .bubble--links {
   display: flex;
   align-items: center;
+  flex-wrap: wrap; /* не помещается в колонку — переносится частями, логотип со ссылкой не разрываются */
   gap: 0 4px;
-  max-width: none; /* в макете 404 — на 4px шире колонки */
-  white-space: nowrap;
 }
 .inline-link { display: flex; align-items: center; gap: 4px; white-space: nowrap; }
 .inline-logo {
@@ -244,8 +250,8 @@ html.is-locked { overflow: hidden; }
   padding: 16px;
   background: var(--bg-bubble);
 }
-.preview-title { color: var(--text-primary); font-size: 14px; line-height: 17px; }
-.preview-sub { color: var(--text-muted); font-size: 12px; line-height: 15px; }
+.preview-title { color: var(--text-primary); font-size: 14px; line-height: 19px; }
+.preview-sub { color: var(--text-muted); font-size: 13px; line-height: 18px; }
 
 .preview--case { width: 260px; max-width: 100%; }
 .preview--case .preview-img { aspect-ratio: 440 / 320; }
@@ -325,6 +331,5 @@ html.is-locked { overflow: hidden; }
 @media (max-width: 480px) {
   /* Реакция выступает за правый край на 23px — на узком экране оставляем ей место */
   .bubble.has-reaction { max-width: calc(100% - 24px); }
-  .bubble--links { flex-wrap: wrap; }
   .preview--nda .preview-img { height: auto; aspect-ratio: 1; }
 }
