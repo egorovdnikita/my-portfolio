@@ -6,6 +6,8 @@
     <title>Егоров Никита</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=1" />
     <meta name="color-scheme" content="light dark" />
+    <!-- Цвет шапки браузера (Safari, Telegram) — как фон страницы; ставят скрипт ниже и useTheme -->
+    <meta name="theme-color" content="#000000" />
     <script>
       // Тема ставится до отрисовки, чтобы не было вспышки светлого фона
       (function () {
@@ -13,6 +15,7 @@
         try { t = localStorage.getItem('theme'); } catch (e) {}
         if (t !== 'light' && t !== 'dark') t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
         document.documentElement.dataset.theme = t;
+        document.querySelector('meta[name="theme-color"]').setAttribute('content', t === 'dark' ? '#000000' : '#f5f5f5');
       })();
     </script>
     <meta name="description" content="Senior Product Designer / Продуктовый дизайнер (Design Systems)" />

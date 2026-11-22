@@ -38,6 +38,7 @@
 .case-scroll {
   --collapse: 0;
   height: 100%;
+  overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-width: none; /* без полосы прокрутки: ширина контента как в макете (952), крестик в 22px от края */
@@ -58,19 +59,28 @@
   margin-bottom: -92px;
   padding: 0 92px;
   pointer-events: none;
+  isolation: isolate;
 }
-/* Подложка шапки проявляется вместе с заголовком: цвет панели с размытием, книзу плавно сходит на нет —
-   без линии, как растворение под шапкой главной */
-.case-bar::before {
+/* Подложка шапки проявляется вместе с заголовком, без линии — как растворение под шапкой главной:
+   цвет панели сходит на нет книзу (::before), под ним размытие с той же маской (::after).
+   Слои шире панели на 32px с каждой стороны: у края размытие подмешивает цвет картинки, лишнее обрезается */
+.case-bar::before,
+.case-bar::after {
   content: '';
   position: absolute;
-  inset: 0 0 -40px;
-  background: linear-gradient(to bottom, var(--bg-panel) 45%, color-mix(in srgb, var(--bg-panel) 0%, transparent));
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
-  -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent);
-  mask-image: linear-gradient(to bottom, #000 55%, transparent);
+  inset: 0 -32px -48px;
   opacity: var(--collapse);
+  pointer-events: none;
+}
+.case-bar::after {
+  z-index: -1;
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  -webkit-mask-image: linear-gradient(to bottom, #000 60%, transparent);
+  mask-image: linear-gradient(to bottom, #000 60%, transparent);
+}
+.case-bar::before {
+  background: linear-gradient(to bottom, var(--bg-panel) 40%, color-mix(in srgb, var(--bg-panel) 0%, transparent));
 }
 .case-bar-title {
   position: relative;
@@ -378,7 +388,8 @@
 
 @media (max-width: 767px) {
   .case { padding: 0; }
-  .case-card { border-radius: 0; }
+  /* На весь экран: панель цвета страницы, чтобы шапка кейса сливалась с шапкой браузера (Telegram, Safari) */
+  .case-card { border-radius: 0; --bg-panel: var(--bg-page); background: var(--bg-panel); }
   .case-group { padding: 24px 16px; }
   .case-title,
   .case-h2 { font-size: 26px; }

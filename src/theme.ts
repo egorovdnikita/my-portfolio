@@ -24,6 +24,8 @@ export function useTheme() {
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
+    // Шапка браузера (Safari, Telegram) — цвета фона страницы, как --bg-page
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'dark' ? '#000000' : '#f5f5f5');
   }, [theme]);
 
   useEffect(() => {
