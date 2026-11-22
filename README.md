@@ -20,3 +20,5 @@ npm run dev
 Публикация: GitHub Actions собирает сайт и выкладывает на GitHub Pages при пуше в `main`. Основной адрес — https://egorovdnikita.ru/.
 
 Анимированные emoji — [Telegram Animated Emojis](https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis), из пака [Animated TeleEmojis](https://telegram-emojis.vercel.app/). Права на изображения принадлежат Telegram. Файлы хранятся локально в `public/assets/emoji-*.webp`.
+
+Аватар — клип Thinking для 18 маскотов Agent Pals из Agent Pulse. Готовые WebP хранятся в `public/assets/mascots`; исходный платный Lottie-пак не включён. При обновлении страницы выбирается маскот, отличный от предыдущего в этой вкладке.

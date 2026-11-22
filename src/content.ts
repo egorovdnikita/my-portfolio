@@ -6,7 +6,6 @@ const asset = (name: string) => `${import.meta.env.BASE_URL}assets/${name}`;
 
 export const profile = {
   name: 'Nikita',
-  portrait: asset('chat-portrait-v2.jpg'),
   telegramUrl: 'https://t.me/egorov_d_nikita',
 };
 

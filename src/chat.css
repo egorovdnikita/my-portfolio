@@ -38,16 +38,15 @@
   width: 64px;
   height: 64px;
   margin-bottom: -12px;
-  overflow: hidden;
-  border-radius: 999px;
+  overflow: visible;
 }
-/* Кадрирование как в Figma: картинка 117.57%, сдвиг −8.79% / −8.4% */
+/* В Figma холст маскота 128×128 расположен в слоте 64×64 со сдвигом −32px. */
 .contact-photo img {
   position: absolute;
-  left: -8.79%;
-  top: -8.4%;
-  width: 117.57%;
-  height: 117.57%;
+  left: -32px;
+  top: -32px;
+  width: 128px;
+  height: 128px;
   max-width: none;
 }
 .contact-pill {

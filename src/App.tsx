@@ -6,6 +6,7 @@ import { icons, jobs, links, previews, profile, tools, type Preview } from './co
 import { findCase } from './cases';
 import { useTheme } from './theme';
 import { useMessageWidth } from './useMessageWidth';
+import { mascotAvatar } from './mascot';
 
 const CASE_CLOSE_MS = 200;
 
@@ -271,7 +272,7 @@ export default function App() {
       <header className="chat-head">
         <a className="contact" href={profile.telegramUrl} target="_blank" rel="noreferrer" aria-label="Написать в Telegram">
           <span className="contact-photo">
-            <img src={profile.portrait} alt="" draggable={false} />
+            <img src={mascotAvatar} alt="" draggable={false} />
           </span>
           <span className="contact-pill">
             {profile.name}
