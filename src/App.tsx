@@ -296,7 +296,7 @@ export default function App() {
             Увлёкся созданием <Fx kind="swing">приложений с AI</Fx>.
           </Bubble>
           <Bubble reaction={<Reaction emoji="🤖" top={-23.31} />}>
-            Свои эксперименты выкладываю на{' '}
+            Свои эксперименты публикую на{' '}
             <a href={links.github.url} target="_blank" rel="noreferrer">
               {links.github.label}
             </a>
