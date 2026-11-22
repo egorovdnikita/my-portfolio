@@ -32,7 +32,6 @@
   position: relative;
   height: 100%;
   overflow: hidden;
-  border: 1px solid var(--border-panel);
   border-radius: 32px;
   background: var(--bg-panel);
 }
@@ -41,9 +40,9 @@
   height: 100%;
   overflow-y: auto;
   overscroll-behavior: contain;
-  scrollbar-width: thin;
-  scrollbar-color: var(--icon-subtle) transparent;
+  scrollbar-width: none; /* без полосы прокрутки: ширина контента как в макете (952), крестик в 22px от края */
 }
+.case-scroll::-webkit-scrollbar { display: none; }
 .case-scroll * { letter-spacing: -0.04em; }
 
 /* ---------- Закреплённая шапка: короткий заголовок появляется, когда крупный уходит под неё ---------- */
@@ -55,9 +54,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 78px; /* крестик 48 с отступом 15, как в макете */
-  margin-bottom: -78px;
-  padding: 0 78px;
+  height: 92px; /* крестик 48 в 22px от краёв обложки, как в макете */
+  margin-bottom: -92px;
+  padding: 0 92px;
   pointer-events: none;
 }
 /* Подложка шапки проявляется вместе с заголовком: цвет панели с размытием и линия снизу */
@@ -85,8 +84,8 @@
 }
 .case-close {
   position: absolute;
-  top: 15px;
-  right: 15px;
+  top: 22px;
+  right: 22px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -100,30 +99,6 @@
   transition: filter 0.15s ease;
 }
 .case-close:hover { filter: brightness(1.2); }
-
-/* ---------- Обложка 950×400: картинка и затемнение снизу в цвет панели (196px) ---------- */
-
-.case-cover {
-  position: relative;
-  height: 400px;
-  overflow: hidden;
-}
-.case-cover img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.case-cover::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 196px;
-  background: linear-gradient(to bottom, color-mix(in srgb, var(--bg-panel) 0%, transparent), var(--bg-panel));
-  pointer-events: none;
-}
 
 /* ---------- Группы: отступ 32, между элементами 24 (если внутри разделители — 40) ---------- */
 
@@ -143,12 +118,11 @@
 }
 
 /* Заголовок кейса и описание по центру */
+.case-intro { padding-top: 16px; }
 .case-heading {
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: 8px;
-  text-align: center;
 }
 .case-title {
   margin: 0;
@@ -160,12 +134,11 @@
   /* крупный заголовок гаснет и чуть уменьшается, уходя под шапку */
   opacity: calc(1 - var(--collapse));
   transform: scale(calc(1 - var(--collapse) * 0.12));
-  transform-origin: 50% 0;
+  transform-origin: 0 0;
 }
 .case-scroll .case-title,
 .case-scroll .case-h2 { letter-spacing: -0.06em; }
 .case-lead {
-  max-width: 500px;
   margin: 0;
   color: var(--text-muted);
   font-size: 14px;
@@ -272,7 +245,7 @@
   border-radius: 24px;
   background: var(--bg-card);
 }
-.case-media::after {
+.case-media.has-border::after {
   content: '';
   position: absolute;
   inset: 0;
@@ -358,7 +331,7 @@
   left: var(--pos);
   width: 2px;
   margin-left: -1px;
-  background: rgba(255, 255, 255, 0.16);
+  background: #ffffff;
   pointer-events: none;
 }
 .case-compare-handle {
@@ -369,14 +342,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
-  margin: -24px 0 0 -24px;
+  width: 64px;
+  height: 64px;
+  margin: -32px 0 0 -32px;
   border-radius: 999px;
-  background: var(--bg-control);
+  background: #ffffff; /* в макете белая в обеих темах */
   -webkit-backdrop-filter: blur(32px);
   backdrop-filter: blur(32px);
-  color: #ffffff;
+  color: #000000;
   fill: currentColor;
 }
 .case-compare-handle:focus-visible { outline: 2px solid var(--accent-base); outline-offset: 2px; }
@@ -403,8 +376,7 @@
 
 @media (max-width: 767px) {
   .case { padding: 0; }
-  .case-card { border: 0; border-radius: 0; }
-  .case-cover { height: 300px; }
+  .case-card { border-radius: 0; }
   .case-group { padding: 24px 16px; }
   .case-title,
   .case-h2 { font-size: 26px; }

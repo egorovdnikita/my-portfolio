@@ -82,8 +82,8 @@ export function CasePage({ study, closing, onClose }: Props) {
           </div>
 
           <article key={study.id} className="case-article">
-            <div className="case-cover">
-              <img src={study.cover.src} alt={study.cover.alt} decoding="async" draggable={false} />
+            <div className="case-media-block case-cover">
+              <Media item={study.cover} loading="eager" />
             </div>
 
             <section className="case-group case-intro">
@@ -218,21 +218,40 @@ function Linked({ text, links }: { text: string; links: Record<string, string> }
   );
 }
 
-/** Картинки секций грузятся, когда подходят к экрану */
-function Media({ item }: { item: CaseMedia }) {
+type Loading = 'eager' | 'lazy';
+
+/** Обложка грузится сразу, картинки секций — когда подходят к экрану. Скругление и обводка — из данных кейса */
+function Media({ item, loading = 'lazy' }: { item: CaseMedia; loading?: Loading }) {
+  const frame = { radius: item.radius, border: item.border };
   if (item.media === 'image') {
     return (
-      <div className="case-media" style={{ aspectRatio: item.ratio, borderRadius: item.radius }}>
-        <img src={item.src} alt={item.alt} loading="lazy" decoding="async" draggable={false} />
-      </div>
+      <Frame {...frame} className="case-media" style={{ aspectRatio: item.ratio }}>
+        <img src={item.src} alt={item.alt} loading={loading} decoding="async" draggable={false} />
+      </Frame>
     );
   }
-  if (item.media === 'compare') return <Compare item={item} />;
-  return <Gallery background={item.background} slides={item.slides} ratio={item.ratio} />;
+  if (item.media === 'compare') return <Compare item={item} loading={loading} />;
+  return <Gallery background={item.background} slides={item.slides} ratio={item.ratio} border={item.border} />;
+}
+
+/** Рамка картинки: скругление 24 по умолчанию, обводка 1px внутрь, если она есть в макете */
+function Frame({
+  radius,
+  border,
+  className,
+  style,
+  children,
+  ...rest
+}: { radius?: number; border?: boolean } & React.HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div {...rest} className={`${className}${border ? ' has-border' : ''}`} style={{ ...style, borderRadius: radius }}>
+      {children}
+    </div>
+  );
 }
 
 /** Сравнение: картинка «до» лежит поверх «после» и обрезается по разделителю, разделитель тянется мышью, пальцем и стрелками */
-function Compare({ item }: { item: Extract<CaseMedia, { media: 'compare' }> }) {
+function Compare({ item, loading }: { item: Extract<CaseMedia, { media: 'compare' }>; loading: Loading }) {
   const boxRef = useRef<HTMLDivElement>(null);
   const [pos, setPos] = useState(50);
 
@@ -261,13 +280,13 @@ function Compare({ item }: { item: Extract<CaseMedia, { media: 'compare' }> }) {
   return (
     <div
       ref={boxRef}
-      className="case-media case-compare"
-      style={{ aspectRatio: item.ratio, ['--pos' as string]: `${pos}%` }}
+      className={`case-media case-compare${item.border ? ' has-border' : ''}`}
+      style={{ aspectRatio: item.ratio, borderRadius: item.radius, ['--pos' as string]: `${pos}%` }}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
     >
-      <img className="case-compare-img" src={item.after} alt={item.alt} loading="lazy" decoding="async" draggable={false} />
-      <img className="case-compare-img case-compare-before" src={item.before} alt="" loading="lazy" decoding="async" draggable={false} />
+      <img className="case-compare-img" src={item.after} alt={item.alt} loading={loading} decoding="async" draggable={false} />
+      <img className="case-compare-img case-compare-before" src={item.before} alt="" loading={loading} decoding="async" draggable={false} />
       <span className="case-compare-line" aria-hidden />
       <span
         className="case-compare-handle"
@@ -290,7 +309,17 @@ function Compare({ item }: { item: Extract<CaseMedia, { media: 'compare' }> }) {
 }
 
 /** Галерея: фон неподвижен, листаются только телефоны — свайпом, прокруткой и точками внизу, как в макете */
-function Gallery({ background, slides, ratio }: { background: string; slides: { src: string; alt: string }[]; ratio: string }) {
+function Gallery({
+  background,
+  slides,
+  ratio,
+  border,
+}: {
+  background: string;
+  slides: { src: string; alt: string }[];
+  ratio: string;
+  border?: boolean;
+}) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
 
@@ -306,7 +335,7 @@ function Gallery({ background, slides, ratio }: { background: string; slides: { 
   };
 
   return (
-    <div className="case-media case-gallery" role="group" aria-roledescription="галерея">
+    <div className={`case-media case-gallery${border ? ' has-border' : ''}`} role="group" aria-roledescription="галерея">
       <div
         ref={trackRef}
         className="case-gallery-track"

@@ -11,18 +11,22 @@ export type CaseBlock =
 /** media — картинка, галерея или сравнение в верхней части карточки секции, над подписью */
 export type CaseSection = { label: string; title: string; media?: CaseMedia; blocks: CaseBlock[] };
 
-/** Картинка, галерея или сравнение перед секцией; ratio — пропорция кадра из макета, например '934 / 558.6'; radius — скругление, если не 24 */
-export type CaseMedia =
-  | { media: 'image'; src: string; alt: string; ratio: string; radius?: number }
+/**
+ * Картинка, галерея или сравнение: обложка кейса или блок перед секцией.
+ * ratio — пропорция кадра из макета, например '936 / 559.8'; radius — скругление, если не 24; border — обводка 1px (border/media)
+ */
+export type CaseMedia = (
+  | { media: 'image'; src: string; alt: string; ratio: string }
   /** background — общий неподвижный фон; слайды — прозрачные PNG размером с кадр, листаются поверх фона */
   | { media: 'gallery'; background: string; slides: { src: string; alt: string }[]; ratio: string }
   /** Две картинки друг на друге: before слева от разделителя, after справа; разделитель перетаскивается */
-  | { media: 'compare'; before: string; after: string; alt: string; ratio: string };
+  | { media: 'compare'; before: string; after: string; alt: string; ratio: string }
+) & { radius?: number; border?: boolean };
 
 export type CaseStudy = {
   id: string;
-  /** Обложка панели: прозрачный PNG 950×400 из макета, снизу затемняется градиентом в цвет панели */
-  cover: { src: string; alt: string };
+  /** Обложка: блок 936×500 со скруглением 24 вверху панели, крестик лежит поверх неё */
+  cover: CaseMedia;
   title: string;
   lead: string;
   meta: { label: string; value: string }[];
@@ -41,7 +45,13 @@ export const BEHANCE = {
 export const cases: CaseStudy[] = [
   {
     id: '1win',
-    cover: { src: asset('case-cover-ds.png'), alt: 'Обложки продуктовых библиотек JetTon и TonPlay' },
+    cover: {
+      media: 'compare',
+      before: asset('case-cover-ds-jetton.webp'),
+      after: asset('case-cover-ds-tonplay.webp'),
+      alt: 'Обложки продуктовых библиотек в брендах JetTon и TonPlay',
+      ratio: '936 / 500',
+    },
     title: 'Дизайн-система для White Label',
     lead: 'Объединил четыре бренда в одной системе, сохранив общие правила и продуктовые различия. С AI подготовил проверки состояний и Handoff.',
     meta: [
@@ -74,7 +84,7 @@ export const cases: CaseStudy[] = [
           media: 'gallery',
           background: asset('case-ds-gallery-bg.webp'),
           slides: [1, 2, 3, 4].map((i) => ({ src: asset(`case-ds-gallery-${i}.webp`), alt: `Основа дизайн-системы, слайд ${i}` })),
-          ratio: '934 / 558.6',
+          ratio: '936 / 559.8',
         },
         label: 'Архитектурное решение',
         title: 'Ограничил Component API',
@@ -146,7 +156,7 @@ export const cases: CaseStudy[] = [
           before: asset('case-ds-compare-A1.webp'),
           after: asset('case-ds-compare-B1.webp'),
           alt: 'Одни и те же экраны в двух брендах',
-          ratio: '934 / 478.2',
+          ratio: '936 / 479.2',
         },
         label: 'Результат и развитие',
         title: 'Совместимость стала частью дизайна',
@@ -173,7 +183,7 @@ export const cases: CaseStudy[] = [
   },
   {
     id: '1win-product',
-    cover: { src: asset('case-cover-cashier.png'), alt: 'Кошелёк кассы на телефоне' },
+    cover: { media: 'image', src: asset('case-cover-cashier.webp'), alt: 'Кошелёк кассы на телефоне', ratio: '936 / 500' },
     title: 'Касса казино: пополнение и вывод',
     lead: 'Связал пополнение, вывод и историю в один путь с понятными условиями и статусами операций. Разделил банковские и криптовалютные сценарии.',
     meta: [
@@ -209,7 +219,8 @@ export const cases: CaseStudy[] = [
             { src: asset('case-product-deposit-1.webp'), alt: 'Пополнение банковской картой' },
             { src: asset('case-product-deposit-2.webp'), alt: 'Пополнение криптовалютой' },
           ],
-          ratio: '934 / 558.6',
+          ratio: '936 / 559.8',
+          border: true,
         },
         label: 'Депозит · Фиат и криптовалюта',
         title: 'Общий путь с разными условиями',
@@ -235,7 +246,8 @@ export const cases: CaseStudy[] = [
             { src: asset('case-product-withdraw-1.webp'), alt: 'Вывод на банковскую карту' },
             { src: asset('case-product-withdraw-2.webp'), alt: 'Вывод в криптовалюте' },
           ],
-          ratio: '934 / 558.6',
+          ratio: '936 / 559.8',
+          border: true,
         },
         label: 'Вывод · Фиат и криптовалюта',
         title: 'Проверить всё до подтверждения',
@@ -254,7 +266,7 @@ export const cases: CaseStudy[] = [
         ],
       },
       {
-        media: { media: 'image', src: asset('case-product-history.webp'), alt: 'История операций', ratio: '934 / 469.2', radius: 32 },
+        media: { media: 'image', src: asset('case-product-history.webp'), alt: 'История операций', ratio: '936 / 470.2', radius: 32, border: true },
         label: 'История операций',
         title: 'Не искать перевод заново',
         blocks: [
