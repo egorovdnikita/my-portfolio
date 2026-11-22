@@ -157,8 +157,52 @@ function InlineLink({ link, variant }: { link: { label: string; url: string; ico
   );
 }
 
+/**
+ * Растворение у краёв экрана, как у sasi.codes: сообщение, уходящее под шапку или под кнопку «Написать»,
+ * становится прозрачным и размытым. Считаем по прокрутке, а не CSS view() — так одинаково работает
+ * и во встроенном браузере Telegram, и в старых Safari.
+ */
+function useEdgeDissolve() {
+  useEffect(() => {
+    const TOP_GONE = 56; // низ сообщения выше этой линии — сообщения не видно
+    const TOP_FADE = 96; // длина затухания у шапки
+    const BOTTOM_GONE = 24; // верхние 48px сообщения ниже (высота окна − 24) — не видно
+    const BOTTOM_FADE = 80;
+    const blur = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const vh = window.innerHeight;
+      document.querySelectorAll<HTMLElement>('.day-title, .bubble, .preview').forEach((el) => {
+        const r = el.getBoundingClientRect();
+        const top = (r.bottom - TOP_GONE) / TOP_FADE;
+        const bottom = (vh - BOTTOM_GONE - (r.top + Math.min(r.height, 48))) / BOTTOM_FADE;
+        const t = Math.max(0, Math.min(1, top, bottom));
+        if (t >= 1) {
+          if (el.style.opacity) (el.style.opacity = ''), (el.style.filter = '');
+          return;
+        }
+        el.style.opacity = String(Math.round(t * 100) / 100);
+        el.style.filter = blur ? `blur(${Math.round((1 - t) * 40) / 10}px)` : '';
+      });
+    };
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', schedule);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener('scroll', schedule);
+      window.removeEventListener('resize', schedule);
+    };
+  }, []);
+}
+
 export default function App() {
   const today = useToday();
+  useEdgeDissolve();
   useTheme();
   const [caseId, setCaseId] = useState<string | null>(caseFromHash);
   const [caseClosing, setCaseClosing] = useState(false);
@@ -208,8 +252,6 @@ export default function App() {
 
   return (
     <div className={`chat-app${caseOpen ? ' has-case' : ''}`}>
-      <div className="edge edge--top" aria-hidden />
-      <div className="edge edge--bottom" aria-hidden />
       <header className="chat-head">
         <a className="contact" href={profile.telegramUrl} target="_blank" rel="noreferrer" aria-label="Написать в Telegram">
           <span className="contact-photo">
@@ -265,8 +307,10 @@ export default function App() {
         </Day>
 
         <Day daysAgo={2} today={today}>
-          <Bubble reaction={<Reaction emoji="👀" right={-19} top={-20.75} />}>
-            А ещё — сайт <InlineLink link={links.basis} variant="basis" /> и раздел экзаменов в{' '}
+          <Bubble className="bubble--links" reaction={<Reaction emoji="👀" right={-19} top={-20.75} />}>
+            <span>А ещё — сайт</span>
+            <InlineLink link={links.basis} variant="basis" />
+            <span>и раздел экзаменов в</span>
             <InlineLink link={links.lyceum} variant="lyceum" />
           </Bubble>
         </Day>

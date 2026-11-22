@@ -1,98 +1,51 @@
 /* Токены, база, календарь вкладов и страница кейса. Главная-чат — в chat.css. */
 
+/* Токены = переменные Figma «Портфолио / Тема» (только те, что использует главная):
+   группа/имя в Figma = --группа-имя здесь. Светлая тема — :root, тёмная — data-theme="dark" */
 :root {
-  /* Токены совпадают с переменными Figma «Портфолио / Тема»: группа/имя в Figma = --группа-имя здесь */
-  /* bg — фоны */
   --bg-page: #f5f5f5;
-  --bg-surface: #ffffff;
-  --bg-nav: rgba(255, 255, 255, 0.5);
-  --bg-nav-hover: rgba(250, 250, 250, 0.7);
-  --bg-avatar: #ebebeb; /* неопознанный посетитель */
-  /* text — текст */
+  --bg-bubble: #ffffff; /* подложка сообщений и карточек: в светлой теме белые на сером, в тёмной — как у sasi.codes */
+  --bg-nav: rgba(255, 255, 255, 0.5); /* стеклянная плашка с именем */
+  --border-nav: #ffffff;
   --text-primary: #000000;
   --text-muted: rgba(0, 0, 0, 0.5);
-  /* accent — акцент */
-  --accent-base: #00a0f0;
-  --accent-hover: #0092db;
-  --accent-soft: rgba(0, 160, 240, 0.08);
-  --accent-tint: #ddf4ff;
-  /* fill — полупрозрачные заливки поверх фона */
-  --fill-2: rgba(0, 0, 0, 0.02);
-  --fill-4: rgba(0, 0, 0, 0.04);
-  --fill-6: rgba(0, 0, 0, 0.06);
-  --fill-8: rgba(0, 0, 0, 0.08);
-  --fill-placeholder: rgba(128, 128, 128, 0.55);
-  /* icon — иконки */
   --icon-strong: #171717;
-  --icon-muted: #737373;
   --icon-subtle: #a3a3a3;
-  /* border — обводки */
-  --border-nav: #ffffff; /* стеклянные плашки навигации, 1px внутрь */
-  --border-logo: #ffffff;
-  /* shadow — цвет теней */
-  --shadow-panel: rgba(0, 0, 0, 0.06);
-  --shadow-lift: rgba(0, 0, 0, 0.08);
-  /* contrib — уровни календаря вкладов */
+  --accent-base: #00a0f0;
+  --static-white: #ffffff;
   --contrib-0: rgba(0, 0, 0, 0.06);
   --contrib-1: #beebb4;
   --contrib-2: #90e37f;
   --contrib-3: #65dc4d;
   --contrib-4: #3dd51e;
-  /* static — одинаковые в обеих темах */
-  --static-white: #ffffff;
-  --static-black: #000000;
 
   /* Только на сайте: эффекты, которых нет в макете */
-  --edge: rgba(0, 160, 240, 0.55);
-  /* Сплошной цвет наконечника и точки — как линия поверх фона, чтобы линия под ними не просвечивала */
-  --edge-solid: color-mix(in srgb, #00a0f0 55%, var(--bg-page));
   --shimmer: rgba(255, 255, 255, 0.45);
-  --nav-blur: blur(16px) saturate(180%);
   --tooltip-bg: rgba(24, 24, 22, 0.9);
   --tooltip-shadow: rgba(24, 24, 22, 0.16);
   --tooltip-text: #ffffff;
   color-scheme: light;
 }
 
-/* Тёмная тема: тема ставится атрибутом data-theme на <html> (скрипт в index.html и useTheme) */
+/* Тёмная тема: атрибут data-theme на <html> ставят скрипт в index.html и useTheme */
 :root[data-theme='dark'] {
-  --bg-page: #0f0f0f;
-  --bg-surface: #1a1a1a;
+  --bg-page: #000000;
+  --bg-bubble: #26252a;
   --bg-nav: rgba(26, 26, 26, 0.5);
-  --bg-nav-hover: rgba(34, 34, 34, 0.7);
-  --bg-avatar: #202020;
+  --border-nav: rgba(255, 255, 255, 0.08);
   --text-primary: #ffffff;
   --text-muted: rgba(255, 255, 255, 0.5);
-  --accent-base: #00a0f0;
-  --accent-hover: #1aaaf2;
-  --accent-soft: rgba(0, 160, 240, 0.16);
-  --accent-tint: #0b3448;
-  --fill-2: rgba(255, 255, 255, 0.03);
-  --fill-4: rgba(255, 255, 255, 0.06);
-  --fill-6: rgba(255, 255, 255, 0.08);
-  --fill-8: rgba(255, 255, 255, 0.12);
-  --fill-placeholder: rgba(128, 128, 128, 0.55);
   --icon-strong: #f5f5f5;
-  --icon-muted: #a3a3a3;
   --icon-subtle: #737373;
-  --border-nav: rgba(255, 255, 255, 0.08);
-  --border-logo: rgba(255, 255, 255, 0.24);
-  --shadow-panel: rgba(0, 0, 0, 0.4);
-  --shadow-lift: rgba(0, 0, 0, 0.5);
   --contrib-0: rgba(255, 255, 255, 0.1);
   --contrib-1: #1d4a14;
   --contrib-2: #287c17;
   --contrib-3: #33a91b;
   --contrib-4: #3dd51e;
-  --static-white: #ffffff;
-  --static-black: #000000;
 
-  --edge: rgba(0, 160, 240, 0.7);
-  --edge-solid: color-mix(in srgb, #00a0f0 70%, var(--bg-page));
   --shimmer: rgba(255, 255, 255, 0.22);
   --tooltip-bg: rgba(64, 64, 62, 0.96);
   --tooltip-shadow: rgba(0, 0, 0, 0.4);
-  --tooltip-text: #ffffff;
   color-scheme: dark;
 }
 
@@ -159,7 +112,6 @@ a {
   mask-repeat: no-repeat;
 }
 .icon--strong { background-color: var(--icon-strong); }
-.icon--muted { background-color: var(--icon-muted); }
 .icon--subtle { background-color: var(--icon-subtle); }
 .icon--white { background-color: var(--static-white); }
 
@@ -267,7 +219,7 @@ a {
   scrollbar-color: var(--icon-subtle) transparent;
 }
 .case-scroll:hover,
-.feed:hover { scrollbar-color: var(--icon-muted) transparent; }
+.feed:hover { scrollbar-color: var(--icon-subtle) transparent; }
 /* Высота строки округляется до целых пикселей, как в Figma (16px × 1.4 = 22.4 → 22):
    множитель задаётся переменной --lh, а считается от размера шрифта каждого элемента */
 .case-column * { line-height: round(calc(var(--lh, 1.2) * 1em), 1px); }
@@ -282,8 +234,8 @@ a {
 }
 .case-close {
   box-shadow: inset 0 0 0 1px var(--border-nav);
-  -webkit-backdrop-filter: var(--nav-blur);
-  backdrop-filter: var(--nav-blur);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  backdrop-filter: blur(16px) saturate(180%);
   position: fixed;
   top: 16px;
   left: calc(50% + var(--case-w) / 2 + 16px); /* 16px от правого края колонки */
@@ -298,7 +250,7 @@ a {
   transition: background-color 0.15s ease;
   animation: fade-in 0.2s ease;
 }
-.case-close:hover { background: var(--bg-nav-hover); }
+.case-close:hover { filter: brightness(1.1); }
 .case.is-closing .case-column {
   animation: case-out 0.2s ease-in forwards;
 }
@@ -319,7 +271,7 @@ a {
   display: flex;
   flex-direction: column;
   width: 100%;
-  background: var(--bg-surface);
+  background: var(--bg-bubble);
   border-radius: 32px;
   overflow: hidden;
 }
@@ -362,7 +314,7 @@ a {
   gap: 6px;
   padding: 16px;
   border-radius: 24px;
-  background: var(--fill-2);
+  background: var(--bg-bubble);
 }
 .case-meta-value { font-size: 16px; font-weight: 600; }
 
@@ -418,14 +370,14 @@ a {
   gap: 4px;
   padding: 20px;
   border-radius: 24px;
-  background: var(--fill-2);
+  background: var(--bg-bubble);
 }
 .case-step-title { font-size: 16px; font-weight: 600; }
 
 /* Картинка: пропорция задаётся из данных кейса */
 .case-media {
   border-radius: 24px;
-  background: var(--fill-2);
+  background: var(--bg-bubble);
   overflow: hidden;
 }
 .case-media img { display: block; width: 100%; height: 100%; object-fit: cover; }
@@ -435,7 +387,7 @@ a {
 .case-gallery-track {
   display: flex;
   border-radius: 24px;
-  background-color: var(--fill-2);
+  background-color: var(--bg-bubble);
   background-size: cover;
   background-position: center;
   overflow-x: auto;
@@ -473,11 +425,11 @@ a {
   padding: 0;
   border: 0;
   border-radius: 999px;
-  background: var(--bg-surface);
+  background: var(--bg-bubble);
   cursor: pointer;
   transition: background-color 0.15s ease;
 }
-.case-gallery-arrow:hover { background: var(--bg-nav-hover); }
+.case-gallery-arrow:hover { filter: brightness(1.1); }
 .case-gallery-arrow.is-prev { left: -32px; }
 .case-gallery-arrow.is-next { right: -32px; }
 .case-gallery-arrow.is-next .icon { transform: scaleX(-1); }
@@ -511,7 +463,7 @@ a {
   position: relative;
   overflow: hidden;
   border-radius: 24px;
-  background: var(--fill-2);
+  background: var(--bg-bubble);
   cursor: ew-resize;
   touch-action: pan-y;
   user-select: none;
@@ -548,7 +500,7 @@ a {
   height: 64px;
   margin: -32px 0 0 -32px;
   border-radius: 999px;
-  background: var(--bg-surface);
+  background: var(--bg-bubble);
   color: var(--text-primary);
   fill: currentColor;
 }

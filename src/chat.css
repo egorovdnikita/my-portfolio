@@ -1,15 +1,6 @@
-/* Главная в виде переписки. Значения сняты из макета Figma «Новый сайт» (кадры «Портфолио», 1920px).
-   Шапка и кнопка «Написать» закреплены, под ними сообщения уходят в размытие — как у sasi.codes. */
-
-:root {
-  /* Подложка сообщения — bg-nav (50%) поверх фона страницы, сведённая в сплошной цвет:
-     так хвостик не просвечивает в месте, где заходит на сообщение */
-  --bg-bubble: #fafafa;
-  --reaction: #0074f0;
-}
-:root[data-theme='dark'] {
-  --bg-bubble: #151515;
-}
+/* Главная в виде переписки. Значения сняты из макета Figma «Новый сайт», кадр «Портфолио / Тёмная» (1920px, колонка 400).
+   Шапка и кнопка «Написать» закреплены. У краёв экрана сообщения растворяются с размытием, как у sasi.codes
+   (прозрачность и размытие считает useEdgeDissolve в App.tsx). */
 
 html.is-locked { overflow: hidden; }
 
@@ -35,9 +26,9 @@ html.is-locked { overflow: hidden; }
 .contact-photo {
   position: relative;
   display: block;
-  width: 96px;
-  height: 96px;
-  margin-bottom: -20px;
+  width: 64px;
+  height: 64px;
+  margin-bottom: -12px;
   overflow: hidden;
   border-radius: 999px;
 }
@@ -64,9 +55,8 @@ html.is-locked { overflow: hidden; }
   backdrop-filter: blur(16px);
   color: var(--text-primary);
   font-size: 16px;
-  transition: background-color 0.15s ease;
+  line-height: 19px;
 }
-.contact:hover .contact-pill { background: var(--bg-nav-hover); }
 
 /* ---------- Переписка ---------- */
 
@@ -74,34 +64,35 @@ html.is-locked { overflow: hidden; }
   display: flex;
   flex-direction: column;
   gap: 32px;
-  width: min(460px, 100% - 32px);
+  width: min(400px, 100% - 32px);
   margin: 0 auto;
-  padding: 172px 0 96px; /* сверху — под шапку, снизу — 16 до кнопки «Написать» (56 + 24) */
+  padding: 148px 0 128px; /* снизу — 48 до кнопки «Написать» и сама кнопка с отступом (56 + 24) */
 }
 .day {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 8px;
+  gap: 4px;
 }
 .day-title {
   align-self: stretch;
   padding-bottom: 24px;
   color: var(--text-muted);
-  font-size: 16px;
-  line-height: 19px;
+  font-size: 14px;
+  line-height: 17px;
   text-align: center;
 }
 
+/* Высота строки — как в Figma: Inter, «auto» округлено до целых (14 → 17, 12 → 15) */
 .bubble {
   position: relative;
   max-width: 100%;
-  padding: 16px;
+  padding: 12px 16px;
   border-radius: 20px;
   background: var(--bg-bubble);
   color: var(--text-primary);
-  font-size: 16px;
-  line-height: 19px; /* как в Figma: Inter 16, высота строки «auto» округлена до 19 */
+  font-size: 14px;
+  line-height: 17px;
 }
 
 /* Хвостик у последнего сообщения дня — как у референса: выступ цвета сообщения
@@ -132,51 +123,57 @@ html.is-locked { overflow: hidden; }
   align-items: center;
   gap: 8px;
   width: 270px;
-  padding: 14px 16px;
+  padding: 8px 16px;
 }
 .job-logo,
 .tool-logo {
   display: block;
   flex-shrink: 0;
-  width: 24px;
-  height: 24px;
   object-fit: cover;
 }
-.job-logo { border-radius: 16px; }
+.job-logo { width: 24px; height: 24px; border-radius: 16px; }
 .job-name { flex: 1 0 0; min-width: 1px; }
-.job-period { color: var(--text-muted); font-size: 14px; line-height: 17px; white-space: nowrap; }
+.job-period { color: var(--text-muted); white-space: nowrap; }
 
-/* Календарь вкладов: 26 недель на 408px, клетка 13.77 со скруглением 4 */
+/* Календарь вкладов: 26 недель на 376px — клетка 11.58, зазор 3, скругление 3 */
 .bubble--contrib {
-  width: 440px;
-  border-radius: 24px;
+  width: 100%;
+  padding: 12px;
+  border-radius: 16px;
 }
-.bubble--contrib .contrib-cell { border-radius: 4px; }
+.bubble--contrib .contrib-months,
+.bubble--contrib .contrib-grid { gap: 3px; }
+.bubble--contrib .contrib-months { line-height: 15px; }
 
 /* Инструменты */
 .bubble--tools {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 24px;
-  padding: 14px 16px;
+  gap: 8px 16px;
+  padding: 10px 16px;
 }
 .tool {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-weight: 600;
   white-space: nowrap;
 }
-.tool-logo { border-radius: 8px; }
+.tool-logo { width: 20px; height: 20px; border-radius: 8px; }
 
-/* Ссылки с логотипом в тексте */
-.inline-link { white-space: nowrap; }
+/* Ссылки с логотипом в тексте: части через 4px, как в макете; на узком экране переносятся целиком */
+.bubble--links {
+  display: flex;
+  align-items: center;
+  gap: 0 4px;
+  max-width: none; /* в макете 404 — на 4px шире колонки */
+  white-space: nowrap;
+}
+.inline-link { display: flex; align-items: center; gap: 4px; white-space: nowrap; }
 .inline-logo {
   position: relative;
-  display: inline-block;
+  display: block;
+  flex-shrink: 0;
   height: 13px;
-  margin-right: 4px;
-  vertical-align: -1px;
 }
 .inline-logo img {
   position: absolute;
@@ -193,7 +190,7 @@ html.is-locked { overflow: hidden; }
   text-decoration: underline;
   text-underline-position: from-font;
 }
-.bubble a:hover { color: var(--accent-hover); }
+.bubble a:hover { text-decoration-thickness: 2px; }
 
 /* Реакция: кружок 40 с эмодзи и два «пузырька» 14 и 6 */
 .reaction {
@@ -206,7 +203,7 @@ html.is-locked { overflow: hidden; }
 .reaction-face {
   position: absolute;
   border-radius: 999px;
-  background: var(--reaction);
+  background: #0074f0; /* как в макете, без токена */
 }
 .reaction-dot--m { left: 28px; top: 28px; width: 14px; height: 14px; }
 .reaction-dot--s { left: 40px; top: 40px; width: 6px; height: 6px; }
@@ -229,7 +226,7 @@ html.is-locked { overflow: hidden; }
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border-radius: 24px;
+  border-radius: 16px;
   background: var(--bg-bubble);
 }
 .preview-img {
@@ -247,10 +244,10 @@ html.is-locked { overflow: hidden; }
   padding: 16px;
   background: var(--bg-bubble);
 }
-.preview-title { color: var(--text-primary); font-size: 16px; line-height: 19px; }
-.preview-sub { color: var(--text-muted); font-size: 14px; line-height: 17px; }
+.preview-title { color: var(--text-primary); font-size: 14px; line-height: 17px; }
+.preview-sub { color: var(--text-muted); font-size: 12px; line-height: 15px; }
 
-.preview--case { width: 300px; max-width: 100%; }
+.preview--case { width: 260px; max-width: 100%; }
 .preview--case .preview-img { aspect-ratio: 440 / 320; }
 
 .preview-row {
@@ -259,7 +256,8 @@ html.is-locked { overflow: hidden; }
   width: 100%;
 }
 .preview--nda { flex: 1 0 0; min-width: 1px; }
-.preview--nda .preview-img { height: 246px; }
+.preview--nda .preview-img { height: 196px; }
+.preview--nda .preview-text { padding: 12px; }
 
 /* ---------- Кнопка «Написать» ---------- */
 
@@ -280,7 +278,7 @@ html.is-locked { overflow: hidden; }
   align-items: center;
   justify-content: center;
   gap: 8px;
-  width: min(480px, 100% - 12px);
+  width: min(420px, 100% - 12px);
   height: 56px;
   padding: 0 16px;
   border-radius: 42px;
@@ -290,8 +288,9 @@ html.is-locked { overflow: hidden; }
   color: var(--static-white);
   font-size: 16px;
   font-weight: 600;
+  line-height: 19px;
   pointer-events: auto;
-  transition: background-color 0.15s ease;
+  transition: filter 0.15s ease;
 }
 .compose-btn::after {
   content: '';
@@ -302,60 +301,9 @@ html.is-locked { overflow: hidden; }
   opacity: 0.32;
   pointer-events: none;
 }
-.compose-btn:hover { background: var(--accent-hover); }
+.compose-btn:hover { filter: brightness(1.08); }
 .compose-btn img { display: block; flex-shrink: 0; }
 
-/* ---------- Размытие у краёв экрана (по мотивам sasi.codes) ----------
-   Под шапкой и под кнопкой сообщения уходят в прогрессивный блюр и растворяются в фоне:
-   цветовой градиент + два слоя backdrop-filter с разной силой размытия и своими масками */
-
-.edge {
-  position: fixed;
-  left: 0;
-  right: 0;
-  z-index: 15;
-  pointer-events: none;
-}
-.edge::before,
-.edge::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-}
-.edge--top {
-  top: 0;
-  height: 172px; /* до первой подписи даты */
-  background: linear-gradient(to bottom, var(--bg-page) 0%, color-mix(in srgb, var(--bg-page) 80%, transparent) 45%, transparent 100%);
-}
-.edge--bottom {
-  bottom: 0;
-  height: 96px; /* до низа последнего сообщения в конце страницы */
-  background: linear-gradient(to top, var(--bg-page) 0%, color-mix(in srgb, var(--bg-page) 80%, transparent) 40%, transparent 100%);
-}
-.edge::before {
-  -webkit-backdrop-filter: blur(3px);
-  backdrop-filter: blur(3px);
-}
-.edge::after {
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
-}
-.edge--top::before {
-  -webkit-mask-image: linear-gradient(to bottom, #000 40%, transparent 100%);
-  mask-image: linear-gradient(to bottom, #000 40%, transparent 100%);
-}
-.edge--top::after {
-  -webkit-mask-image: linear-gradient(to bottom, #000 0%, transparent 60%);
-  mask-image: linear-gradient(to bottom, #000 0%, transparent 60%);
-}
-.edge--bottom::before {
-  -webkit-mask-image: linear-gradient(to top, #000 40%, transparent 100%);
-  mask-image: linear-gradient(to top, #000 40%, transparent 100%);
-}
-.edge--bottom::after {
-  -webkit-mask-image: linear-gradient(to top, #000 0%, transparent 60%);
-  mask-image: linear-gradient(to top, #000 0%, transparent 60%);
-}
 @media (prefers-reduced-motion: reduce) {
   .preview-img { transition: none; }
 }
@@ -364,11 +312,9 @@ html.is-locked { overflow: hidden; }
 
 .chat-head,
 .chat,
-.edge,
 .compose { transition: opacity 0.2s ease; }
 .has-case .chat-head,
 .has-case .chat,
-.has-case .edge,
 .has-case .compose {
   opacity: 0;
   pointer-events: none;
@@ -376,10 +322,9 @@ html.is-locked { overflow: hidden; }
 
 /* ---------- Телефон ---------- */
 
-@media (max-width: 520px) {
+@media (max-width: 480px) {
   /* Реакция выступает за правый край на 23px — на узком экране оставляем ей место */
   .bubble.has-reaction { max-width: calc(100% - 24px); }
-  .bubble--contrib { width: 100%; }
-  .bubble--tools { gap: 8px 16px; }
-  .preview--nda .preview-img { height: auto; aspect-ratio: 226 / 246; }
+  .bubble--links { flex-wrap: wrap; }
+  .preview--nda .preview-img { height: auto; aspect-ratio: 1; }
 }
