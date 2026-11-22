@@ -135,15 +135,6 @@ html.is-locked body { background: var(--bg-page-case); }
   gap: 24px;
   padding: 32px;
 }
-.case-group--multi { gap: 40px; }
-.case-divider {
-  width: 100%;
-  height: 0;
-  margin: 0;
-  border: 0;
-  box-shadow: 0 0 0 0.5px var(--border-divider); /* линия 1px без высоты, как Line в Figma */
-}
-
 /* Заголовок кейса и описание по центру */
 .case-intro { padding-top: 16px; }
 .case-heading {
@@ -164,8 +155,7 @@ html.is-locked body { background: var(--bg-page-case); }
   transform: scale(calc(1 - var(--collapse) * 0.12));
   transform-origin: center top;
 }
-.case-scroll .case-title,
-.case-scroll .case-h2 { letter-spacing: -0.06em; }
+.case-scroll .case-title { letter-spacing: -0.06em; }
 .case-lead {
   margin: 0;
   color: var(--text-muted);
@@ -200,88 +190,15 @@ html.is-locked body { background: var(--bg-page-case); }
   line-height: round(calc(1.4 * 1em), 1px); /* как в Figma: 14 → 20, 16 → 22, 17 → 24 */
 }
 
-.case-role {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-/* Секция: подпись, заголовок, текст — через 20 */
-.case-section {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-.case-h2 {
-  margin: 0;
-  color: var(--text-primary);
-  font-size: 32px;
-  font-weight: 600;
-  line-height: round(calc(1.15 * 1em), 1px); /* 32 → 37 */
-}
-.case-text {
-  margin: 0;
-  color: var(--text-muted);
-  font-size: 17px;
-  line-height: round(calc(1.4 * 1em), 1px); /* как в Figma: 14 → 20, 16 → 22, 17 → 24 */
-}
-/* Ссылка в тексте: цвет текста и подчёркивание, как в макете */
-.case-text a {
-  color: inherit;
-  text-decoration: underline;
-  text-underline-position: from-font;
-}
-.case-text a:hover { color: var(--text-primary); }
-
-/* Пункты с синей точкой в слоте 24px */
-.case-bullets {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  color: var(--text-primary);
-  font-size: 16px;
-  line-height: round(calc(1.4 * 1em), 1px); /* как в Figma: 14 → 20, 16 → 22, 17 → 24 */
-}
-.case-bullets li { display: flex; gap: 4px; }
-.case-marker { flex-shrink: 0; width: 24px; color: var(--accent-base); text-align: center; }
-
-/* Шаги: по два в ряд, через 8 */
-.case-steps {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
-  margin-top: 4px; /* 24 от текста, как в макете кассы */
-}
-/* Один шаг — во всю ширину, как в макете */
-.case-steps:has(> :only-child) { grid-template-columns: minmax(0, 1fr); }
-.case-step {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 20px;
-  border-radius: 24px;
-  background: var(--bg-card);
-}
-
 /* ---------- Картинки, галереи, сравнение: блок с отступом 8, скругление 24, обводка 1px внутрь ---------- */
 
-.case-media-block { padding: 8px; }
+/* Блок картинок и ответов внутри секции — через 4, как Content в макете */
+.case-content { display: flex; flex-direction: column; gap: 4px; }
 .case-media {
   position: relative;
   overflow: hidden;
   border-radius: 24px;
   background: var(--bg-card);
-}
-.case-media.has-border::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  box-shadow: inset 0 0 0 1px var(--border-media);
-  pointer-events: none;
 }
 .case-media > img {
   display: block;
@@ -316,10 +233,10 @@ html.is-locked body { background: var(--bg-page-case); }
   height: 100%;
   object-fit: cover;
 }
-/* Точки: плашка 16 высотой, активная 32×8, остальные 8×8, 20px от низа */
+/* Точки: плашка 16 высотой, активная 32×8, остальные 8×8, 12px от низа */
 .case-gallery-dots {
   position: absolute;
-  bottom: 20px;
+  bottom: 12px;
   left: 50%;
   z-index: 1;
   display: flex;
@@ -340,10 +257,13 @@ html.is-locked body { background: var(--bg-page-case); }
 .case-gallery-dot.is-active { width: 32px; background: #ffffff; }
 
 .case-compare {
+  position: relative;
   cursor: ew-resize;
   touch-action: pan-y;
   user-select: none;
 }
+/* Каждая половина — своя картинка со скруглением 24 со всех сторон и щелью 2px у разделителя:
+   изгиб едет вместе с разделителем */
 .case-compare-img {
   position: absolute;
   inset: 0;
@@ -353,17 +273,8 @@ html.is-locked body { background: var(--bg-page-case); }
   object-fit: cover;
   pointer-events: none;
 }
-.case-compare-before { clip-path: inset(0 calc(100% - var(--pos)) 0 0); }
-.case-compare-line {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: var(--pos);
-  width: 2px;
-  margin-left: -1px;
-  background: var(--bg-panel); /* линия цвета панели, как в макете */
-  pointer-events: none;
-}
+.case-compare-before { clip-path: inset(0 calc(100% - var(--pos) + 1px) 0 0 round 24px); }
+.case-compare-after { clip-path: inset(0 0 0 calc(var(--pos) + 1px) round 24px); }
 .case-compare-handle {
   position: absolute;
   top: 50%;
@@ -372,13 +283,13 @@ html.is-locked body { background: var(--bg-page-case); }
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 64px;
-  height: 64px;
-  margin: -32px 0 0 -32px;
+  width: 48px;
+  height: 48px;
+  margin: -24px 0 0 -24px;
   border-radius: 999px;
-  background: #ffffff; /* в макете белая в обеих темах */
-  -webkit-backdrop-filter: blur(32px);
-  backdrop-filter: blur(32px);
+  background: var(--static-white); /* в макете белая в обеих темах */
+  -webkit-backdrop-filter: blur(18.9px);
+  backdrop-filter: blur(18.9px);
   color: #000000;
   fill: currentColor;
 }
@@ -449,12 +360,7 @@ html.is-locked body { background: var(--bg-page-case); }
   .sheet-active.has-case .chat-surface { animation: case-home-back 0.45s cubic-bezier(0.22, 1, 0.36, 1); }
   .sheet-active:not(.has-case) .chat-surface { animation: case-home-return 0.2s ease-in forwards; }
   .case-group { padding: 24px 16px; }
-  .case-title,
-  .case-h2 { font-size: 26px; }
-  .case-text { font-size: 16px; }
-  .case-meta { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .case-steps { grid-template-columns: minmax(0, 1fr); }
-  .case-gallery-dots { bottom: 12px; }
+  .case-title { font-size: 26px; }
 }
 @keyframes case-sheet-in { from { transform: translateY(100%); } }
 @keyframes case-sheet-out { to { transform: translateY(100%); } }
@@ -479,8 +385,6 @@ html.is-locked body { background: var(--bg-page-case); }
 /* Актуальные кадры: панель 600px, текстовая область 552px. */
 .case-group { padding: 24px; }
 .case-intro { padding-top: 0; }
-.case-group--multi { gap: 24px; }
-.case-group--spaced { gap: 40px; }
 .case-meta { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .case-meta-item { gap: 3px; background: var(--bg-bubble); }
 .case--ds .case-meta-item { gap: 6px; }
@@ -493,7 +397,7 @@ html.is-locked body { background: var(--bg-page-case); }
 .case-scroll .case-question { align-self: flex-end; position: relative; max-width: 100%; width: fit-content; margin: 0; padding: 12px 16px; border-radius: 20px; background: var(--accent-base); color: var(--static-white); font-size: 16px; font-weight: 500; line-height: 22px; letter-spacing: -0.04em; }
 .case-answers { display: flex; flex-direction: column; gap: 4px; margin: 0; padding: 0; list-style: none; }
 .case-answers li { position: relative; width: fit-content; max-width: 100%; padding: 12px 16px; border-radius: 20px; background: var(--bg-bubble); color: var(--text-primary); font-size: 16px; font-weight: 500; line-height: 22px; }
-.case-scroll .case-answers li, .case-scroll .case-answers li span { letter-spacing: -0.04em; }
+.case-scroll .case-answers li { letter-spacing: -0.04em; }
 /* Та же геометрия хвостика, что у сообщений главной. */
 .case-question::before,
 .case-question::after,

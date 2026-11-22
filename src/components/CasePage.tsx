@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { type CaseBlock, type CaseMedia, type CaseSection, type CaseStudy } from '../cases';
+import { type CaseMedia, type CaseSection, type CaseStudy } from '../cases';
 import { icons } from '../content';
 import { Icon } from './Cards';
 
@@ -10,21 +10,6 @@ type Props = {
 };
 
 /**
- * Группы панели, как в макете: секция с картинкой начинается с блока картинки и открывает новую группу,
- * секции без картинки присоединяются к предыдущей группе.
- */
-function groupSections(sections: CaseSection[]) {
-  const intro: CaseSection[] = [];
-  const groups: { media?: CaseMedia; sections: CaseSection[] }[] = [];
-  for (const s of sections) {
-    if (s.media) groups.push({ media: s.media, sections: [s] });
-    else if (groups.length) groups[groups.length - 1].sections.push(s);
-    else intro.push(s);
-  }
-  return { intro, groups };
-}
-
-/**
  * Панель кейса справа от переписки (на узком экране — поверх неё).
  * При прокрутке крупный заголовок уходит вверх, а в закреплённой шапке плавно появляется его короткая версия —
  * как имя в профиле Telegram.
@@ -33,7 +18,6 @@ export function CasePage({ study, closing, onClose }: Props) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const barRef = useRef<HTMLDivElement>(null);
-  const { intro, groups } = groupSections(study.sections);
 
   // Новый кейс — с начала
   useEffect(() => {
@@ -84,7 +68,7 @@ export function CasePage({ study, closing, onClose }: Props) {
           </div>
 
           <article key={study.id} className="case-article">
-            <div className="case-media-block case-cover">
+            <div className="case-cover">
               <Media item={study.cover} loading="eager" />
             </div>
 
@@ -103,29 +87,10 @@ export function CasePage({ study, closing, onClose }: Props) {
                   </div>
                 ))}
               </div>
-              {study.role && (
-                <div className="case-role">
-                  <span className="case-label">{study.role.label}</span>
-                  <Bullets items={study.role.items} />
-                </div>
-              )}
-              {intro.map((s) => (
+              {study.sections.map((s) => (
                 <Section key={s.label} section={s} />
               ))}
             </section>
-
-            {groups.map((g, gi) => (
-              <div key={gi}>
-                {g.media && (
-                  <div className="case-media-block">
-                    <Media item={g.media} />
-                  </div>
-                )}
-                <section className={`case-group${g.sections.length > 1 ? ' case-group--multi' : ''}${(study.id === '1win' && gi < 2) || (study.id === '1win-product' && gi === 2) ? ' case-group--spaced' : ''}`}>
-                  {g.sections.map(s => <Section key={s.label} section={s} />)}
-                </section>
-              </div>
-            ))}
           </article>
         </div>
       </div>
@@ -134,67 +99,34 @@ export function CasePage({ study, closing, onClose }: Props) {
   );
 }
 
+/** Секция-переписка: подпись по центру, вопрос справа, картинки и ответы слева, как в макете */
 function Section({ section }: { section: CaseSection }) {
-  return (
-    <div className="case-section">
-      <span className="case-section-label">{section.label}</span>
-      <h2 className="case-question">{section.title}</h2>
-      {section.blocks.map((block, i) => (
-        <Block key={i} block={block} />
-      ))}
-    </div>
-  );
-}
-
-/** Ответы отдельными сообщениями, как в макете. */
-function Bullets({ items }: { items: string[] }) {
-  return (
+  const media = section.media?.map((m, i) => <Media key={i} item={m} />);
+  const answers = (
     <ul className="case-answers">
-      {items.map((item) => (
-        <li key={item}>
-          <span>{item}</span>
-        </li>
+      {section.answers.map((a) => (
+        <li key={a}>{a}</li>
       ))}
     </ul>
   );
-}
-
-function Block({ block }: { block: CaseBlock }) {
-  switch (block.type) {
-    case 'text':
-      return <p className="case-text">{block.links ? <Linked text={block.text} links={block.links} /> : block.text}</p>;
-    case 'bullets':
-      return <Bullets items={block.items} />;
-    case 'steps':
-      return (
-        <div className="case-steps">
-          {block.items.map((step) => (
-            <div key={step.title} className="case-step">
-              <span className="case-value">{step.title}</span>
-              <span className="case-small">{step.text}</span>
-            </div>
-          ))}
-        </div>
-      );
-  }
-}
-
-/** Текст со ссылками: слова из links подчёркнуты и открываются в новой вкладке */
-function Linked({ text, links }: { text: string; links: Record<string, string> }) {
-  const words = Object.keys(links).sort((a, b) => b.length - a.length);
-  const pattern = new RegExp(`(${words.map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})`);
   return (
-    <>
-      {text.split(pattern).map((part, i) =>
-        links[part] ? (
-          <a key={i} href={links[part]} target="_blank" rel="noreferrer">
-            {part}
-          </a>
-        ) : (
-          part
-        ),
+    <div className="case-section">
+      <span className="case-section-label">{section.label}</span>
+      <h2 className="case-question">{section.question}</h2>
+      {media && section.mediaGap === 12 ? (
+        <>
+          {media}
+          {answers}
+        </>
+      ) : media ? (
+        <div className="case-content">
+          {media}
+          {answers}
+        </div>
+      ) : (
+        answers
       )}
-    </>
+    </div>
   );
 }
 
@@ -202,36 +134,28 @@ type Loading = 'eager' | 'lazy';
 
 /** Обложка грузится сразу, картинки секций — когда подходят к экрану. Скругление и обводка — из данных кейса */
 function Media({ item, loading = 'lazy' }: { item: CaseMedia; loading?: Loading }) {
-  const frame = { radius: item.radius, border: item.border };
-  if (item.media === 'emoji') return <div className="case-emoji-cover"><img src={item.src} alt={item.alt} width={196} height={196} /></div>;
+  if (item.media === 'emoji') {
+    return (
+      <div className="case-emoji-cover">
+        <img src={item.src} alt={item.alt} width={128} height={128} />
+      </div>
+    );
+  }
   if (item.media === 'image') {
     return (
-      <Frame {...frame} className="case-media" style={{ aspectRatio: item.ratio }}>
+      <div className="case-media" style={{ aspectRatio: item.ratio, borderRadius: item.radius }}>
         <img src={item.src} alt={item.alt} loading={loading} decoding="async" draggable={false} />
-      </Frame>
+      </div>
     );
   }
   if (item.media === 'compare') return <Compare item={item} loading={loading} />;
-  return <Gallery background={item.background} slides={item.slides} ratio={item.ratio} border={item.border} />;
+  return <Gallery background={item.background} slides={item.slides} ratio={item.ratio} />;
 }
 
-/** Рамка картинки: скругление 24 по умолчанию, обводка 1px внутрь, если она есть в макете */
-function Frame({
-  radius,
-  border,
-  className,
-  style,
-  children,
-  ...rest
-}: { radius?: number; border?: boolean } & React.HTMLAttributes<HTMLDivElement>) {
-  return (
-    <div {...rest} className={`${className}${border ? ' has-border' : ''}`} style={{ ...style, borderRadius: radius }}>
-      {children}
-    </div>
-  );
-}
-
-/** Сравнение: картинка «до» лежит поверх «после» и обрезается по разделителю, разделитель тянется мышью, пальцем и стрелками */
+/**
+ * Сравнение: две картинки со скруглением 24 у каждой половины и щелью 2px между ними, как в макете.
+ * Скруглённый изгиб едет вместе с разделителем; тянется мышью, пальцем и стрелками
+ */
 function Compare({ item, loading }: { item: Extract<CaseMedia, { media: 'compare' }>; loading: Loading }) {
   const boxRef = useRef<HTMLDivElement>(null);
   const [pos, setPos] = useState(50);
@@ -261,14 +185,13 @@ function Compare({ item, loading }: { item: Extract<CaseMedia, { media: 'compare
   return (
     <div
       ref={boxRef}
-      className={`case-media case-compare${item.border ? ' has-border' : ''}`}
-      style={{ aspectRatio: item.ratio, borderRadius: item.radius, ['--pos' as string]: `${pos}%` }}
+      className="case-compare"
+      style={{ aspectRatio: item.ratio, ['--pos' as string]: `${pos}%` }}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
     >
-      <img className="case-compare-img" src={item.after} alt={item.alt} loading={loading} decoding="async" draggable={false} />
+      <img className="case-compare-img case-compare-after" src={item.after} alt={item.alt} loading={loading} decoding="async" draggable={false} />
       <img className="case-compare-img case-compare-before" src={item.before} alt="" loading={loading} decoding="async" draggable={false} />
-      <span className="case-compare-line" aria-hidden />
       <span
         className="case-compare-handle"
         role="slider"
@@ -279,10 +202,11 @@ function Compare({ item, loading }: { item: Extract<CaseMedia, { media: 'compare
         aria-valuenow={Math.round(pos)}
         onKeyDown={onKeyDown}
       >
-        <svg width="32" height="32" viewBox="0 0 32 32" aria-hidden>
-          <rect x="9.33" y="4.33" width="2" height="23.33" rx="1" />
-          <rect x="15" y="4.33" width="2" height="23.33" rx="1" />
-          <rect x="20.67" y="4.33" width="2" height="23.33" rx="1" />
+        {/* Bolt «Hamburger Menu», повёрнутая на 90°, как в макете */}
+        <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden>
+          <rect x="6.25" y="3.25" width="1.5" height="17.5" rx="0.75" />
+          <rect x="11.25" y="3.25" width="1.5" height="17.5" rx="0.75" />
+          <rect x="16.25" y="3.25" width="1.5" height="17.5" rx="0.75" />
         </svg>
       </span>
     </div>
@@ -294,12 +218,10 @@ function Gallery({
   background,
   slides,
   ratio,
-  border,
 }: {
   background: string;
   slides: { src: string; alt: string }[];
   ratio: string;
-  border?: boolean;
 }) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
@@ -316,7 +238,7 @@ function Gallery({
   };
 
   return (
-    <div className={`case-media case-gallery${border ? ' has-border' : ''}`} role="group" aria-roledescription="галерея">
+    <div className="case-media case-gallery" role="group" aria-roledescription="галерея">
       <div
         ref={trackRef}
         className="case-gallery-track"

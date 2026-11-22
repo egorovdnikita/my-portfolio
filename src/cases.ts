@@ -1,38 +1,37 @@
-// Актуальные кейсы: карточки «Касса» и «DS».
-
-export type CaseBlock =
-  /** links — слова из текста, которые становятся ссылками (подчёркнуты, цвет текста), как в макете */
-  | { type: 'text'; text: string; links?: Record<string, string> }
-  /** Ответы в отдельных сообщениях */
-  | { type: 'bullets'; items: string[] }
-  /** Карточки по две в ряд: заголовок и пояснение */
-  | { type: 'steps'; items: { title: string; text: string }[] };
-
-/** media — картинка, галерея или сравнение в верхней части карточки секции, над подписью */
-export type CaseSection = { label: string; title: string; media?: CaseMedia; blocks: CaseBlock[] };
+// Кейсы «Касса» и «DS» — переписка по макету Figma «Новый сайт», кадры «Case Card — Касса» и «Case Card — DS».
 
 /**
- * Картинка, галерея или сравнение: обложка кейса или блок перед секцией.
- * ratio — пропорция кадра из макета, например '936 / 559.8'; radius — скругление, если не 24; border — обводка 1px (border/media)
+ * Картинка, галерея, сравнение или анимированный эмодзи над заголовком.
+ * ratio — пропорция кадра из макета, например '552 / 330.1'; radius — скругление, если не 24
  */
 export type CaseMedia = (
   | { media: 'image'; src: string; alt: string; ratio: string }
-  | { media: 'emoji'; src: string; alt: string; ratio: string }
-  /** background — общий неподвижный фон; слайды — прозрачные PNG размером с кадр, листаются поверх фона */
+  | { media: 'emoji'; src: string; alt: string }
+  /** background — общий неподвижный фон; слайды — прозрачные картинки размером с кадр, листаются поверх фона */
   | { media: 'gallery'; background: string; slides: { src: string; alt: string }[]; ratio: string }
-  /** Две картинки друг на друге: before слева от разделителя, after справа; разделитель перетаскивается */
+  /** Две картинки: before слева от разделителя, after справа; разделитель со скруглёнными краями перетаскивается */
   | { media: 'compare'; before: string; after: string; alt: string; ratio: string }
-) & { radius?: number; border?: boolean };
+) & { radius?: number };
+
+/**
+ * Секция-переписка: подпись по центру, вопрос справа, картинки и ответы слева.
+ * mediaGap — отступ между картинками и ответами: 4, если картинка лежит в одном блоке с ответами, иначе 12
+ */
+export type CaseSection = {
+  label: string;
+  question: string;
+  media?: CaseMedia[];
+  mediaGap?: 4 | 12;
+  answers: string[];
+};
 
 export type CaseStudy = {
   id: string;
-  /** Обложка: блок 936×500 со скруглением 24 вверху панели, крестик лежит поверх неё */
+  /** Анимированный эмодзи над заголовком, 128×128 */
   cover: CaseMedia;
   title: string;
   lead: string;
   meta: { label: string; value: string }[];
-  /** Блок «Моя роль» после фактов: подпись и пункты */
-  role?: { label: string; items: string[] };
   sections: CaseSection[];
 };
 
@@ -43,323 +42,210 @@ export const BEHANCE = {
   lyceum: 'https://www.behance.net/gallery/207229405/rostelekom-licej-ekzameny',
 };
 
+const RATIO = '552 / 330.1';
+
 const cashier: CaseStudy = {
-  "id": "1win-product",
-  "cover": {
-    "media": "emoji",
-    "src": asset('emoji-coin.webp'),
-    "alt": "Монета",
-    "ratio": "952 / 260"
-  },
-  "title": "Касса, которая не теряет платёж",
-  "lead": "Пересобрал кассу iGaming-платформы: пополнение, вывод и история для фиата и крипты в одном модуле. Сбой провайдера больше не обрывает сценарий.",
-  "meta": [
-    {
-      "label": "Роль",
-      "value": "Ведущий дизайнер"
-    },
-    {
-      "label": "Команда",
-      "value": "5 дизайнеров"
-    },
-    {
-      "label": "Масштаб",
-      "value": "8 валют, 20+ методов"
-    },
-    {
-      "label": "Период",
-      "value": "2025 — сейчас"
-    }
+  id: '1win-product',
+  cover: { media: 'emoji', src: asset('emoji-coin.webp'), alt: 'Монета' },
+  title: 'Касса, которая не теряет платёж',
+  lead: 'Пересобрал кассу iGaming-платформы: пополнение, вывод и история для фиата и крипты в одном модуле. Сбой провайдера больше не обрывает сценарий.',
+  meta: [
+    { label: 'Роль', value: 'Ведущий дизайнер' },
+    { label: 'Команда', value: 'Продуктовая команда' },
+    { label: 'Масштаб', value: '8 валют, ~20 методов' },
+    { label: 'Период', value: '2025 — сейчас' },
   ],
-  "sections": [
+  sections: [
     {
-      "label": "Моя роль",
-      "title": "Что ты делал в проекте?",
-      "blocks": [
-        {
-          "type": "bullets",
-          "items": [
-            "Спроектировал кассу целиком: депозит, вывод, история.",
-            "Руководил A/B-тестом комиссии на вывод.",
-            "Вёл 13 итераций от задачи до релиза."
-          ]
-        }
-      ]
+      label: 'Моя роль',
+      question: 'Что ты делал в проекте?',
+      answers: ['Спроектировал кассу целиком: депозит, вывод, история', 'Руководил A/B-тестом и вёл итерации до релиза'],
     },
     {
-      "label": "Контекст",
-      "title": "Почему сбой провайдера — это сбой продукта?",
-      "blocks": [
-        {
-          "type": "bullets",
-          "items": [
-            "Реквизиты выдаются не сразу.",
-            "Методы отключаются без предупреждения.",
-            "Пользователь видит не провайдера, а кассу."
-          ]
-        }
-      ]
+      label: 'Контекст',
+      question: 'Почему сбой провайдера — это сбой продукта?',
+      answers: ['Реквизиты приходят не сразу', 'Методы отключаются без предупреждения', 'А пользователь видит не провайдера, а кассу'],
     },
     {
-      "label": "Исследование",
-      "title": "Почему начал с причин, а не с экранов?",
-      "blocks": [
-        {
-          "type": "bullets",
-          "items": [
-            "Разобрал обращения в поддержку и воронку кассы.",
-            "Сравнил кассы конкурентов.",
-            "С разработкой и СБ собрал ограничения провайдеров."
-          ]
-        }
-      ]
+      label: 'Исследование',
+      question: 'Откуда знал, что чинить?',
+      answers: [
+        'Разобрал обращения в поддержку и воронку кассы',
+        'Сравнил кассы конкурентов',
+        'С разработкой и безопасностью собрал ограничения',
+      ],
     },
     {
-      "label": "Цели",
-      "title": "Какие цели и метрики?",
-      "blocks": [
-        {
-          "type": "bullets",
-          "items": [
-            "Платёж зачисляется сам — доля автозачислений.",
-            "Сбой метода не обрывает сессию — депозиты другим методом.",
-            "Одна касса на все рынки — конверсия по регионам."
-          ]
-        }
-      ]
+      label: 'Цели',
+      question: 'Как поймём, что сработало?',
+      answers: [
+        'Платёж зачисляется сам — доля автозачислений',
+        'Сбой не рвёт сессию — депозиты другим методом',
+        'Одна касса на все рынки — конверсия',
+      ],
     },
     {
-      "label": "Решение 1 · Пополнение",
-      "title": "Как платёж узнаёт себя сам?",
-      "blocks": [
+      label: 'Решение 1 · Пополнение',
+      question: 'Как платёж доходит без ручной сверки?',
+      media: [
         {
-          "type": "bullets",
-          "items": [
-            "Касса меняет сумму на пару рублей: 2 014 ₽ вместо 2 000 ₽.",
-            "По ней платёж зачисляется автоматически.",
-            "Ожидание — до 90 секунд, с прогрессом и повтором.",
-            "«Я оплатил» — активна только через 10 секунд."
-          ]
-        }
-      ]
+          media: 'gallery',
+          background: asset('case-product-cashier-bg.webp'),
+          slides: [1, 2].map((i) => ({ src: asset(`case-product-deposit-${i}.webp`), alt: `Пополнение, слайд ${i}` })),
+          ratio: RATIO,
+        },
+      ],
+      answers: [
+        'Быстрое пополнение — прошлый метод уже выбран',
+        'Касса меняет сумму на несколько рублей',
+        'По ней платёж зачисляется сам',
+        'Поиск реквизитов — до 90 секунд, с повтором',
+      ],
     },
     {
-      "label": "Решение 2 · Сбои",
-      "title": "Что, если метод упал?",
-      "blocks": [
-        {
-          "type": "bullets",
-          "items": [
-            "Недоступный метод заменяется популярным.",
-            "Нет фиата — ведём в крипту.",
-            "Быстрое пополнение — прошлый метод и сумма уже заполнены.",
-            "Бонус — подсказка, сколько не хватает до него."
-          ]
-        }
-      ]
+      label: 'Решение 2 · Сбои',
+      question: 'Что, если метод упал?',
+      answers: ['Недоступный метод заменяется популярным', 'Без фиата ведём в крипту'],
     },
     {
-      "label": "Решение 3 · Вывод",
-      "title": "Что видно до кнопки вывода?",
-      "blocks": [
+      label: 'Решение 3 · Вывод',
+      question: 'Что видно до кнопки вывода?',
+      media: [
         {
-          "type": "bullets",
-          "items": [
-            "До подтверждения видны сумма, комиссия и бонусы, которые сгорят."
-          ]
-        }
-      ]
+          media: 'gallery',
+          background: asset('case-product-cashier-bg.webp'),
+          slides: [1, 2].map((i) => ({ src: asset(`case-product-withdraw-${i}.webp`), alt: `Вывод, слайд ${i}` })),
+          ratio: RATIO,
+        },
+      ],
+      mediaGap: 12,
+      answers: ['Сумма к зачислению и бонусы, которые сгорят', 'Профиль не подтверждён — сразу ведём в профиль'],
     },
     {
-      "label": "A/B-тест",
-      "title": "Быстрый или стандартный вывод?",
-      "blocks": [
-        {
-          "type": "bullets",
-          "items": [
-            "Задача — переложить часть комиссии на пользователя.",
-            "Тест вёл дизайнер команды, я задал рамки и ревьюил.",
-            "Быстрый — от 20 минут, с комиссией.",
-            "Стандартный — от 120 минут."
-          ]
-        }
-      ]
+      label: 'A/B-тест',
+      question: 'Быстрый или стандартный вывод?',
+      media: [{ media: 'image', src: asset('case-product-ab.webp'), alt: 'Вывод: быстрый и стандартный', ratio: RATIO }],
+      mediaGap: 12,
+      answers: [
+        'Часть комиссии переносим на пользователя',
+        'Тест вёл дизайнер команды под моим руководством',
+        'Быстрый — от 20 минут, с комиссией',
+        'Стандартный — от 120 минут',
+      ],
     },
     {
-      "label": "Процесс",
-      "title": "Как прошли 13 итераций?",
-      "blocks": [
-        {
-          "type": "bullets",
-          "items": [
-            "Каждая задача: Preview для бизнеса → Ready for dev.",
-            "~440 состояний на платформу, 4 брейкпоинта.",
-            "Анимации — прототипами в CodePen."
-          ]
-        }
-      ]
+      label: 'Процесс',
+      question: 'Как довёл до релиза?',
+      answers: ['Каждая задача: Preview → Ready for dev', 'Около 900 экранов, 4 брейкпоинта, анимации в CodePen'],
     },
     {
-      "label": "Результат",
-      "title": "Что дала одна касса вместо набора сценариев?",
-      "blocks": [
-        {
-          "type": "bullets",
-          "items": [
-            "Охват — 8 валют и 20+ методов.",
-            "Автозачисление — по уникальной сумме.",
-            "Устойчивость — у каждого сбоя есть следующий шаг."
-          ]
-        }
-      ]
-    }
-  ]
+      label: 'Результат',
+      question: 'Что в итоге?',
+      answers: [
+        'Охват — 8 валют и около 20 методов',
+        'Автозачисление — по уникальной сумме',
+        'Устойчивость — у каждого сбоя есть следующий шаг',
+      ],
+    },
+  ],
 };
+
 const designSystem: CaseStudy = {
-  "id": "1win",
-  "cover": {
-    "media": "emoji",
-    "src": asset('emoji-dividers.webp'),
-    "alt": "Разделители картотеки",
-    "ratio": "952 / 260"
-  },
-  "title": "Одна система для четырёх брендов",
-  "lead": "Вместе с дизайн-лидом перестроил дизайн-систему White-Label продуктов: общий Foundation, брендовые библиотеки поверх него и процесс от задачи до Storybook.",
-  "meta": [
-    {
-      "label": "Роль",
-      "value": "Ведущий дизайнер"
-    },
-    {
-      "label": "Команда",
-      "value": "5 дизайнеров"
-    },
-    {
-      "label": "Масштаб",
-      "value": "4 бренда, 16+ стран"
-    },
-    {
-      "label": "Период",
-      "value": "2025 — сейчас"
-    }
+  id: '1win',
+  cover: { media: 'emoji', src: asset('emoji-dividers.webp'), alt: 'Разделители картотеки' },
+  title: 'Одна система для четырёх брендов',
+  lead: 'Вместе с дизайн-лидом перестроил дизайн-систему White-Label продуктов: общий Foundation, брендовые библиотеки поверх него и процесс от задачи до Storybook.',
+  meta: [
+    { label: 'Роль', value: 'Ведущий дизайнер' },
+    { label: 'Команда', value: '5 дизайнеров' },
+    { label: 'Масштаб', value: '4 бренда, 16+ стран' },
+    { label: 'Период', value: '2025 — сейчас' },
   ],
-  "sections": [
+  sections: [
     {
-      "label": "Моя роль",
-      "title": "Что ты делал в проекте?",
-      "blocks": [
-        {
-          "type": "bullets",
-          "items": [
-            "С дизайн-лидом определил архитектуру библиотек и токенов.",
-            "Выстроил DesignOps: файлы, передача, Task Preview.",
-            "Вёл команду: ревью, ИПР, Performance Review."
-          ]
-        }
-      ]
+      label: 'Моя роль',
+      question: 'Что ты делал в проекте?',
+      answers: ['С дизайн-лидом определил архитектуру библиотек', 'Выстроил DesignOps и вёл команду: ревью, ИПР'],
     },
     {
-      "label": "Проблема",
-      "title": "Почему четыре бренда расходились?",
-      "blocks": [
-        {
-          "type": "bullets",
-          "items": [
-            "Компоненты брендов разъезжались.",
-            "Одну правку делали четыре раза.",
-            "Разработка получала разные макеты одного компонента."
-          ]
-        }
-      ]
+      label: 'Проблема',
+      question: 'Что было не так?',
+      answers: ['Компоненты брендов разъезжались', 'Правку повторяли в каждом бренде', 'Разработка получала разные макеты'],
     },
     {
-      "label": "Исследование",
-      "title": "Зачем аудит перед архитектурой?",
-      "blocks": [
-        {
-          "type": "bullets",
-          "items": [
-            "Отделил, что меняется по бренду: цвет, шрифт, скругления, иконки.",
-            "И что не меняется: поведение, состояния, сетка.",
-            "Сверил библиотеку со Storybook."
-          ]
-        }
-      ]
+      label: 'Исследование',
+      question: 'Что показал аудит?',
+      answers: [
+        'Библиотека не была готова к масштабированию',
+        'Аудит прогнал через AI — собрал для этого плагин',
+        'Разделил, что меняется по бренду, а что общее',
+        'Сверил библиотеку со Storybook',
+      ],
     },
     {
-      "label": "Решение 1 · Архитектура",
-      "title": "Какие три слоя библиотек?",
-      "blocks": [
+      label: 'Решение 1 · Архитектура',
+      question: 'Какие три слоя библиотек?',
+      media: [
         {
-          "type": "bullets",
-          "items": [
-            "Foundation — токены, база, иконки.",
-            "Core бренда — компоненты, брендбук, ассеты.",
-            "Product — экраны. Каждый слой берёт только из нижнего."
-          ]
-        }
-      ]
+          media: 'compare',
+          before: asset('case-cover-ds-jetton.webp'),
+          after: asset('case-cover-ds-tonplay.webp'),
+          alt: 'Продуктовые библиотеки двух брендов',
+          ratio: '552 / 330',
+        },
+        {
+          media: 'image',
+          src: asset('case-ds-architecture.webp'),
+          alt: 'Схема библиотек: Foundation → Core бренда → Product',
+          ratio: '552 / 534.6',
+          radius: 17.4,
+        },
+      ],
+      answers: ['Foundation → Core бренда → Product', 'Каждый слой берёт только из нижнего'],
     },
     {
-      "label": "Решение 2 · Токены",
-      "title": "Как бренд стал режимом переменных?",
-      "blocks": [
+      label: 'Решение 2 · Токены',
+      question: 'Как бренд стал режимом переменных?',
+      media: [
         {
-          "type": "bullets",
-          "items": [
-            "348 переменных в 7 коллекциях.",
-            "Режим бренда меняет цвет, шрифт и скругления.",
-            "Цвет — Primitive → Semantic → Component.",
-            "Иконки — стиль переключается режимом."
-          ]
-        }
-      ]
+          media: 'gallery',
+          background: asset('case-ds-gallery-bg.webp'),
+          slides: [1, 2, 3, 4].map((i) => ({ src: asset(`case-ds-gallery-${i}.webp`), alt: `Токены, слайд ${i}` })),
+          ratio: RATIO,
+        },
+      ],
+      answers: ['348 переменных в 7 коллекциях', 'Режим бренда меняет цвет, шрифт и скругления', 'Цвет — Primitive → Semantic → Component'],
     },
     {
-      "label": "Решение 3 · Связь с кодом",
-      "title": "Когда компонент считается готовым?",
-      "blocks": [
-        {
-          "type": "bullets",
-          "items": [
-            "26 компонентов: у каждого Ready for dev и ссылка на Storybook.",
-            "Launch Kit — новый продукт стартует с готовых шаблонов."
-          ]
-        }
-      ]
+      label: 'Решение 3 · Связь с кодом',
+      question: 'Когда компонент считается готовым?',
+      answers: ['Ready for dev — только когда компонент есть в Storybook', 'У готового две ссылки: Figma и Storybook'],
     },
     {
-      "label": "Процесс",
-      "title": "Как задача доходит до публикации?",
-      "blocks": [
-        {
-          "type": "bullets",
-          "items": [
-            "Creation Guide — Preview, Workspace, Ready for dev.",
-            "Task Preview — задача для БА и ПМ в одном месте."
-          ]
-        }
-      ]
+      label: 'Процесс',
+      question: 'Как задача доходит до разработки?',
+      answers: ['Creation Guide — Preview, Workspace, Ready for dev', 'Task Preview — задача для БА и ПМ в одном месте'],
     },
     {
-      "label": "Результат",
-      "title": "Что дала одна база для четырёх брендов?",
-      "blocks": [
+      label: 'Результат',
+      question: 'Что в итоге?',
+      media: [
         {
-          "type": "bullets",
-          "items": [
-            "Масштаб — 348 переменных, 26 компонентов.",
-            "Процесс — от Jira до Ready for dev по одному гайду.",
-            "Дальше — Code Connect."
-          ]
-        }
-      ]
-    }
-  ]
+          media: 'compare',
+          before: asset('case-ds-compare-A1.webp'),
+          after: asset('case-ds-compare-B1.webp'),
+          alt: 'Одни экраны в двух брендах',
+          ratio: '552 / 282.6',
+        },
+      ],
+      answers: [
+        'Новый бренд — набор значений, не компонентов',
+        'Launch Kit — старт с готовых шаблонов',
+        'Процесс — от Jira до Ready for dev',
+      ],
+    },
+  ],
 };
-const cashierMedia: CaseMedia[] = [{ media:'gallery', background:asset('case-product-cashier-bg.webp'),slides:[1,2].map(i=>({src:asset(`case-product-deposit-${i}.webp`),alt:`Пополнение, слайд ${i}`})),ratio:'936 / 559.8',border:true },{ media:'gallery', background:asset('case-product-cashier-bg.webp'),slides:[1,2].map(i=>({src:asset(`case-product-withdraw-${i}.webp`),alt:`Вывод, слайд ${i}`})),ratio:'936 / 559.8',border:true },{media:'image',src:asset('case-product-history.webp'),alt:'История операций',ratio:'936 / 470.2',radius:32,border:true}];
-const dsMedia: CaseMedia[] = [{ media: 'gallery', background: asset('case-ds-gallery-bg.webp'), slides: [1,2,3,4].map(i => ({src: asset(`case-ds-gallery-${i}.webp`), alt: `Основа дизайн-системы, слайд ${i}`})), ratio: '936 / 559.8' }, {media:'compare',before:asset('case-ds-compare-A1.webp'),after:asset('case-ds-compare-B1.webp'),alt:'Одни экраны в двух брендах',ratio:'936 / 479.2'}, {media:'compare',before:asset('case-cover-ds-jetton.webp'),after:asset('case-cover-ds-tonplay.webp'),alt:'Продуктовые библиотеки двух брендов',ratio:'936 / 500'}];
-[4,6,8].forEach((section, i) => { cashier.sections[section].media = cashierMedia[i]; });
-[3,5,7].forEach((section, i) => { designSystem.sections[section].media = dsMedia[i]; });
+
 export const cases: CaseStudy[] = [designSystem, cashier];
-export const findCase = (id: string | null) => cases.find(c => c.id === id) ?? null;
+export const findCase = (id: string | null) => cases.find((c) => c.id === id) ?? null;
