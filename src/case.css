@@ -158,7 +158,7 @@
   /* крупный заголовок гаснет и чуть уменьшается, уходя под шапку */
   opacity: calc(1 - var(--collapse));
   transform: scale(calc(1 - var(--collapse) * 0.12));
-  transform-origin: 0 0;
+  transform-origin: center top;
 }
 .case-scroll .case-title,
 .case-scroll .case-h2 { letter-spacing: -0.06em; }
