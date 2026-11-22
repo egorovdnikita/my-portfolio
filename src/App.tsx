@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import { CasePage } from './components/CasePage';
 import { Icon } from './components/Cards';
 import { calendar, commitsWord, dayLabel } from './contrib';
@@ -67,12 +67,30 @@ type FxKind = 'ripple' | 'swing' | 'flip';
 
 /**
  * Живые слова, как у sasi.codes: каждая буква анимируется со своей задержкой (--i),
- * Три мягких эффекта повторяются по странице. Слова не разрываются переносом.
+ * Три мягких эффекта на странице, каждый проигрывается один раз при появлении фразы. Слова не разрываются переносом.
  */
 function Fx({ kind, children }: { kind: FxKind; children: string }) {
+  // Анимация проигрывается один раз — когда фраза впервые целиком видна между шапкой и кнопкой «Написать»
+  const ref = useRef<HTMLSpanElement>(null);
+  const [on, setOn] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || on) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setOn(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin: '-120px 0px -100px 0px', threshold: 1 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [on]);
   let i = 0;
   return (
-    <span className={`fx fx--${kind}`} aria-label={children}>
+    <span ref={ref} className={`fx fx--${kind}${on ? ' is-on' : ''}`} aria-label={children}>
       {children.split(' ').map((word, w) => (
         <span key={w}>
           {w > 0 && ' '}
