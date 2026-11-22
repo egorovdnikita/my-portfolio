@@ -106,7 +106,8 @@ function PreviewCard({ item, onOpenCase, className = '' }: { item: Preview; onOp
   const external = !('caseId' in item.open);
   const body = (
     <>
-      <img className="preview-img" src={item.image} alt={item.title} draggable={false} loading="lazy" />
+      {/* Грузятся сразу: на медленной сети ленивая загрузка показывала пустые карточки при прокрутке */}
+      <img className="preview-img" src={item.image} alt={item.title} draggable={false} decoding="async" />
       <span className="preview-label">
         {item.label}
         {external && <Icon src={icons.external} size={12} className="icon--white" />}
@@ -234,6 +235,15 @@ export default function App() {
   // Под открытым кейсом страница не прокручивается
   useEffect(() => {
     document.documentElement.classList.toggle('is-locked', Boolean(study));
+  }, [study]);
+
+  // На телефоне кейс открыт на весь экран: шапка браузера (Safari, Telegram) берёт цвет панели, после закрытия — цвет страницы
+  useEffect(() => {
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (!meta) return;
+    const css = getComputedStyle(document.documentElement);
+    const full = study && window.matchMedia('(max-width: 767px)').matches;
+    meta.setAttribute('content', css.getPropertyValue(full ? '--bg-panel' : '--bg-page').trim());
   }, [study]);
 
   return (

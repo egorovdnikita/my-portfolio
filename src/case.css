@@ -395,13 +395,8 @@
 @media (max-width: 767px) {
   .case { padding: 0; }
   /* На весь экран: панель цвета страницы, чтобы шапка кейса сливалась с шапкой браузера (Telegram, Safari) */
-  .case-card {
-    border-radius: 0;
-    --bg-panel: var(--bg-page);
-    /* на фоне страницы 3% не видно — подложки блоков цвета сообщений чата */
-    --bg-card: var(--bg-bubble);
-    background: var(--bg-panel);
-  }
+  /* Цвета те же, что на десктопе; шапку браузера под цвет панели перекрашивает App (theme-color) */
+  .case-card { border-radius: 0; }
   .case-group { padding: 24px 16px; }
   .case-title,
   .case-h2 { font-size: 26px; }
