@@ -1,4 +1,4 @@
-// Тексты кейсов из макета (страница «GitHub», кадры «Кейс / White Label, который выдерживает изменения» и «Кейс / Касса казино: от депозита до вывода»).
+// Тексты кейсов из макета: страница «Новый сайт», кадры «Portfolio / Case Cashier — Dark» и «Portfolio / Case Design System — Dark».
 
 export type CaseBlock =
   /** links — слова из текста, которые становятся ссылками (подчёркнуты, цвет текста), как в макете */
@@ -11,9 +11,9 @@ export type CaseBlock =
 /** media — картинка, галерея или сравнение в верхней части карточки секции, над подписью */
 export type CaseSection = { label: string; title: string; media?: CaseMedia; blocks: CaseBlock[] };
 
-/** Картинка, галерея или сравнение в шапке кейса или вверху карточки секции; ratio — пропорция кадра из макета, например '836 / 500' */
+/** Картинка, галерея или сравнение перед секцией; ratio — пропорция кадра из макета, например '934 / 558.6'; radius — скругление, если не 24 */
 export type CaseMedia =
-  | { media: 'image'; src: string; alt: string; ratio: string }
+  | { media: 'image'; src: string; alt: string; ratio: string; radius?: number }
   /** background — общий неподвижный фон; слайды — прозрачные PNG размером с кадр, листаются поверх фона */
   | { media: 'gallery'; background: string; slides: { src: string; alt: string }[]; ratio: string }
   /** Две картинки друг на друге: before слева от разделителя, after справа; разделитель перетаскивается */
@@ -21,12 +21,12 @@ export type CaseMedia =
 
 export type CaseStudy = {
   id: string;
-  /** Картинка, галерея или сравнение в шапке кейса */
-  heroMedia: CaseMedia;
+  /** Обложка панели: прозрачный PNG 950×400 из макета, снизу затемняется градиентом в цвет панели */
+  cover: { src: string; alt: string };
   title: string;
   lead: string;
   meta: { label: string; value: string }[];
-  /** Блок «Моя роль» после шапки: подпись слева, пояснение справа, пункты */
+  /** Блок «Моя роль» после фактов: подпись и пункты */
   role?: { label: string; items: string[] };
   sections: CaseSection[];
 };
@@ -41,13 +41,7 @@ export const BEHANCE = {
 export const cases: CaseStudy[] = [
   {
     id: '1win',
-    heroMedia: {
-      media: 'compare',
-      before: asset('case-ds-compare-A2.webp'),
-      after: asset('case-ds-compare-B2.webp'),
-      alt: 'Обложки продуктовых библиотек в двух брендах',
-      ratio: '836 / 500',
-    },
+    cover: { src: asset('case-cover-ds.png'), alt: 'Обложки продуктовых библиотек JetTon и TonPlay' },
     title: 'Дизайн-система для White Label',
     lead: 'Объединил четыре бренда в одной системе, сохранив общие правила и продуктовые различия. С AI подготовил проверки состояний и Handoff.',
     meta: [
@@ -80,7 +74,7 @@ export const cases: CaseStudy[] = [
           media: 'gallery',
           background: asset('case-ds-gallery-bg.webp'),
           slides: [1, 2, 3, 4].map((i) => ({ src: asset(`case-ds-gallery-${i}.webp`), alt: `Основа дизайн-системы, слайд ${i}` })),
-          ratio: '836 / 507',
+          ratio: '934 / 558.6',
         },
         label: 'Архитектурное решение',
         title: 'Ограничил Component API',
@@ -152,7 +146,7 @@ export const cases: CaseStudy[] = [
           before: asset('case-ds-compare-A1.webp'),
           after: asset('case-ds-compare-B1.webp'),
           alt: 'Одни и те же экраны в двух брендах',
-          ratio: '836 / 428',
+          ratio: '934 / 478.2',
         },
         label: 'Результат и развитие',
         title: 'Совместимость стала частью дизайна',
@@ -179,7 +173,7 @@ export const cases: CaseStudy[] = [
   },
   {
     id: '1win-product',
-    heroMedia: { media: 'image', src: asset('case-product-hero.webp'), alt: 'Кошелёк кассы', ratio: '836 / 500' },
+    cover: { src: asset('case-cover-cashier.png'), alt: 'Кошелёк кассы на телефоне' },
     title: 'Касса казино: пополнение и вывод',
     lead: 'Связал пополнение, вывод и историю в один путь с понятными условиями и статусами операций. Разделил банковские и криптовалютные сценарии.',
     meta: [
@@ -215,7 +209,7 @@ export const cases: CaseStudy[] = [
             { src: asset('case-product-deposit-1.webp'), alt: 'Пополнение банковской картой' },
             { src: asset('case-product-deposit-2.webp'), alt: 'Пополнение криптовалютой' },
           ],
-          ratio: '836 / 500',
+          ratio: '934 / 558.6',
         },
         label: 'Депозит · Фиат и криптовалюта',
         title: 'Общий путь с разными условиями',
@@ -241,7 +235,7 @@ export const cases: CaseStudy[] = [
             { src: asset('case-product-withdraw-1.webp'), alt: 'Вывод на банковскую карту' },
             { src: asset('case-product-withdraw-2.webp'), alt: 'Вывод в криптовалюте' },
           ],
-          ratio: '836 / 500',
+          ratio: '934 / 558.6',
         },
         label: 'Вывод · Фиат и криптовалюта',
         title: 'Проверить всё до подтверждения',
@@ -260,7 +254,7 @@ export const cases: CaseStudy[] = [
         ],
       },
       {
-        media: { media: 'image', src: asset('case-product-history.webp'), alt: 'История операций', ratio: '836 / 420' },
+        media: { media: 'image', src: asset('case-product-history.webp'), alt: 'История операций', ratio: '934 / 469.2', radius: 32 },
         label: 'История операций',
         title: 'Не искать перевод заново',
         blocks: [

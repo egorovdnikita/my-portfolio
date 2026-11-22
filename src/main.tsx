@@ -8,6 +8,7 @@ import '@fontsource/inter/latin-600.css';
 import '@fontsource/inter/cyrillic-600.css';
 import './styles.css';
 import './chat.css';
+import './case.css';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

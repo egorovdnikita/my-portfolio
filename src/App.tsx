@@ -342,7 +342,7 @@ export default function App() {
         </a>
       </div>
 
-      {study && <CasePage study={study} zoom={1} closing={caseClosing} onClose={closeCase} />}
+      {study && <CasePage study={study} closing={caseClosing} onClose={closeCase} />}
     </div>
   );
 }

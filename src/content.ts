@@ -12,7 +12,6 @@ export const profile = {
 
 export const icons = {
   chevronRight: asset('ic-chevron-right.svg'),
-  chevronLeft: asset('ic-chevron-left.svg'),
   close: asset('ic-close.svg'),
   send: asset('chat-send.svg'),
 };

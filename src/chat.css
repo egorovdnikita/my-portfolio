@@ -2,7 +2,10 @@
    Шапка и кнопка «Написать» закреплены. У краёв экрана сообщения растворяются с размытием, как у sasi.codes
    (прозрачность и размытие считает useEdgeDissolve в App.tsx). */
 
-html.is-locked { overflow: hidden; }
+/* Под кейсом на узком экране страница не прокручивается */
+@media (max-width: 1099px) {
+  html.is-locked { overflow: hidden; }
+}
 
 /* Межбуквенный −4%, как в Figma, от размера шрифта каждого элемента
    (с body наследуется уже посчитанное от 14px значение) */
@@ -394,18 +397,6 @@ html.is-locked { overflow: hidden; }
   .day-title,
   .bubble,
   .preview { animation: none; }
-}
-
-/* ---------- Под открытым кейсом переписка прячется ---------- */
-
-.chat-head,
-.chat,
-.compose { transition: opacity 0.2s ease; }
-.has-case .chat-head,
-.has-case .chat,
-.has-case .compose {
-  opacity: 0;
-  pointer-events: none;
 }
 
 /* ---------- Телефон ---------- */

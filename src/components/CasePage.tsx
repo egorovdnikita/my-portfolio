@@ -1,72 +1,164 @@
-import { useEffect, useRef, useState } from 'react';
-import { type CaseBlock, type CaseMedia, type CaseStudy } from '../cases';
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
+import { type CaseBlock, type CaseMedia, type CaseSection, type CaseStudy } from '../cases';
 import { icons } from '../content';
 import { Icon } from './Cards';
 
 type Props = {
   study: CaseStudy;
-  zoom: number;
   closing: boolean;
   onClose: () => void;
 };
 
-/** Страница кейса поверх холста: колонка 900px по центру, своя прокрутка, крестик справа. */
-export function CasePage({ study, zoom, closing, onClose }: Props) {
-  const scrollRef = useRef<HTMLDivElement>(null);
+/**
+ * Группы панели, как в макете: секция с картинкой начинается с блока картинки и открывает новую группу,
+ * секции без картинки присоединяются к предыдущей группе через разделитель.
+ */
+function groupSections(sections: CaseSection[]) {
+  const intro: CaseSection[] = [];
+  const groups: { media?: CaseMedia; sections: CaseSection[] }[] = [];
+  for (const s of sections) {
+    if (s.media) groups.push({ media: s.media, sections: [s] });
+    else if (groups.length) groups[groups.length - 1].sections.push(s);
+    else intro.push(s);
+  }
+  return { intro, groups };
+}
 
-  // При переходе к следующему кейсу начинаем сверху
+/**
+ * Панель кейса справа от переписки (на узком экране — поверх неё).
+ * При прокрутке крупный заголовок уходит вверх, а в закреплённой шапке плавно появляется его короткая версия —
+ * как имя в профиле Telegram.
+ */
+export function CasePage({ study, closing, onClose }: Props) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const barRef = useRef<HTMLDivElement>(null);
+  const { intro, groups } = groupSections(study.sections);
+
+  // Новый кейс — с начала
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: 0 });
   }, [study.id]);
 
+  // Прогресс сворачивания заголовка: 0 — крупный заголовок виден целиком, 1 — он ушёл под шапку
+  useLayoutEffect(() => {
+    const scroller = scrollRef.current;
+    const title = titleRef.current;
+    const bar = barRef.current;
+    if (!scroller || !title || !bar) return;
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const barBottom = bar.offsetHeight;
+      const top = title.getBoundingClientRect().top - scroller.getBoundingClientRect().top;
+      // плавно: на протяжении высоты заголовка и ещё 64px прокрутки
+      const p = Math.max(0, Math.min(1, (barBottom + 32 - top) / (title.offsetHeight + 64)));
+      scroller.style.setProperty('--collapse', p.toFixed(3));
+    };
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+    update();
+    scroller.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    return () => {
+      cancelAnimationFrame(frame);
+      scroller.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
+  }, [study.id]);
+
   return (
-    <div className={`case${closing ? ' is-closing' : ''}`} role="dialog" aria-modal="true" aria-label={study.title}>
-      <div ref={scrollRef} className="case-scroll">
-        <article key={study.id} className="case-column" style={{ zoom }}>
-          <section className="case-card case-hero">
-            <Media item={study.heroMedia} loading="eager" />
-            <div className="case-intro">
-              <h1 className="case-title">{study.title}</h1>
-              <p className="case-lead">{study.lead}</p>
-            </div>
-            <div className="case-meta">
-              {study.meta.map((m) => (
-                <div key={m.label} className="case-meta-item">
-                  <span className="case-label">{m.label}</span>
-                  <span className="case-meta-value">{m.value}</span>
-                </div>
-              ))}
-            </div>
-          </section>
+    <aside className={`case${closing ? ' is-closing' : ''}`} role="dialog" aria-modal="false" aria-label={study.title}>
+      <div className="case-card">
+        <div ref={scrollRef} className="case-scroll">
+          <div ref={barRef} className="case-bar">
+            <span className="case-bar-title" aria-hidden>
+              {study.title}
+            </span>
+            <button type="button" className="case-close" aria-label="Закрыть кейс" onClick={onClose}>
+              <Icon src={icons.close} size={32} className="icon--strong" />
+            </button>
+          </div>
 
-          {study.role && (
-            <section className="case-card case-panel">
-              <span className="case-label">{study.role.label}</span>
-              <Bullets items={study.role.items} />
-            </section>
-          )}
+          <article key={study.id} className="case-article">
+            <div className="case-cover">
+              <img src={study.cover.src} alt={study.cover.alt} decoding="async" draggable={false} />
+            </div>
 
-          {study.sections.map((section) => (
-            <section key={section.label} className="case-card case-panel case-section">
-              {section.media && (
-                <div className="case-section-media">
-                  <Media item={section.media} loading="lazy" />
+            <section className="case-group case-intro">
+              <header className="case-heading">
+                <h1 ref={titleRef} className="case-title">
+                  {study.title}
+                </h1>
+                <p className="case-lead">{study.lead}</p>
+              </header>
+              <div className="case-meta">
+                {study.meta.map((m) => (
+                  <div key={m.label} className="case-meta-item">
+                    <span className="case-label">{m.label}</span>
+                    <span className="case-value">{m.value}</span>
+                  </div>
+                ))}
+              </div>
+              {study.role && (
+                <div className="case-role">
+                  <span className="case-label">{study.role.label}</span>
+                  <Bullets items={study.role.items} />
                 </div>
               )}
-              <span className="case-label">{section.label}</span>
-              <h2 className="case-h2">{section.title}</h2>
-              {section.blocks.map((block, i) => (
-                <Block key={i} block={block} />
+              {intro.map((s) => (
+                <Divided key={s.label}>
+                  <Section section={s} />
+                </Divided>
               ))}
             </section>
-          ))}
 
-        </article>
+            {groups.map((g, gi) => (
+              <div key={gi}>
+                {g.media && (
+                  <div className="case-media-block">
+                    <Media item={g.media} />
+                  </div>
+                )}
+                <section className={`case-group${g.sections.length > 1 ? ' case-group--multi' : ''}`}>
+                  {g.sections.map((s, i) =>
+                    i === 0 ? (
+                      <Section key={s.label} section={s} />
+                    ) : (
+                      <Divided key={s.label}>
+                        <Section section={s} />
+                      </Divided>
+                    ),
+                  )}
+                </section>
+              </div>
+            ))}
+          </article>
+        </div>
       </div>
+    </aside>
+  );
+}
 
-      <button type="button" className="case-close" aria-label="Закрыть кейс" onClick={onClose}>
-        <Icon src={icons.close} size={32} className="icon--strong" />
-      </button>
+/** Разделитель перед секцией */
+function Divided({ children }: { children: ReactNode }) {
+  return (
+    <>
+      <hr className="case-divider" />
+      {children}
+    </>
+  );
+}
+
+function Section({ section }: { section: CaseSection }) {
+  return (
+    <div className="case-section">
+      <span className="case-label">{section.label}</span>
+      <h2 className="case-h2">{section.title}</h2>
+      {section.blocks.map((block, i) => (
+        <Block key={i} block={block} />
+      ))}
     </div>
   );
 }
@@ -77,7 +169,7 @@ function Bullets({ items }: { items: string[] }) {
     <ul className="case-bullets">
       {items.map((item) => (
         <li key={item}>
-          <span className="case-dash" aria-hidden>
+          <span className="case-marker" aria-hidden>
             •
           </span>
           <span>{item}</span>
@@ -98,7 +190,7 @@ function Block({ block }: { block: CaseBlock }) {
         <div className="case-steps">
           {block.items.map((step) => (
             <div key={step.title} className="case-step">
-              <span className="case-step-title">{step.title}</span>
+              <span className="case-value">{step.title}</span>
               <span className="case-small">{step.text}</span>
             </div>
           ))}
@@ -126,23 +218,21 @@ function Linked({ text, links }: { text: string; links: Record<string, string> }
   );
 }
 
-type Loading = 'eager' | 'lazy';
-
-/** loading: шапка грузится сразу, картинки секций — когда подходят к экрану */
-function Media({ item, loading }: { item: CaseMedia; loading: Loading }) {
+/** Картинки секций грузятся, когда подходят к экрану */
+function Media({ item }: { item: CaseMedia }) {
   if (item.media === 'image') {
     return (
-      <div className="case-media" style={{ aspectRatio: item.ratio }}>
-        <img src={item.src} alt={item.alt} loading={loading} decoding="async" draggable={false} />
+      <div className="case-media" style={{ aspectRatio: item.ratio, borderRadius: item.radius }}>
+        <img src={item.src} alt={item.alt} loading="lazy" decoding="async" draggable={false} />
       </div>
     );
   }
-  if (item.media === 'compare') return <Compare item={item} loading={loading} />;
-  return <Gallery background={item.background} slides={item.slides} ratio={item.ratio} loading={loading} />;
+  if (item.media === 'compare') return <Compare item={item} />;
+  return <Gallery background={item.background} slides={item.slides} ratio={item.ratio} />;
 }
 
 /** Сравнение: картинка «до» лежит поверх «после» и обрезается по разделителю, разделитель тянется мышью, пальцем и стрелками */
-function Compare({ item, loading }: { item: Extract<CaseMedia, { media: 'compare' }>; loading: Loading }) {
+function Compare({ item }: { item: Extract<CaseMedia, { media: 'compare' }> }) {
   const boxRef = useRef<HTMLDivElement>(null);
   const [pos, setPos] = useState(50);
 
@@ -171,13 +261,13 @@ function Compare({ item, loading }: { item: Extract<CaseMedia, { media: 'compare
   return (
     <div
       ref={boxRef}
-      className="case-compare"
+      className="case-media case-compare"
       style={{ aspectRatio: item.ratio, ['--pos' as string]: `${pos}%` }}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
     >
-      <img className="case-compare-img" src={item.after} alt={item.alt} loading={loading} decoding="async" draggable={false} />
-      <img className="case-compare-img case-compare-before" src={item.before} alt="" loading={loading} decoding="async" draggable={false} />
+      <img className="case-compare-img" src={item.after} alt={item.alt} loading="lazy" decoding="async" draggable={false} />
+      <img className="case-compare-img case-compare-before" src={item.before} alt="" loading="lazy" decoding="async" draggable={false} />
       <span className="case-compare-line" aria-hidden />
       <span
         className="case-compare-handle"
@@ -199,26 +289,15 @@ function Compare({ item, loading }: { item: Extract<CaseMedia, { media: 'compare
   );
 }
 
-/** Галерея: фон неподвижен, листаются только телефоны — свайпом, прокруткой, стрелками и точками */
-function Gallery({
-  background,
-  slides,
-  ratio,
-  loading,
-}: {
-  background: string;
-  slides: { src: string; alt: string }[];
-  ratio: string;
-  loading: Loading;
-}) {
+/** Галерея: фон неподвижен, листаются только телефоны — свайпом, прокруткой и точками внизу, как в макете */
+function Gallery({ background, slides, ratio }: { background: string; slides: { src: string; alt: string }[]; ratio: string }) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
 
   const goTo = (i: number) => {
     const track = trackRef.current;
     if (!track) return;
-    const next = (i + slides.length) % slides.length;
-    track.scrollTo({ left: next * track.clientWidth, behavior: 'smooth' });
+    track.scrollTo({ left: i * track.clientWidth, behavior: 'smooth' });
   };
 
   const onScroll = () => {
@@ -227,26 +306,19 @@ function Gallery({
   };
 
   return (
-    <div className="case-gallery" role="group" aria-roledescription="галерея">
+    <div className="case-media case-gallery" role="group" aria-roledescription="галерея">
       <div
         ref={trackRef}
         className="case-gallery-track"
         style={{ backgroundImage: `url(${background})`, aspectRatio: ratio }}
         onScroll={onScroll}
       >
-        {slides.map((slide, i) => (
+        {slides.map((slide) => (
           <div key={slide.src} className="case-gallery-slide">
-            {/* Следующие слайды не видны до перелистывания — грузятся по мере приближения */}
-            <img src={slide.src} alt={slide.alt} loading={i === 0 ? loading : 'lazy'} decoding="async" draggable={false} />
+            <img src={slide.src} alt={slide.alt} loading="lazy" decoding="async" draggable={false} />
           </div>
         ))}
       </div>
-      <button type="button" className="case-gallery-arrow is-prev" aria-label="Предыдущий слайд" onClick={() => goTo(active - 1)}>
-        <Icon src={icons.chevronLeft} size={32} className="icon--strong" />
-      </button>
-      <button type="button" className="case-gallery-arrow is-next" aria-label="Следующий слайд" onClick={() => goTo(active + 1)}>
-        <Icon src={icons.chevronLeft} size={32} className="icon--strong" />
-      </button>
       <div className="case-gallery-dots">
         {slides.map((slide, i) => (
           <button
