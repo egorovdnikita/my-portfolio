@@ -266,17 +266,20 @@ export default function App() {
         </Day>
 
         <Day daysAgo={5} today={today}>
-          <Bubble className="bubble--contrib">
-            <Contributions />
-          </Bubble>
-          <Bubble className="bubble--tools">
-            {tools.map((tool) => (
-              <span key={tool.name} className="tool">
-                <img className="tool-logo" src={tool.icon} alt="" draggable={false} />
-                {tool.name}
-              </span>
-            ))}
-          </Bubble>
+          {/* Календарь шириной с сообщение об инструментах: обёртка по ширине инструментов, календарь тянется на неё */}
+          <div className="contrib-pair">
+            <Bubble className="bubble--contrib">
+              <Contributions />
+            </Bubble>
+            <Bubble className="bubble--tools">
+              {tools.map((tool) => (
+                <span key={tool.name} className="tool">
+                  <img className="tool-logo" src={tool.icon} alt="" draggable={false} />
+                  {tool.name}
+                </span>
+              ))}
+            </Bubble>
+          </div>
           <Bubble>
             Увлёкся созданием <Fx kind="swing">приложений с AI</Fx>.
           </Bubble>

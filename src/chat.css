@@ -142,19 +142,26 @@ html.is-locked { overflow: hidden; }
 .job-name { flex: 1 0 0; min-width: 1px; }
 .job-period { color: var(--text-muted); font-size: 14px; white-space: nowrap; }
 
-/* Календарь вкладов: последние 4 месяца (17 недель), клетка 10.62, зазор 4, скругление 3; пузырь по ширине сетки */
-.bubble--contrib {
-  padding: 12px;
-  border-radius: 16px;
+/* Календарь вкладов: последние 6 месяцев, без подложки, шириной с сообщение об инструментах;
+   клетки квадратные (≈11.5px при 360), зазор 3, скругление 3 */
+.contrib-pair {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: fit-content;
+  max-width: 100%;
 }
-.bubble--contrib .contrib {
-  --cell: 10.62px;
+.bubble--contrib {
+  width: 100%;
+  min-width: 0;
+  padding: 0 0 8px;
+  border-radius: 0;
+  background: none;
 }
 .bubble--contrib .contrib-grid {
-  grid-template-columns: repeat(var(--weeks), var(--cell));
-  gap: 4px;
+  grid-template-columns: repeat(var(--weeks), minmax(0, 1fr));
+  gap: 3px;
 }
-.bubble--contrib .contrib-cell { width: var(--cell); }
 /* Подписи месяцев — на равных расстояниях, как в макете: по краям 16px, между — поровну */
 .bubble--contrib .contrib-months {
   display: flex;
@@ -299,7 +306,6 @@ html.is-locked { overflow: hidden; }
   width: min(420px, 100% - 32px); /* на телефоне 16px от краёв, как колонка */
   height: 56px;
   padding: 0 16px;
-  border: 1.5px solid var(--static-white); /* в макете белая в обеих темах */
   border-radius: 42px;
   background: var(--accent-base);
   -webkit-backdrop-filter: blur(16px);
@@ -310,6 +316,20 @@ html.is-locked { overflow: hidden; }
   line-height: 19px;
   pointer-events: auto;
   transition: filter 0.15s ease;
+}
+/* Обводка 1.5px внутрь, как в макете: белый градиент слева направо (белый → прозрачный к середине → белый), 50% */
+.compose-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1.5px;
+  border-radius: inherit;
+  background: linear-gradient(to right, #ffffff, rgba(255, 255, 255, 0) 50%, #ffffff);
+  opacity: 0.5;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  pointer-events: none;
 }
 .compose-btn:hover { filter: brightness(1.08); }
 .compose-btn img { display: block; flex-shrink: 0; }
