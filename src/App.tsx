@@ -143,7 +143,7 @@ function Contributions() {
       className="contrib"
       style={{ '--weeks': calendar.weeks } as React.CSSProperties}
       role="img"
-      aria-label={`Вклады на GitHub за 4 месяца: ${calendar.total}`}
+      aria-label={`Вклады на GitHub за 6 месяцев: ${calendar.total}`}
     >
       <div className="contrib-months" aria-hidden>
         {calendar.months.map((m) => (
@@ -250,8 +250,21 @@ export default function App() {
       </header>
 
       <main className="chat">
+        <Day daysAgo={7} today={today}>
+          <Bubble>Привет, я Никита 👋 продуктовый дизайнер.</Bubble>
+          <Bubble>А ещё люблю участвовать в хакатонах.</Bubble>
+          <Bubble>Кстати</Bubble>
+          <Bubble>
+            Выигрывал дизайн-конкурс{' '}
+            <a href="https://workspace.ru/" target="_blank" rel="noreferrer">Workspace.ru</a>
+          </Bubble>
+          <Bubble>Здесь собрал и другие свои проекты</Bubble>
+          <Bubble>Давайте покажу 👇</Bubble>
+        </Day>
+
         <Day daysAgo={6} today={today}>
-          <Bubble>Привет, я Никита 👋 Продуктовый дизайнер.</Bubble>
+          <Bubble>Немного об опыте</Bubble>
+          <Bubble reaction={<Reaction emoji="🫡" />}>Четыре года в продуктовом дизайне.</Bubble>
           {jobs.map((job) => (
             <Bubble key={job.company} className="bubble--job">
               <img className="job-logo" src={job.logo} alt="" draggable={false} />
@@ -259,7 +272,6 @@ export default function App() {
               <span className="job-period">{job.period}</span>
             </Bubble>
           ))}
-          <Bubble reaction={<Reaction emoji="🫡" />}>Четыре года в продуктовом дизайне.</Bubble>
           <Bubble>
             Сейчас — <Fx kind="ripple">ведущий дизайнер</Fx>.
           </Bubble>
