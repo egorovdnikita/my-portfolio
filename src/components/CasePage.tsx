@@ -69,6 +69,8 @@ export function CasePage({ study, closing, onClose }: Props) {
   }, [study.id]);
 
   return (
+    <>
+    <button type="button" className={`case-backdrop${closing ? ' is-closing' : ''}`} aria-label="Закрыть кейс" onClick={onClose} />
     <aside className={`case${study.id === '1win' ? ' case--ds' : ''}${closing ? ' is-closing' : ''}`} role="dialog" aria-modal="false" aria-label={study.title}>
       <div className="case-card">
         <div ref={scrollRef} className="case-scroll">
@@ -128,6 +130,7 @@ export function CasePage({ study, closing, onClose }: Props) {
         </div>
       </div>
     </aside>
+    </>
   );
 }
 

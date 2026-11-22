@@ -217,12 +217,14 @@ export default function App() {
   useTheme();
   const [caseId, setCaseId] = useState<string | null>(caseFromHash);
   const [caseClosing, setCaseClosing] = useState(false);
+  const [pageScroll, setPageScroll] = useState(window.scrollY);
   const study = findCase(caseId);
   useMessageWidth(caseId);
 
   // Адрес и кнопка «Назад» в браузере управляют открытым кейсом
   useEffect(() => {
     const sync = () => {
+      if (caseFromHash()) setPageScroll(window.scrollY);
       setCaseClosing(false);
       setCaseId(caseFromHash());
     };
@@ -235,6 +237,7 @@ export default function App() {
   }, []);
 
   const openCase = useCallback((id: string) => {
+    setPageScroll(window.scrollY);
     setCaseClosing(false);
     if (caseFromHash() !== id) window.history.pushState(null, '', `#/case/${id}`);
     setCaseId(id);
@@ -263,7 +266,8 @@ export default function App() {
   }, [study]);
 
   return (
-    <div className={`chat-app${caseOpen ? ' has-case' : ''}`}>
+    <div className={`chat-app${caseOpen ? ' has-case' : ''}${study ? ' sheet-active' : ''}`} style={{ ['--page-scroll' as string]: `${pageScroll}px` }}>
+      <div className="chat-surface">
       <header className="chat-head">
         <a className="contact" href={profile.telegramUrl} target="_blank" rel="noreferrer" aria-label="Написать в Telegram">
           <span className="contact-photo">
@@ -394,6 +398,7 @@ export default function App() {
         </a>
       </div>
 
+      </div>
       {study && <CasePage study={study} closing={caseClosing} onClose={closeCase} />}
     </div>
   );

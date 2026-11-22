@@ -4,6 +4,7 @@
 /* ---------- Раскладка: переписка уезжает влево, панель занимает правую половину ---------- */
 
 .chat-app { --chat-area: 100%; }
+.chat-surface { display: contents; }
 .chat-head,
 .compose { right: calc(100% - var(--chat-area)); transition: right 0.45s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease; }
 .chat {
@@ -30,6 +31,7 @@
   animation: case-in 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .case.is-closing { animation: case-out 0.2s ease-in forwards; }
+.case-backdrop { display: none; }
 @keyframes case-in { from { opacity: 0; transform: translateX(48px); } }
 @keyframes case-out { to { opacity: 0; transform: translateX(48px); } }
 
@@ -401,20 +403,49 @@
 }
 
 @media (max-width: 767px) {
-  .case { padding: 0; }
-  /* На весь экран: панель цвета страницы, чтобы шапка кейса сливалась с шапкой браузера (Telegram, Safari) */
-  /* На весь экран: фон кейса цвета страницы — шапка кейса сливается с шапкой браузера (Telegram, Safari).
-     Подложки блоков — сплошной цвет того же оттенка, что на десктопе (6% поверх цвета панели) */
-  .case { --panel-desktop: var(--bg-panel); }
+  .case {
+    top: max(44px, calc(env(safe-area-inset-top) + 12px));
+    padding: 0;
+    animation: case-sheet-in 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .case.is-closing { animation: case-sheet-out 0.2s ease-in forwards; }
   .case-card {
+    border-radius: 32px 32px 0 0;
+  }
+  .case-scroll { padding-bottom: env(safe-area-inset-bottom); }
+  .has-case .chat-head,
+  .has-case .chat,
+  .has-case .compose { opacity: 1; }
+  .case-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 29;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: 0;
     border-radius: 0;
-    --bg-card: color-mix(in srgb, var(--panel-desktop), var(--card-tint) 6%);
-    --bg-panel: var(--bg-page);
-    background: var(--bg-panel);
+    background: rgba(0, 0, 0, 0.48);
+    animation: case-backdrop-in 0.45s ease;
   }
-  .case-close {
-    background: linear-gradient(var(--bg-control), var(--bg-control)), var(--panel-desktop);
+  .case-backdrop.is-closing { animation: case-backdrop-out 0.2s ease forwards; }
+  .sheet-active { min-height: calc(var(--page-scroll) + 100dvh); }
+  .sheet-active .chat-surface {
+    display: block;
+    position: fixed;
+    inset: 0;
+    height: 100dvh;
+    overflow: hidden;
+    background: var(--bg-page);
+    border-radius: 24px;
+    transform-origin: center top;
+    transform: translateY(8px) scale(0.94);
+    isolation: isolate;
   }
+  .sheet-active .chat { margin-top: calc(-1 * var(--page-scroll)); }
+  .sheet-active.has-case .chat-surface { animation: case-home-back 0.45s cubic-bezier(0.22, 1, 0.36, 1); }
+  .sheet-active:not(.has-case) .chat-surface { animation: case-home-return 0.2s ease-in forwards; }
   .case-group { padding: 24px 16px; }
   .case-title,
   .case-h2 { font-size: 26px; }
@@ -422,6 +453,25 @@
   .case-meta { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .case-steps { grid-template-columns: minmax(0, 1fr); }
   .case-gallery-dots { bottom: 12px; }
+}
+@keyframes case-sheet-in { from { transform: translateY(100%); } }
+@keyframes case-sheet-out { to { transform: translateY(100%); } }
+@keyframes case-backdrop-in { from { opacity: 0; } }
+@keyframes case-backdrop-out { to { opacity: 0; } }
+@keyframes case-home-back {
+  from { transform: translateY(0) scale(1); border-radius: 0; }
+  to { transform: translateY(8px) scale(0.94); border-radius: 24px; }
+}
+@keyframes case-home-return {
+  from { transform: translateY(8px) scale(0.94); border-radius: 24px; }
+  to { transform: translateY(0) scale(1); border-radius: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .case, .case.is-closing,
+  .case-backdrop, .case-backdrop.is-closing,
+  .sheet-active.has-case .chat-surface,
+  .sheet-active:not(.has-case) .chat-surface { animation-duration: 0.01s; }
 }
 
 /* Актуальные кадры: панель 600px, текстовая область 552px. */
