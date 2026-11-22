@@ -84,13 +84,13 @@ html.is-locked { overflow: hidden; }
   align-self: stretch;
   padding-bottom: 24px;
   color: var(--text-muted);
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 600;
   line-height: 15px;
   text-align: center;
 }
 
-/* Размеры шрифта — как у sasi.codes: сообщение 16/22, дата 11/15, карточка 14/19 и 13/18 */
+/* Размеры шрифта — как у sasi.codes: сообщение 16/22, карточка 14/19 и 13/18; дата 13/15 по макету */
 .bubble {
   position: relative;
   max-width: 100%;
@@ -151,6 +151,9 @@ html.is-locked { overflow: hidden; }
 .bubble--contrib .contrib-months,
 .bubble--contrib .contrib-grid { gap: 3px; }
 .bubble--contrib .contrib-months { line-height: 15px; }
+/* Подписи месяцев — на равных расстояниях, как в макете, а не над неделей с 1-м числом */
+.bubble--contrib .contrib-months { display: flex; }
+.bubble--contrib .contrib-months span { flex: 1 0 0; text-align: center; }
 
 /* Инструменты */
 .bubble--tools {
@@ -258,7 +261,7 @@ html.is-locked { overflow: hidden; }
 
 .preview-row {
   display: flex;
-  gap: 8px;
+  gap: 4px;
   width: 100%;
 }
 .preview--nda { flex: 1 0 0; min-width: 1px; }
@@ -310,8 +313,102 @@ html.is-locked { overflow: hidden; }
 .compose-btn:hover { filter: brightness(1.08); }
 .compose-btn img { display: block; flex-shrink: 0; }
 
+/* ---------- Растворение у краёв экрана, как у sasi.codes ----------
+   Анимация по прокрутке (CSS view timeline): её считает браузер, поэтому без следов на iPhone.
+   Отступы таймлайна — шапка сверху и кнопка снизу: сообщение растворяется, заходя под них.
+   Карточки только прозрачнеют: размытая картинка вылезала бы за скруглённый край. */
+@keyframes edge-dissolve {
+  0% { opacity: 0; filter: blur(3px); }
+  11% { opacity: 1; filter: blur(0); }
+  86% { opacity: 1; filter: blur(0); }
+  100% { opacity: 0; filter: blur(3px); }
+}
+@keyframes edge-fade {
+  0% { opacity: 0; }
+  11% { opacity: 1; }
+  86% { opacity: 1; }
+  100% { opacity: 0; }
+}
+@supports (animation-timeline: view()) {
+  .day-title,
+  .bubble,
+  .preview {
+    animation: edge-dissolve linear both;
+    animation-timeline: view(block 100px 80px); /* сверху — под шапку (низ плашки 116), снизу — под кнопку */
+    animation-range: cover;
+  }
+  .preview { animation-name: edge-fade; }
+}
+
+/* ---------- Живые слова (как у sasi.codes: волна и взрыв, плюс свои варианты) ---------- */
+.fx-word { white-space: nowrap; }
+.fx-letter {
+  display: inline-block;
+  transform-origin: 50% 78%;
+  animation: 3s cubic-bezier(0.22, 1, 0.36, 1) calc(1s + var(--i) * var(--fx-stagger, 45ms)) infinite;
+}
+/* Волна: буквы по очереди подпрыгивают на 7px (референс) */
+.fx--ripple .fx-letter { --fx-stagger: 55ms; animation-name: fx-ripple; }
+@keyframes fx-ripple {
+  0%, 33.3%, 100% { transform: translateY(0); }
+  11.7% { transform: translateY(-7px); }
+}
+/* Взрыв: буквы разлетаются от центра и возвращаются (референс) */
+.fx--explode .fx-letter {
+  --fx-stagger: 26ms;
+  animation-name: fx-explode;
+  animation-duration: 2.4s;
+  animation-timing-function: cubic-bezier(0.3, 1.4, 0.5, 1);
+}
+@keyframes fx-explode {
+  0%, 46.2%, 100% { transform: translate(0) scale(1); }
+  10.5% { transform: translate(calc(var(--d) * 12px), -6px) scale(1.22); }
+  25.2% { transform: translate(calc(var(--d) * -2px), 2px) scale(0.98); }
+}
+/* Качели: буквы покачиваются вокруг основания */
+.fx--swing .fx-letter { --fx-stagger: 40ms; animation-name: fx-swing; animation-duration: 3.2s; }
+@keyframes fx-swing {
+  0%, 36%, 100% { transform: rotate(0); }
+  9% { transform: rotate(-14deg); }
+  18% { transform: rotate(10deg); }
+  27% { transform: rotate(-4deg); }
+}
+/* Желе: буквы сплющиваются и пружинят */
+.fx--jelly .fx-letter { --fx-stagger: 35ms; animation-name: fx-jelly; animation-duration: 3.4s; }
+@keyframes fx-jelly {
+  0%, 34%, 100% { transform: scale(1, 1); }
+  8% { transform: scale(1.25, 0.75); }
+  16% { transform: scale(0.85, 1.2) translateY(-3px); }
+  25% { transform: scale(1.06, 0.95); }
+}
+/* Переворот: буквы по очереди переворачиваются */
+.fx--flip .fx-letter { --fx-stagger: 70ms; animation-name: fx-flip; animation-duration: 3.6s; transform-origin: 50% 55%; }
+@keyframes fx-flip {
+  0%, 22%, 100% { transform: rotateX(0); }
+  14% { transform: rotateX(360deg); }
+}
+/* Дрожь: «секретная» надпись нервно подрагивает */
+.fx--shake .fx-letter { --fx-stagger: 0ms; animation-name: fx-shake; animation-duration: 3s; animation-timing-function: linear; }
+@keyframes fx-shake {
+  0%, 20%, 100% { transform: translate(0); }
+  2%, 10%, 18% { transform: translate(-1.5px, 0.5px) rotate(-3deg); }
+  6%, 14% { transform: translate(1.5px, -0.5px) rotate(3deg); }
+}
+/* Прыжок: буквы подпрыгивают с приземлением */
+.fx--hop .fx-letter { --fx-stagger: 60ms; animation-name: fx-hop; animation-duration: 2.8s; }
+@keyframes fx-hop {
+  0%, 40%, 100% { transform: translateY(0) scale(1, 1); }
+  8% { transform: translateY(1px) scale(1.15, 0.85); }
+  18% { transform: translateY(-9px) scale(0.9, 1.1); }
+  30% { transform: translateY(0) scale(1.1, 0.9); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .preview-img { transition: none; }
+  .fx-letter { animation: none; }
+  .day-title,
+  .bubble,
+  .preview { animation: none; }
 }
 
 /* ---------- Под открытым кейсом переписка прячется ---------- */

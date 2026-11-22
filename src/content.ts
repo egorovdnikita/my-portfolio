@@ -46,6 +46,6 @@ export const previews = {
 } satisfies Record<string, Preview>;
 
 export const links = {
-  basis: { label: 'Базиса', url: BEHANCE.basis, icon: asset('chat-basis.svg') },
+  basis: { label: 'Базиса.', url: BEHANCE.basis, icon: asset('chat-basis.svg') },
   lyceum: { label: 'Лицее.', url: BEHANCE.lyceum, icon: asset('chat-lyceum.svg') },
 };

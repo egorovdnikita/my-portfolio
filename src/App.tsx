@@ -63,6 +63,37 @@ function Bubble({ children, reaction, className = '' }: { children: ReactNode; r
   );
 }
 
+type FxKind = 'ripple' | 'explode' | 'swing' | 'jelly' | 'flip' | 'shake' | 'hop';
+
+/**
+ * Живые слова, как у sasi.codes: каждая буква анимируется со своей задержкой (--i),
+ * для «взрыва» — со своим направлением от центра (--d, от −1 до 1). Слова не разрываются переносом.
+ */
+function Fx({ kind, children }: { kind: FxKind; children: string }) {
+  const letters = children.replace(/ /g, '').length;
+  let i = 0;
+  return (
+    <span className={`fx fx--${kind}`} aria-label={children}>
+      {children.split(' ').map((word, w) => (
+        <span key={w}>
+          {w > 0 && ' '}
+          <span className="fx-word" aria-hidden>
+            {[...word].map((ch) => {
+              const n = i++;
+              const d = letters > 1 ? (n / (letters - 1)) * 2 - 1 : 0;
+              return (
+                <span key={n} className="fx-letter" style={{ '--i': n, '--d': d.toFixed(2) } as React.CSSProperties}>
+                  {ch}
+                </span>
+              );
+            })}
+          </span>
+        </span>
+      ))}
+    </span>
+  );
+}
+
 /** День переписки: подпись даты и сообщения. Хвостик — у последнего сообщения дня (через CSS). */
 function Day({ daysAgo, today, children }: { daysAgo: number; today: Date; children: ReactNode }) {
   return (
@@ -157,52 +188,8 @@ function InlineLink({ link, variant }: { link: { label: string; url: string; ico
   );
 }
 
-/**
- * Растворение у краёв экрана, как у sasi.codes: сообщение, уходящее под шапку или под кнопку «Написать»,
- * становится прозрачным и размытым. Считаем по прокрутке, а не CSS view() — так одинаково работает
- * и во встроенном браузере Telegram, и в старых Safari.
- */
-function useEdgeDissolve() {
-  useEffect(() => {
-    const TOP_GONE = 56; // низ сообщения выше этой линии — сообщения не видно
-    const TOP_FADE = 96; // длина затухания у шапки
-    const BOTTOM_GONE = 24; // верхние 48px сообщения ниже (высота окна − 24) — не видно
-    const BOTTOM_FADE = 80;
-    const blur = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    let frame = 0;
-    const update = () => {
-      frame = 0;
-      const vh = window.innerHeight;
-      document.querySelectorAll<HTMLElement>('.day-title, .bubble, .preview').forEach((el) => {
-        const r = el.getBoundingClientRect();
-        const top = (r.bottom - TOP_GONE) / TOP_FADE;
-        const bottom = (vh - BOTTOM_GONE - (r.top + Math.min(r.height, 48))) / BOTTOM_FADE;
-        const t = Math.max(0, Math.min(1, top, bottom));
-        if (t >= 1) {
-          if (el.style.opacity) (el.style.opacity = ''), (el.style.filter = '');
-          return;
-        }
-        el.style.opacity = String(Math.round(t * 100) / 100);
-        el.style.filter = blur ? `blur(${Math.round((1 - t) * 40) / 10}px)` : '';
-      });
-    };
-    const schedule = () => {
-      if (!frame) frame = requestAnimationFrame(update);
-    };
-    update();
-    window.addEventListener('scroll', schedule, { passive: true });
-    window.addEventListener('resize', schedule);
-    return () => {
-      cancelAnimationFrame(frame);
-      window.removeEventListener('scroll', schedule);
-      window.removeEventListener('resize', schedule);
-    };
-  }, []);
-}
-
 export default function App() {
   const today = useToday();
-  useEdgeDissolve();
   useTheme();
   const [caseId, setCaseId] = useState<string | null>(caseFromHash);
   const [caseClosing, setCaseClosing] = useState(false);
@@ -275,7 +262,9 @@ export default function App() {
             </Bubble>
           ))}
           <Bubble reaction={<Reaction emoji="👀" />}>Четыре года в продуктовом дизайне.</Bubble>
-          <Bubble>Сейчас — ведущий дизайнер.</Bubble>
+          <Bubble>
+            Сейчас — <Fx kind="ripple">ведущий дизайнер</Fx>.
+          </Bubble>
         </Day>
 
         <Day daysAgo={5} today={today}>
@@ -290,28 +279,39 @@ export default function App() {
               </span>
             ))}
           </Bubble>
-          <Bubble>В последнее время увлёкся приложениями с AI.</Bubble>
-          <Bubble>Нравится, что идею можно сразу попробовать.</Bubble>
+          <Bubble>
+            Увлёкся созданием <Fx kind="explode">приложений с AI</Fx>.
+          </Bubble>
+          <Bubble>Нравится сразу пробовать свои идеи.</Bubble>
         </Day>
 
         <Day daysAgo={4} today={today}>
           <PreviewCard item={previews.cashier} onOpenCase={openCase} className="preview--case" />
-          <Bubble>Покажу одну из последних задач — кассу.</Bubble>
-          <Bubble>Оказалось, банк и крипта требуют разных шагов.</Bubble>
+          <Bubble>Покажу недавнюю задачу — кассу.</Bubble>
+          <Bubble>
+            Собрал общий путь для <Fx kind="swing">банка и крипты</Fx>.
+          </Bubble>
         </Day>
 
         <Day daysAgo={3} today={today}>
           <PreviewCard item={previews.ds} onOpenCase={openCase} className="preview--case" />
-          <Bubble>А вот задача уже про четыре бренда.</Bubble>
-          <Bubble>Собирал общую систему и искал, где оставить свободу.</Bubble>
+          <Bubble>А здесь — система для четырёх брендов.</Bubble>
+          <Bubble>
+            Искал баланс общих <Fx kind="jelly">правил и свободы</Fx>.
+          </Bubble>
         </Day>
 
         <Day daysAgo={2} today={today}>
           <Bubble className="bubble--links" reaction={<Reaction emoji="👀" right={-19} top={-20.75} />}>
-            <span>А ещё — сайт</span>
+            <span>А ещё делал сайт</span>
             <InlineLink link={links.basis} variant="basis" />
-            <span>и раздел экзаменов в</span>
+          </Bubble>
+          <Bubble className="bubble--links">
+            <span>И раздел с экзаменами в</span>
             <InlineLink link={links.lyceum} variant="lyceum" />
+          </Bubble>
+          <Bubble>
+            Оба кейса можно найти на <Fx kind="flip">Behance</Fx>.
           </Bubble>
         </Day>
 
@@ -320,13 +320,17 @@ export default function App() {
             <PreviewCard item={previews.wink} onOpenCase={openCase} className="preview--nda" />
             <PreviewCard item={previews.promminer} onOpenCase={openCase} className="preview--nda" />
           </div>
-          <Bubble>Ещё проектировал музыкальный сервис и майнинг-пул.</Bubble>
-          <Bubble>Подробности этих проектов — под NDA.</Bubble>
+          <Bubble>Ещё работал с музыкой и майнингом.</Bubble>
+          <Bubble>
+            Детали этих проектов — <Fx kind="shake">под NDA</Fx>.
+          </Bubble>
         </Day>
 
         <Day daysAgo={0} today={today}>
           <Bubble>Буду рад познакомиться.</Bubble>
-          <Bubble reaction={<Reaction emoji="🤝" top={-20.75} />}>Расскажете о своей команде?</Bubble>
+          <Bubble reaction={<Reaction emoji="🤝" top={-20.75} />}>
+            Расскажете о своей <Fx kind="hop">команде</Fx>?
+          </Bubble>
         </Day>
       </main>
 
