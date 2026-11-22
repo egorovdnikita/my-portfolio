@@ -140,7 +140,6 @@ html.is-locked { overflow: hidden; }
   flex-shrink: 0;
   width: 24px;
   height: 24px;
-  border: 1px solid var(--chat-logo-border, #ffffff);
   object-fit: cover;
 }
 .job-logo { border-radius: 16px; }
