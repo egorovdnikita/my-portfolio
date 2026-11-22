@@ -22,7 +22,7 @@
   --contrib-4: #3dd51e;
   /* Панель кейса */
   --bg-panel: #ffffff;
-  --bg-card: rgba(0, 0, 0, 0.03); /* карточки фактов и шагов */
+  --bg-card: rgba(0, 0, 0, 0.06); /* карточки фактов и шагов */
   --card-tint: #000000; /* оттенок карточек для сплошного варианта на телефоне */
   --bg-control: rgba(0, 0, 0, 0.06); /* круглая кнопка «закрыть» */
   --border-divider: rgba(0, 0, 0, 0.08);
@@ -54,7 +54,7 @@
   --contrib-3: #33a91b;
   --contrib-4: #3dd51e;
   --bg-panel: #141414;
-  --bg-card: rgba(255, 255, 255, 0.03);
+  --bg-card: rgba(255, 255, 255, 0.06);
   --card-tint: #ffffff;
   --bg-control: rgba(255, 255, 255, 0.08);
   --border-divider: rgba(255, 255, 255, 0.12);
