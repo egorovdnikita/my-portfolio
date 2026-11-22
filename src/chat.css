@@ -322,10 +322,6 @@
   pointer-events: auto;
   transition: background-color 0.2s;
 }
-:root[data-theme='dark'] .compose-btn {
-  --compose-fill: #8774e1;
-  --compose-hover: #7b71c6;
-}
 @media (hover: hover) {
   .compose-btn:hover { background-color: var(--compose-hover); }
 }
