@@ -301,6 +301,7 @@
 }
 .compose-btn {
   position: relative;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -335,6 +336,22 @@
 }
 .compose-btn:hover { filter: brightness(1.08); }
 .compose-btn img { display: block; flex-shrink: 0; }
+
+/* Мягкий проходящий блик: эффект shiny из Telegram Web. */
+.compose-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(to right, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
+  transform: translateX(-100%);
+  animation: compose-shine 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  pointer-events: none;
+}
+@keyframes compose-shine {
+  0% { transform: translateX(-100%); }
+  50%, 100% { transform: translateX(100%); }
+}
 
 /* ---------- Растворение у краёв экрана, как у sasi.codes ----------
    Анимация по прокрутке (CSS view timeline): её считает браузер, поэтому без следов на iPhone.
@@ -391,6 +408,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .compose-btn::after { animation: none; }
   .preview-img { transition: none; }
   .fx-letter { animation: none; }
   .day-title,
