@@ -245,6 +245,8 @@
   gap: 8px;
   margin-top: 4px; /* 24 от текста, как в макете кассы */
 }
+/* Один шаг — во всю ширину, как в макете */
+.case-steps:has(> :only-child) { grid-template-columns: minmax(0, 1fr); }
 .case-step {
   display: flex;
   flex-direction: column;
