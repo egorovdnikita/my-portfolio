@@ -366,29 +366,29 @@
    Отступы таймлайна — шапка сверху и кнопка снизу: сообщение растворяется, заходя под них.
    Карточки только прозрачнеют: размытая картинка вылезала бы за скруглённый край. */
 /* Растворяется только то, что заходит под шапку (низ плашки с именем — 116px) или под кнопку «Написать» (80px снизу).
-   Фазы привязаны к самим границам (entry — снизу, exit — сверху), а не к процентам высоты окна,
-   поэтому при открытии страницы первая дата и сообщения не размыты */
-@keyframes edge-dissolve {
-  entry 0% { opacity: 0; filter: blur(3px); }
-  entry 100% { opacity: 1; filter: blur(0); }
-  exit 0% { opacity: 1; filter: blur(0); }
-  exit 100% { opacity: 0; filter: blur(3px); }
+   Две анимации с границами в пикселях, а не в процентах высоты окна: при открытии страницы верх не размыт,
+   а уход под шапку растянут до самого верха экрана */
+/* Как у sasi.codes: под шапкой сообщения не исчезают, а остаются размытыми и полупрозрачными до верха экрана */
+@keyframes edge-out {
+  from { opacity: 1; filter: blur(0); }
+  to { opacity: 0.25; filter: blur(5px); }
 }
-@keyframes edge-fade {
-  entry 0% { opacity: 0; }
-  entry 100% { opacity: 1; }
-  exit 0% { opacity: 1; }
-  exit 100% { opacity: 0; }
+@keyframes edge-in {
+  from { opacity: 0; filter: blur(4px); }
+  to { opacity: 1; filter: blur(0); }
 }
+@keyframes edge-out-fade { from { opacity: 1; } to { opacity: 0.25; } }
+@keyframes edge-in-fade { from { opacity: 0; } to { opacity: 1; } }
 @supports (animation-timeline: view()) {
   .day-title,
   .bubble,
   .preview {
-    animation: edge-dissolve linear both;
-    animation-timeline: view(block 116px 80px);
-    animation-range: entry 0% exit 100%;
+    animation: edge-in linear backwards, edge-out linear forwards;
+    animation-timeline: view(block 116px 80px), view(block 116px 80px);
+    /* сверху: с 148px (где стоит первая дата — при открытии ничего не размыто) до ухода сообщения за верх экрана */
+    animation-range: entry 0% entry calc(100% + 40px), exit -32px exit calc(100% + 116px);
   }
-  .preview { animation-name: edge-fade; }
+  .preview { animation-name: edge-in-fade, edge-out-fade; }
 }
 
 /* ---------- Живые слова: три мягких эффекта по мотивам sasi.codes, повторяются по странице ---------- */
