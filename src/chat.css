@@ -391,16 +391,13 @@
   .preview { animation-name: edge-in-fade, edge-out-fade; }
 }
 
-/* ---------- Живые слова: три мягких эффекта по мотивам sasi.codes, каждый проигрывается один раз ---------- */
+/* ---------- Живые слова: три мягких эффекта по мотивам sasi.codes, по кругу, соседние разные ---------- */
 .fx-word { white-space: nowrap; }
 .fx-letter {
   display: inline-block;
   transform-origin: 50% 78%;
-  /* один раз и только когда фраза появилась на экране (.is-on ставит Fx в App.tsx) */
-  animation: 4s cubic-bezier(0.22, 1, 0.36, 1) calc(0.3s + var(--i) * var(--fx-stagger, 45ms)) 1 both;
-  animation-play-state: paused;
+  animation: 4s cubic-bezier(0.22, 1, 0.36, 1) calc(1s + var(--i) * var(--fx-stagger, 45ms)) infinite;
 }
-.fx.is-on .fx-letter { animation-play-state: running; }
 /* Волна: буквы по очереди чуть приподнимаются */
 .fx--ripple .fx-letter { --fx-stagger: 55ms; animation-name: fx-ripple; }
 @keyframes fx-ripple {
