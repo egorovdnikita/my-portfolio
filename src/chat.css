@@ -365,25 +365,28 @@
    Анимация по прокрутке (CSS view timeline): её считает браузер, поэтому без следов на iPhone.
    Отступы таймлайна — шапка сверху и кнопка снизу: сообщение растворяется, заходя под них.
    Карточки только прозрачнеют: размытая картинка вылезала бы за скруглённый край. */
+/* Растворяется только то, что заходит под шапку (низ плашки с именем — 116px) или под кнопку «Написать» (80px снизу).
+   Фазы привязаны к самим границам (entry — снизу, exit — сверху), а не к процентам высоты окна,
+   поэтому при открытии страницы первая дата и сообщения не размыты */
 @keyframes edge-dissolve {
-  0% { opacity: 0; filter: blur(3px); }
-  11% { opacity: 1; filter: blur(0); }
-  86% { opacity: 1; filter: blur(0); }
-  100% { opacity: 0; filter: blur(3px); }
+  entry 0% { opacity: 0; filter: blur(3px); }
+  entry 100% { opacity: 1; filter: blur(0); }
+  exit 0% { opacity: 1; filter: blur(0); }
+  exit 100% { opacity: 0; filter: blur(3px); }
 }
 @keyframes edge-fade {
-  0% { opacity: 0; }
-  11% { opacity: 1; }
-  86% { opacity: 1; }
-  100% { opacity: 0; }
+  entry 0% { opacity: 0; }
+  entry 100% { opacity: 1; }
+  exit 0% { opacity: 1; }
+  exit 100% { opacity: 0; }
 }
 @supports (animation-timeline: view()) {
   .day-title,
   .bubble,
   .preview {
     animation: edge-dissolve linear both;
-    animation-timeline: view(block 100px 80px); /* сверху — под шапку (низ плашки 116), снизу — под кнопку */
-    animation-range: cover;
+    animation-timeline: view(block 116px 80px);
+    animation-range: entry 0% exit 100%;
   }
   .preview { animation-name: edge-fade; }
 }
