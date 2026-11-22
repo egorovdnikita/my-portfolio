@@ -275,16 +275,16 @@
 .preview-title { color: var(--text-primary); font-size: 14px; line-height: 19px; }
 .preview-sub { color: var(--text-muted); font-size: 13px; line-height: 18px; }
 
-.preview--case { width: 260px; max-width: 100%; }
-.preview--case .preview-img { aspect-ratio: 440 / 320; }
+.preview--case,
+.preview--nda { width: 300px; max-width: 100%; }
+/* Картинка карточки 300×220, как в макете */
+.preview-img { aspect-ratio: 300 / 220; }
 
 .preview-row {
   display: flex;
+  flex-direction: column; /* Wink и Promminer друг под другом через 4 */
   gap: 4px;
-  width: 100%;
 }
-.preview--nda { flex: 1 0 0; min-width: 1px; }
-.preview--nda .preview-img { height: 196px; }
 
 /* ---------- Кнопка «Написать» ---------- */
 
@@ -403,5 +403,4 @@
 @media (max-width: 480px) {
   /* Реакция выступает за правый край на 23px — на узком экране оставляем ей место */
   .bubble.has-reaction { max-width: calc(100% - 24px); }
-  .preview--nda .preview-img { height: auto; aspect-ratio: 1; }
 }

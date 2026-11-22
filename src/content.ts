@@ -38,10 +38,10 @@ export type Preview = {
 };
 
 export const previews = {
-  cashier: { title: 'Касса казино', subtitle: 'Пополнение, вывод и история', image: asset('chat-cashier.jpg'), open: { caseId: '1win-product' } },
-  ds: { title: 'Дизайн-система', subtitle: 'Четыре бренда на общей основе', image: asset('chat-ds.jpg'), open: { caseId: '1win' } },
-  wink: { title: 'Wink Музыка', subtitle: 'wink.ru', image: asset('chat-wink.jpg'), open: { url: 'https://wink.ru' } },
-  promminer: { title: 'Promminer Pool', subtitle: 'promminer.ru', image: asset('chat-promminer.jpg'), open: { url: 'https://promminer.ru' } },
+  cashier: { title: 'Касса казино', subtitle: 'Пополнение, вывод и история', image: asset('chat-cashier-v2.webp'), open: { caseId: '1win-product' } },
+  ds: { title: 'Дизайн-система', subtitle: 'Четыре бренда на общей основе', image: asset('chat-ds-v2.webp'), open: { caseId: '1win' } },
+  wink: { title: 'Wink Музыка', subtitle: 'wink.ru', image: asset('chat-wink-v2.webp'), open: { url: 'https://wink.ru' } },
+  promminer: { title: 'Promminer Pool', subtitle: 'promminer.ru', image: asset('chat-promminer-v2.webp'), open: { url: 'https://promminer.ru' } },
 } satisfies Record<string, Preview>;
 
 export const links = {
