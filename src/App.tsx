@@ -260,7 +260,9 @@ export default function App() {
             <a href="https://workspace.ru/" target="_blank" rel="noreferrer">Workspace.ru</a>
           </Bubble>
           <Bubble>Здесь собрал и другие свои проекты</Bubble>
-          <Bubble>Давайте покажу 👇</Bubble>
+          <Bubble>
+            <Fx kind="ripple">Давайте покажу</Fx> 👇
+          </Bubble>
         </Day>
 
         <Day daysAgo={6} today={today}>

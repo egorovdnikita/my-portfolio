@@ -45,7 +45,7 @@ export type Preview = {
 };
 
 export const previews = {
-  cashier: { title: 'Касса казино', label: 'igaming.com', image: asset('chat-cashier-v3.webp'), open: { caseId: '1win-product' } },
+  cashier: { title: 'Касса казино', label: 'igaming.com', image: asset('chat-cashier-v4.webp'), open: { caseId: '1win-product' } },
   ds: { title: 'Дизайн-система', label: 'whitelabel.com', image: asset('chat-ds-v3.webp'), open: { caseId: '1win' } },
   wink: { title: 'Wink Музыка', label: 'wink.ru', image: asset('chat-wink-v3.webp'), open: { url: 'https://wink.ru' } },
   promminer: { title: 'Promminer Pool', label: 'promminer.ru', image: asset('chat-promminer-v3.webp'), open: { url: 'https://promminer.ru' } },
