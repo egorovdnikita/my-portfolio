@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { type CaseBlock, type CaseMedia, type CaseSection, type CaseStudy } from '../cases';
 import { icons } from '../content';
 import { Icon } from './Cards';
@@ -11,7 +11,7 @@ type Props = {
 
 /**
  * Группы панели, как в макете: секция с картинкой начинается с блока картинки и открывает новую группу,
- * секции без картинки присоединяются к предыдущей группе через разделитель.
+ * секции без картинки присоединяются к предыдущей группе.
  */
 function groupSections(sections: CaseSection[]) {
   const intro: CaseSection[] = [];
@@ -108,9 +108,7 @@ export function CasePage({ study, closing, onClose }: Props) {
                 </div>
               )}
               {intro.map((s) => (
-                <Divided key={s.label}>
-                  <Section section={s} />
-                </Divided>
+                <Section key={s.label} section={s} />
               ))}
             </section>
 
@@ -122,15 +120,7 @@ export function CasePage({ study, closing, onClose }: Props) {
                   </div>
                 )}
                 <section className={`case-group${g.sections.length > 1 ? ' case-group--multi' : ''}`}>
-                  {g.sections.map((s, i) =>
-                    i === 0 ? (
-                      <Section key={s.label} section={s} />
-                    ) : (
-                      <Divided key={s.label}>
-                        <Section section={s} />
-                      </Divided>
-                    ),
-                  )}
+                  {g.sections.map(s => <Section key={s.label} section={s} />)}
                 </section>
               </div>
             ))}
@@ -141,21 +131,11 @@ export function CasePage({ study, closing, onClose }: Props) {
   );
 }
 
-/** Разделитель перед секцией */
-function Divided({ children }: { children: ReactNode }) {
-  return (
-    <>
-      <hr className="case-divider" />
-      {children}
-    </>
-  );
-}
-
 function Section({ section }: { section: CaseSection }) {
   return (
     <div className="case-section">
-      <span className="case-label">{section.label}</span>
-      <h2 className="case-h2">{section.title}</h2>
+      <span className="case-section-label">{section.label}</span>
+      <h2 className="case-question">{section.title}</h2>
       {section.blocks.map((block, i) => (
         <Block key={i} block={block} />
       ))}
@@ -163,15 +143,12 @@ function Section({ section }: { section: CaseSection }) {
   );
 }
 
-/** Пункты с синей точкой в слоте 24px, как в макете */
+/** Ответы отдельными сообщениями, как в макете. */
 function Bullets({ items }: { items: string[] }) {
   return (
-    <ul className="case-bullets">
+    <ul className="case-answers">
       {items.map((item) => (
         <li key={item}>
-          <span className="case-marker" aria-hidden>
-            •
-          </span>
           <span>{item}</span>
         </li>
       ))}
@@ -223,6 +200,7 @@ type Loading = 'eager' | 'lazy';
 /** Обложка грузится сразу, картинки секций — когда подходят к экрану. Скругление и обводка — из данных кейса */
 function Media({ item, loading = 'lazy' }: { item: CaseMedia; loading?: Loading }) {
   const frame = { radius: item.radius, border: item.border };
+  if (item.media === 'emoji') return <div className="case-emoji-cover"><img src={item.src} alt={item.alt} width={196} height={196} /></div>;
   if (item.media === 'image') {
     return (
       <Frame {...frame} className="case-media" style={{ aspectRatio: item.ratio }}>

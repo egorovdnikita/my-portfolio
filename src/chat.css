@@ -458,3 +458,5 @@
   /* Реакция выступает за правый край на 23px — на узком экране оставляем ей место */
   .bubble.has-reaction { max-width: calc(100% - 24px); }
 }
+
+.animated-emoji { display: inline-block; width: 20px; height: 20px; vertical-align: -4px; object-fit: contain; }

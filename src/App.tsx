@@ -43,6 +43,11 @@ function dayTitle(daysAgo: number, today: Date) {
   return `${wd.charAt(0).toUpperCase()}${wd.slice(1)}, ${dayMonth.format(d)}`;
 }
 
+const emojiAssets: Record<string, string> = { '🫡': 'salute', '🤖': 'robot', '👀': 'eyes', '🤝': 'handshake', '👋': 'wave' };
+function AnimatedEmoji({ emoji }: { emoji: string }) {
+  return <img className="animated-emoji" src={`${import.meta.env.BASE_URL}assets/emoji-${emojiAssets[emoji]}.webp`} alt={emoji} width={20} height={20} />;
+}
+
 /** Реакция на сообщение: синий кружок с эмодзи и два «пузырька мысли», как в макете. */
 function Reaction({ emoji, right = -23, top = -23 }: { emoji: string; right?: number; top?: number }) {
   // Появляется один раз, когда сообщение целиком видно между шапкой и кнопкой «Написать»
@@ -67,7 +72,7 @@ function Reaction({ emoji, right = -23, top = -23 }: { emoji: string; right?: nu
     <span ref={ref} className={`reaction${shown ? ' is-shown' : ''}`} style={{ right, top }} aria-hidden>
       <span className="reaction-dot reaction-dot--m" />
       <span className="reaction-dot reaction-dot--s" />
-      <span className="reaction-face">{emoji}</span>
+      <span className="reaction-face">{shown && <AnimatedEmoji emoji={emoji} />}</span>
     </span>
   );
 }
@@ -271,7 +276,7 @@ export default function App() {
 
       <main className="chat">
         <Day daysAgo={7} today={today}>
-          <Bubble>Привет! Я Никита, продуктовый дизайнер 👋</Bubble>
+          <Bubble>Привет! Я Никита, продуктовый дизайнер <AnimatedEmoji emoji="👋" /></Bubble>
           <Bubble>Рад, что заглянули 🙂</Bubble>
           <Bubble>Расскажу о себе коротко, как в чате</Bubble>
           <Bubble>

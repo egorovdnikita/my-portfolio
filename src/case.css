@@ -414,3 +414,21 @@
   .case-steps { grid-template-columns: minmax(0, 1fr); }
   .case-gallery-dots { bottom: 12px; }
 }
+
+/* Кейсы в формате переписки: кадры Case Card, 952px. */
+.case-intro { padding-top: 0; }
+.case-group--multi { gap: 24px; }
+.case-meta-item { gap: 3px; background: var(--bg-bubble); }
+.case-emoji-cover { height: 244px; display: flex; justify-content: center; padding: 24px 0; }
+.case-emoji-cover img { width: 196px; height: 196px; object-fit: contain; }
+.case-cover { padding: 8px; }
+.case-close { top: 16px; right: 16px; }
+.case-section { display: flex; flex-direction: column; gap: 12px; }
+.case-section-label { padding-bottom: 8px; text-align: center; color: var(--text-muted); font-size: 13px; font-weight: 600; line-height: 15px; }
+.case-scroll .case-question { align-self: flex-end; position: relative; max-width: 100%; width: fit-content; margin: 0; padding: 12px 16px; border-radius: 20px; background: #3390ec; color: white; font-size: 16px; font-weight: 500; line-height: 22px; letter-spacing: -0.04em; }
+.case-answers { display: flex; flex-direction: column; gap: 4px; margin: 0; padding: 0; list-style: none; }
+.case-answers li { position: relative; width: fit-content; max-width: 100%; padding: 12px 16px; border-radius: 20px; background: var(--bg-bubble); color: var(--text-primary); font-size: 17px; font-weight: 500; line-height: 24px; }
+.case-scroll .case-answers li, .case-scroll .case-answers li span { letter-spacing: -0.02em; }
+.case-question::after, .case-answers li:last-child::after { content: ''; position: absolute; bottom: 0; width: 10px; height: 12px; background: inherit; }
+.case-question::after { right: -3px; border-radius: 0 0 0 12px; transform: skewX(25deg); }
+.case-answers li:last-child::after { left: -3px; border-radius: 0 0 12px 0; transform: skewX(-25deg); }
