@@ -12,6 +12,9 @@
 }
 @media (min-width: 1100px) {
   .chat-app.has-case { --chat-area: calc(50% - 8px); }
+  .chat-app.has-case .chat { margin-left: max(16px, calc(var(--chat-area) - 500px)); }
+  .chat-app.has-case .chat-head,
+  .chat-app.has-case .compose { left: max(0px, calc(var(--chat-area) - 600px)); }
   .chat-app.has-case .chat-head,
   .chat-app.has-case .chat { opacity: 0.32; }
 }
@@ -19,10 +22,10 @@
 .case {
   position: fixed;
   top: 0;
-  right: 0;
+  left: calc(50% - 8px);
   bottom: 0;
   z-index: 30;
-  width: calc(50% + 8px);
+  width: min(616px, calc(50% + 8px));
   padding: 8px;
   animation: case-in 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -387,7 +390,7 @@
 /* ---------- Узкий экран: панель поверх переписки ---------- */
 
 @media (max-width: 1099px) {
-  .case { width: 100%; }
+  .case { left: 0; right: 0; width: 100%; }
   .has-case .chat-head,
   .has-case .chat,
   .has-case .compose {
@@ -417,13 +420,17 @@
   .case-gallery-dots { bottom: 12px; }
 }
 
-/* Кейсы в формате переписки: кадры Case Card, 952px. */
+/* Актуальные кадры: панель 600px, текстовая область 552px. */
+.case-group { padding: 24px; }
 .case-intro { padding-top: 0; }
 .case-group--multi { gap: 24px; }
+.case-group--spaced { gap: 40px; }
+.case-meta { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .case-meta-item { gap: 3px; background: var(--bg-bubble); }
-.case-emoji-cover { height: 244px; display: flex; justify-content: center; padding: 24px 0; }
-.case-emoji-cover img { width: 196px; height: 196px; object-fit: contain; }
-.case-cover { padding: 8px; }
+.case--ds .case-meta-item { gap: 6px; }
+.case-emoji-cover { height: 192px; display: flex; justify-content: center; padding: 32px 0; }
+.case-emoji-cover img { width: 128px; height: 128px; object-fit: contain; }
+.case-cover { padding: 0 8px; }
 .case-close { top: 16px; right: 16px; }
 .case-section { display: flex; flex-direction: column; gap: 12px; }
 .case-section-label { padding-bottom: 8px; text-align: center; color: var(--text-muted); font-size: 13px; font-weight: 600; line-height: 15px; }
@@ -458,3 +465,7 @@
 .case-answers li:last-child::after { left: -26px; }
 .case-question::before { right: -7px; transform: scaleX(-1); }
 .case-question::after { right: -26px; transform: scaleX(-1); }
+
+@media (max-width: 767px) {
+  .case-group { padding-left: 16px; padding-right: 16px; }
+}

@@ -69,7 +69,7 @@ export function CasePage({ study, closing, onClose }: Props) {
   }, [study.id]);
 
   return (
-    <aside className={`case${closing ? ' is-closing' : ''}`} role="dialog" aria-modal="false" aria-label={study.title}>
+    <aside className={`case${study.id === '1win' ? ' case--ds' : ''}${closing ? ' is-closing' : ''}`} role="dialog" aria-modal="false" aria-label={study.title}>
       <div className="case-card">
         <div ref={scrollRef} className="case-scroll">
           <div ref={barRef} className="case-bar">
@@ -119,7 +119,7 @@ export function CasePage({ study, closing, onClose }: Props) {
                     <Media item={g.media} />
                   </div>
                 )}
-                <section className={`case-group${g.sections.length > 1 ? ' case-group--multi' : ''}`}>
+                <section className={`case-group${g.sections.length > 1 ? ' case-group--multi' : ''}${(study.id === '1win' && gi < 2) || (study.id === '1win-product' && gi === 2) ? ' case-group--spaced' : ''}`}>
                   {g.sections.map(s => <Section key={s.label} section={s} />)}
                 </section>
               </div>
