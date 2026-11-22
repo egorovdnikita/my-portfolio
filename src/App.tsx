@@ -253,22 +253,14 @@ export default function App() {
 
       <main className="chat">
         <Day daysAgo={7} today={today}>
-          <Bubble>Привет, я Никита 👋 продуктовый дизайнер.</Bubble>
-          <Bubble>А ещё люблю участвовать в хакатонах.</Bubble>
-          <Bubble>Кстати</Bubble>
-          <Bubble>
-            Выигрывал дизайн-конкурс{' '}
-            <a href="https://workspace.ru/" target="_blank" rel="noreferrer">Workspace.ru</a>
-          </Bubble>
-          <Bubble>Здесь собрал и другие свои проекты</Bubble>
-          <Bubble>
-            <Fx kind="ripple">Давайте покажу</Fx> 👇
-          </Bubble>
+          <Bubble>Привет! Я Никита, продуктовый дизайнер 👋</Bubble>
+          <Bubble>Рад, что заглянули 🙂</Bubble>
+          <Bubble>Расскажу о себе коротко, как в чате</Bubble>
+          <Bubble>Давайте начнём 👇</Bubble>
         </Day>
 
         <Day daysAgo={6} today={today}>
           <Bubble>Немного об опыте</Bubble>
-          <Bubble reaction={<Reaction emoji="🫡" />}>Четыре года в продуктовом дизайне.</Bubble>
           {jobs.map((job) => (
             <Bubble key={job.company} className="bubble--job">
               <img className="job-logo" src={job.logo} alt="" draggable={false} />
@@ -276,12 +268,16 @@ export default function App() {
               <span className="job-period">{job.period}</span>
             </Bubble>
           ))}
+          <Bubble reaction={<Reaction emoji="🫡" />}>Четыре года в продуктовом дизайне</Bubble>
           <Bubble>
-            Сейчас — <Fx kind="ripple">ведущий дизайнер</Fx>.
+            Сейчас — <Fx kind="ripple">ведущий дизайнер</Fx>
           </Bubble>
         </Day>
 
         <Day daysAgo={5} today={today}>
+          <Bubble reaction={<Reaction emoji="🤖" top={-23.31} />}>
+            По вечерам собираю <Fx kind="swing">приложения с AI</Fx>
+          </Bubble>
           {/* Календарь шириной с сообщение об инструментах: обёртка по ширине инструментов, календарь тянется на неё */}
           <div className="contrib-pair">
             <Bubble className="bubble--contrib">
@@ -297,43 +293,53 @@ export default function App() {
             </Bubble>
           </div>
           <Bubble>
-            Увлёкся созданием <Fx kind="swing">приложений с AI</Fx>.
-          </Bubble>
-          <Bubble reaction={<Reaction emoji="🤖" top={-23.31} />}>
-            Свои эксперименты публикую на{' '}
+            Выкладываю их на{' '}
             <a href={links.github.url} target="_blank" rel="noreferrer">
               {links.github.label}
+            </a>
+          </Bubble>
+          <Bubble>А ещё люблю участвовать в хакатонах</Bubble>
+          <Bubble>Кстати</Bubble>
+          <Bubble>
+            Выигрывал дизайн-конкурс{' '}
+            <a href={links.workspace.url} target="_blank" rel="noreferrer">
+              {links.workspace.label}
             </a>
           </Bubble>
         </Day>
 
         <Day daysAgo={4} today={today}>
-          <PreviewCard item={previews.cashier} onOpenCase={openCase} className="preview--case" />
-          <Bubble>Покажу недавнюю задачу — кассу.</Bubble>
           <Bubble>
-            Собрал общий путь для <Fx kind="flip">банка и крипты</Fx>.
+            <Fx kind="ripple">Давайте покажу</Fx>, что делаю сейчас 👇
           </Bubble>
+          <PreviewCard item={previews.cashier} onOpenCase={openCase} className="preview--case" />
+          <Bubble>Это касса: пополнение и вывод</Bubble>
+          <Bubble>
+            Один путь для <Fx kind="flip">фиата и крипты</Fx>
+          </Bubble>
+          <Bubble>Но риски видны до отправки денег</Bubble>
         </Day>
 
         <Day daysAgo={3} today={today}>
           <PreviewCard item={previews.ds} onOpenCase={openCase} className="preview--case" />
-          <Bubble>А здесь — система для четырёх брендов.</Bubble>
+          <Bubble>А это дизайн-система для 4 брендов</Bubble>
           <Bubble>
-            Искал баланс общих <Fx kind="ripple">правил и свободы</Fx>.
+            Решал, <Fx kind="ripple">где общее, а где своё</Fx>
           </Bubble>
         </Day>
 
         <Day daysAgo={2} today={today}>
+          <Bubble>До этого был Ростелеком</Bubble>
           <Bubble className="bubble--links">
-            <span>А ещё делал сайт</span>
+            <span>Делал сайт</span>
             <InlineLink link={links.basis} variant="basis" />
           </Bubble>
-          <Bubble className="bubble--links">
+          <Bubble className="bubble--links" reaction={<Reaction emoji="👀" top={-23.49} />}>
             <span>И раздел с экзаменами в</span>
             <InlineLink link={links.lyceum} variant="lyceum" />
           </Bubble>
-          <Bubble reaction={<Reaction emoji="👀" top={-23.49} />}>
-            Оба кейса можно найти на <Fx kind="flip">Behance</Fx>.
+          <Bubble>
+            Оба кейса — на <Fx kind="flip">Behance</Fx>
           </Bubble>
         </Day>
 
@@ -342,14 +348,14 @@ export default function App() {
             <PreviewCard item={previews.wink} onOpenCase={openCase} className="preview--nda" />
             <PreviewCard item={previews.promminer} onOpenCase={openCase} className="preview--nda" />
           </div>
-          <Bubble>Ещё работал с музыкой и майнингом.</Bubble>
+          <Bubble>Ещё были стриминг и майнинг</Bubble>
           <Bubble>
-            Детали этих проектов — <Fx kind="swing">под NDA</Fx>.
+            Детали — <Fx kind="swing">под NDA</Fx> 🤫
           </Bubble>
         </Day>
 
         <Day daysAgo={0} today={today}>
-          <Bubble>Буду рад познакомиться.</Bubble>
+          <Bubble>Буду рад познакомиться</Bubble>
           <Bubble reaction={<Reaction emoji="🤝" top={-23.49} />}>
             Расскажете о своей <Fx kind="ripple">команде</Fx>?
           </Bubble>
