@@ -418,9 +418,9 @@ html.is-locked body { background: var(--bg-page-case); }
 .case-close { top: 16px; right: 16px; }
 .case-section { display: flex; flex-direction: column; gap: 12px; }
 .case-section-label { padding-bottom: 8px; text-align: center; color: var(--text-muted); font-size: 13px; font-weight: 600; line-height: 15px; }
-.case-scroll .case-question { align-self: flex-end; position: relative; max-width: 100%; width: fit-content; margin: 0; padding: 12px 16px; border-radius: 20px; background: var(--accent-base); color: var(--static-white); font-size: 16px; font-weight: 500; line-height: 22px; letter-spacing: -0.04em; }
+.case-scroll .case-question { align-self: flex-end; position: relative; max-width: 100%; width: fit-content; margin: 0; padding: 8px 16px; border-radius: 20px; background: var(--accent-base); color: var(--static-white); font-size: 16px; font-weight: 500; line-height: 22px; letter-spacing: -0.04em; }
 .case-answers { display: flex; flex-direction: column; gap: 4px; margin: 0; padding: 0; list-style: none; }
-.case-answers li { position: relative; width: fit-content; max-width: 100%; padding: 12px 16px; border-radius: 20px; background: var(--bg-bubble); color: var(--text-primary); font-size: 16px; font-weight: 500; line-height: 22px; }
+.case-answers li { position: relative; width: fit-content; max-width: 100%; padding: 8px 16px; border-radius: 20px; background: var(--bg-bubble); color: var(--text-primary); font-size: 16px; font-weight: 500; line-height: 22px; }
 .case-scroll .case-answers li { letter-spacing: -0.04em; }
 /* Та же геометрия хвостика, что у сообщений главной. */
 .case-question::before,
@@ -467,7 +467,7 @@ html.is-locked body { background: var(--bg-page-case); }
   display: flex;
   gap: 4px;
   width: fit-content;
-  padding: 19px 16px;
+  padding: 15px 16px;
   border-radius: 20px;
   background: var(--bg-bubble);
 }
@@ -486,7 +486,7 @@ html.is-locked body { background: var(--bg-page-case); }
 .case-chat-chips { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
 .case-chat-chip {
   max-width: 100%;
-  padding: 10px 16px;
+  padding: 7px 16px;
   border: 1px solid var(--accent-base);
   border-radius: 20px;
   background: none;
