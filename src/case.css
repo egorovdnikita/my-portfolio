@@ -70,32 +70,16 @@ html.is-locked body { background: var(--bg-page-case); }
   pointer-events: none;
   isolation: isolate;
 }
-/* Подложка шапки проявляется вместе с заголовком, без линии — как растворение под шапкой главной:
-   цвет панели сходит на нет книзу (::before), под ним размытие с той же маской (::after).
-   Слои шире панели на 32px с каждой стороны: у края размытие подмешивает цвет картинки, лишнее обрезается */
-.case-bar::before,
-.case-bar::after {
+/* Подложка шапки проявляется вместе с заголовком: сплошной цвет панели и еле видная линия снизу, без размытия */
+.case-bar::before {
   content: '';
   position: absolute;
-  inset: 0 -32px -48px;
+  inset: 0;
+  z-index: -1;
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--border-nav);
   opacity: var(--collapse);
   pointer-events: none;
-}
-.case-bar::after {
-  z-index: -1;
-  -webkit-backdrop-filter: blur(16px);
-  backdrop-filter: blur(16px);
-  -webkit-mask-image: linear-gradient(to bottom, #000 30%, transparent);
-  mask-image: linear-gradient(to bottom, #000 30%, transparent);
-}
-/* Затемнение мягкое и сходит на нет сразу от верха: заголовок лежит на полупрозрачном размытом фоне */
-.case-bar::before {
-  background: linear-gradient(
-    to bottom,
-    color-mix(in srgb, var(--bg-panel) 72%, transparent) 0%,
-    color-mix(in srgb, var(--bg-panel) 40%, transparent) 45%,
-    color-mix(in srgb, var(--bg-panel) 0%, transparent) 100%
-  );
 }
 .case-bar-title {
   position: relative;
