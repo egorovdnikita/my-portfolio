@@ -349,6 +349,7 @@ html.is-locked body { background: var(--bg-page-case); }
   }
   /* Поле 64 + 16 снизу и 40 градиента над ним; ещё 24 даёт отступ группы — последнее сообщение встаёт ровно над затемнением */
   .case-scroll { padding-bottom: calc(96px + env(safe-area-inset-bottom)); }
+  .case-dock .case-chat-form { padding-left: 16px; } /* на телефоне текст поля ближе к краю */
   .has-case .chat-head,
   .has-case .chat,
   .has-case .compose { opacity: 1; }
