@@ -8,7 +8,7 @@ export function useMessageWidth(caseId: string | null) {
       if (disposed) return;
       const mobile = window.matchMedia('(max-width: 767px)').matches;
       const messages = document.querySelectorAll<HTMLElement>(
-        '.bubble:not(.bubble--job):not(.bubble--tools):not(.bubble--contrib):not(.bubble--links), .case-question, .case-answers li',
+        '.bubble:not(.bubble--job):not(.bubble--contrib):not(.bubble--links), .case-question, .case-answers li',
       );
       messages.forEach(message => {
         message.style.removeProperty('width');

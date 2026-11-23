@@ -312,20 +312,18 @@ export default function App() {
           <Bubble>
             По вечерам собираю <Fx kind="flip">приложения с AI</Fx>
           </Bubble>
-          {/* Календарь шириной с сообщение об инструментах: обёртка по ширине инструментов, календарь тянется на неё */}
-          <div className="contrib-pair">
-            <Bubble className="bubble--contrib">
-              <Contributions />
-            </Bubble>
-            <Bubble className="bubble--tools">
+          {/* Календарь и инструменты — одно сообщение с обводкой */}
+          <Bubble className="bubble--contrib">
+            <Contributions />
+            <span className="tools">
               {tools.map((tool) => (
                 <span key={tool.name} className="tool">
                   <img className="tool-logo" src={tool.icon} alt="" draggable={false} />
                   {tool.name}
                 </span>
               ))}
-            </Bubble>
-          </div>
+            </span>
+          </Bubble>
           <Bubble>
             Выкладываю их на{' '}
             <a href={links.github.url} target="_blank" rel="noreferrer">
