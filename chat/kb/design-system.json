@@ -17,7 +17,13 @@
         "team",
         "designops"
       ],
-      "starter": false
+      "starter": false,
+      "variants": [
+        [
+          "Вместе с дизайн-лидом строил архитектуру",
+          "Плюс DesignOps и команда: ревью, ИПР"
+        ]
+      ]
     },
     {
       "id": "team",
@@ -33,7 +39,12 @@
         "role",
         "designops"
       ],
-      "starter": false
+      "starter": false,
+      "variants": [
+        [
+          "Нас было 5 дизайнеров, вёл вместе с дизайн-лидом"
+        ]
+      ]
     },
     {
       "id": "designops",
@@ -49,7 +60,12 @@
         "process",
         "team"
       ],
-      "starter": false
+      "starter": false,
+      "variants": [
+        [
+          "Настроил DesignOps: ревью и ИПР для команды"
+        ]
+      ]
     },
     {
       "id": "scale",
@@ -65,7 +81,12 @@
         "problem",
         "architecture"
       ],
-      "starter": false
+      "starter": false,
+      "variants": [
+        [
+          "Система на 4 бренда в 16+ странах"
+        ]
+      ]
     },
     {
       "id": "period",
@@ -80,7 +101,12 @@
       "related": [
         "scale"
       ],
-      "starter": false
+      "starter": false,
+      "variants": [
+        [
+          "С 2025 года, работа продолжается"
+        ]
+      ]
     },
     {
       "id": "problem",
@@ -99,7 +125,14 @@
         "goal",
         "audit"
       ],
-      "starter": true
+      "starter": true,
+      "variants": [
+        [
+          "У 4 брендов разъехались компоненты",
+          "Одну правку делали четыре раза",
+          "А разработка получала разные макеты"
+        ]
+      ]
     },
     {
       "id": "goal",
@@ -116,7 +149,13 @@
         "result",
         "problem"
       ],
-      "starter": false
+      "starter": false,
+      "variants": [
+        [
+          "Чтобы новый бренд не требовал новой разработки",
+          "И команда не делала работу четырежды"
+        ]
+      ]
     },
     {
       "id": "audit",
@@ -134,7 +173,14 @@
         "ai-plugin",
         "shared-vs-brand"
       ],
-      "starter": false
+      "starter": false,
+      "variants": [
+        [
+          "Аудит делал своим AI-плагином",
+          "Нашёл хардкод цветов и отвязанные инстансы",
+          "Плюс дубли компонентов и нехватку состояний"
+        ]
+      ]
     },
     {
       "id": "ai-plugin",
@@ -150,7 +196,13 @@
       "related": [
         "audit"
       ],
-      "starter": true
+      "starter": true,
+      "variants": [
+        [
+          "Это мой плагин для аудита библиотеки",
+          "Он ищет хардкод цветов и отвязанные инстансы"
+        ]
+      ]
     },
     {
       "id": "shared-vs-brand",
@@ -167,7 +219,13 @@
         "architecture",
         "brand-mode"
       ],
-      "starter": false
+      "starter": false,
+      "variants": [
+        [
+          "Отделил общее от того, что меняется по бренду",
+          "По бренду меняются цвет, шрифт и скругления"
+        ]
+      ]
     },
     {
       "id": "architecture",
@@ -175,7 +233,8 @@
         "Какие три слоя библиотек?",
         "Как устроена архитектура?",
         "Как связаны библиотеки?",
-        "Из каких библиотек состоит система?"
+        "Из каких библиотек состоит система?",
+        "Из каких слоёв система?"
       ],
       "answer": [
         "Foundation → Core бренда → Product",
@@ -185,7 +244,13 @@
         "foundation",
         "tokens"
       ],
-      "starter": true
+      "starter": true,
+      "variants": [
+        [
+          "Три слоя: Foundation, Core бренда и Product",
+          "Слой берёт только из того, что ниже"
+        ]
+      ]
     },
     {
       "id": "foundation",
@@ -202,7 +267,13 @@
         "architecture",
         "tokens"
       ],
-      "starter": false
+      "starter": false,
+      "variants": [
+        [
+          "Foundation — база, общая для всех брендов",
+          "Там цвета, токены, компоненты и документация"
+        ]
+      ]
     },
     {
       "id": "tokens",
@@ -219,7 +290,13 @@
         "brand-mode",
         "color-layers"
       ],
-      "starter": false
+      "starter": false,
+      "variants": [
+        [
+          "7 коллекций, 348 переменных",
+          "Цвет идёт Primitive → Semantic → Component"
+        ]
+      ]
     },
     {
       "id": "brand-mode",
@@ -237,7 +314,13 @@
         "tokens",
         "new-brand"
       ],
-      "starter": false
+      "starter": false,
+      "variants": [
+        [
+          "Бренд — это режим переменных",
+          "Он меняет цвет, шрифт и скругления"
+        ]
+      ]
     },
     {
       "id": "color-layers",
@@ -252,7 +335,12 @@
       "related": [
         "tokens"
       ],
-      "starter": false
+      "starter": false,
+      "variants": [
+        [
+          "Три слоя цвета: Primitive, Semantic, Component"
+        ]
+      ]
     },
     {
       "id": "code-link",
@@ -270,7 +358,13 @@
         "storybook",
         "process"
       ],
-      "starter": false
+      "starter": false,
+      "variants": [
+        [
+          "Раньше Figma обгоняла Storybook",
+          "Теперь Ready for dev — только если компонент в коде"
+        ]
+      ]
     },
     {
       "id": "storybook",
@@ -285,7 +379,12 @@
       "related": [
         "code-link"
       ],
-      "starter": false
+      "starter": false,
+      "variants": [
+        [
+          "Готовый компонент ссылается на Figma и Storybook"
+        ]
+      ]
     },
     {
       "id": "process",
@@ -302,7 +401,13 @@
         "adoption",
         "code-link"
       ],
-      "starter": false
+      "starter": false,
+      "variants": [
+        [
+          "Creation Guide ведёт от Preview до Ready for dev",
+          "Для БА и ПМ — Task Preview в одном месте"
+        ]
+      ]
     },
     {
       "id": "adoption",
@@ -318,7 +423,13 @@
         "process",
         "result"
       ],
-      "starter": false
+      "starter": false,
+      "variants": [
+        [
+          "Перевести всех разом не вышло",
+          "Поэтому шли продукт за продуктом"
+        ]
+      ]
     },
     {
       "id": "result",
@@ -335,7 +446,13 @@
         "new-brand",
         "launch-kit"
       ],
-      "starter": false
+      "starter": false,
+      "variants": [
+        [
+          "Новый бренд запускаем за 1–2 недели",
+          "Макеты делаем вдвое быстрее"
+        ]
+      ]
     },
     {
       "id": "new-brand",
@@ -352,7 +469,13 @@
         "brand-mode",
         "launch-kit"
       ],
-      "starter": false
+      "starter": false,
+      "variants": [
+        [
+          "Бренд запускается за 1–2 недели",
+          "И без новой разработки"
+        ]
+      ]
     },
     {
       "id": "launch-kit",
@@ -368,7 +491,12 @@
         "new-brand",
         "result"
       ],
-      "starter": false
+      "starter": false,
+      "variants": [
+        [
+          "Launch Kit — готовые шаблоны для старта продукта"
+        ]
+      ]
     },
     {
       "id": "speed",
@@ -382,6 +510,56 @@
       ],
       "related": [
         "result"
+      ],
+      "starter": false,
+      "variants": [
+        [
+          "Макеты стали вдвое быстрее, правок на ревью меньше"
+        ]
+      ]
+    },
+    {
+      "id": "tools",
+      "draft": true,
+      "questions": [
+        "В чём делали систему?",
+        "Какие инструменты использовали?",
+        "Где живут компоненты?"
+      ],
+      "answer": [
+        "Библиотеки — в Figma, компоненты кода — в Storybook"
+      ],
+      "variants": [
+        [
+          "Figma для библиотек, Storybook для кода"
+        ]
+      ],
+      "related": [
+        "code-link",
+        "architecture"
+      ],
+      "starter": false
+    },
+    {
+      "id": "hardest",
+      "questions": [
+        "Что было самым сложным?",
+        "Какая была главная трудность?",
+        "Что далось тяжелее всего?"
+      ],
+      "answer": [
+        "Сложнее всего — перевести команды на систему",
+        "Всех сразу не вышло — пошли по продукту"
+      ],
+      "variants": [
+        [
+          "Самое трудное — внедрение, а не сами компоненты",
+          "Пошли продукт за продуктом"
+        ]
+      ],
+      "related": [
+        "adoption",
+        "process"
       ],
       "starter": false
     }

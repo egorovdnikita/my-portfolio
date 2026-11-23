@@ -1,7 +1,8 @@
 // Логика бота без зависимостей от Cloudflare: проверки, запретные темы, выбор ответа по близости.
 // Бот ничего не генерирует — только отдаёт готовые ответы из базы.
 
-export type Entry = { id: string; questions: string[]; answer: string[]; related: string[]; starter: boolean };
+/** answer и variants — разные формулировки одного ответа, бот берёт случайную; draft — додумано, ждёт проверки Никиты */
+export type Entry = { id: string; questions: string[]; answer: string[]; variants?: string[][]; related: string[]; starter: boolean; draft?: boolean };
 export type Kb = { caseId: string; entries: Entry[] };
 /** Векторы формулировок: для каждой записи — по вектору на вопрос, в том же порядке */
 export type KbVectors = Record<string, number[][]>;
@@ -12,16 +13,23 @@ export type Reply = { status: Status; messages: string[]; suggestions: Suggestio
 
 export const MAX_LEN = 200;
 export const ANSWER_AT = 0.75;
-export const CLARIFY_AT = 0.6;
+/** Ниже — «спросите лично»: на посторонние вопросы (учёба, хобби) близость доходит до 0,68 */
+export const CLARIFY_AT = 0.7;
 /** Похожесть на пример запретной темы, с которой вопрос уходит в «спросите лично» */
 export const FORBIDDEN_AT = 0.72;
 
 export const TEXT = {
-  personal: 'Это лучше спросить меня лично',
-  clarify: 'Возможно, вы про это?',
-  limited: 'Чат сейчас недоступен',
-  blocked: 'Не понял вопрос — сформулируйте иначе',
+  personal: ['Это лучше спросить меня лично', 'Тут лучше напишите мне — отвечу подробно', 'Об этом расскажу лично'],
+  /** Вступление, когда вопрос близок к записи, но не уверенно: бот отвечает по ближайшей теме */
+  clarify: ['Если я правильно понял:', 'Расскажу, что знаю об этом:', 'Близко к этому могу сказать так:'],
+  limited: ['Чат сейчас недоступен'],
+  blocked: ['Не понял вопрос — сформулируйте иначе', 'Сформулируйте вопрос чуть иначе?'],
 };
+
+export type Rng = () => number;
+const pick = <T>(list: T[], rng: Rng): T => list[Math.floor(rng() * list.length) % list.length];
+/** Одна из формулировок ответа записи */
+export const answerText = (e: Entry, rng: Rng = Math.random): string[] => pick([e.answer, ...(e.variants ?? [])], rng);
 
 /** Убирает HTML и управляющие символы, схлопывает пробелы */
 export function clean(text: string): string {
@@ -104,26 +112,21 @@ export function starters(kb: Kb): Suggestion[] {
   return kb.entries.filter((e) => e.starter).slice(0, 3).map(suggestion);
 }
 
-export function answerOf(kb: Kb, entry: Entry, asked: string[], score?: number): Reply {
-  return { status: 'answer', messages: entry.answer, suggestions: relatedOf(kb, entry, [...asked, entry.id]), entryId: entry.id, score };
+export function answerOf(kb: Kb, entry: Entry, asked: string[], score?: number, rng: Rng = Math.random): Reply {
+  return { status: 'answer', messages: answerText(entry, rng), suggestions: relatedOf(kb, entry, [...asked, entry.id]), entryId: entry.id, score };
 }
 
-export const personal = (score?: number): Reply => ({ status: 'personal', messages: [TEXT.personal], suggestions: [], score });
-export const limited = (): Reply => ({ status: 'limited', messages: [TEXT.limited], suggestions: [] });
-export const blocked = (): Reply => ({ status: 'blocked', messages: [TEXT.blocked], suggestions: [] });
+export const personal = (score?: number, rng: Rng = Math.random): Reply => ({ status: 'personal', messages: [pick(TEXT.personal, rng)], suggestions: [], score });
+export const limited = (): Reply => ({ status: 'limited', messages: [TEXT.limited[0]], suggestions: [] });
+export const blocked = (rng: Rng = Math.random): Reply => ({ status: 'blocked', messages: [pick(TEXT.blocked, rng)], suggestions: [] });
 
-/** Решение по близости: ответ, уточнение или «спросите лично» */
-export function decide(kb: Kb, ranked: { id: string; score: number }[], asked: string[]): Reply {
+/** Решение по близости: уверенно — ответ; близко — ответ по ближайшей теме со вступлением; иначе — «спросите лично» */
+export function decide(kb: Kb, ranked: { id: string; score: number }[], asked: string[], rng: Rng = Math.random): Reply {
   const best = ranked[0];
-  if (!best || best.score < CLARIFY_AT) return personal(best?.score);
+  if (!best || best.score < CLARIFY_AT) return personal(best?.score, rng);
   const entry = kb.entries.find((e) => e.id === best.id)!;
-  if (best.score >= ANSWER_AT) return answerOf(kb, entry, asked, best.score);
-  const options = ranked
-    .filter((r) => r.score >= CLARIFY_AT && !asked.includes(r.id))
-    .slice(0, 2)
-    .map((r) => suggestion(kb.entries.find((e) => e.id === r.id)!));
-  if (!options.length) return personal(best.score);
-  return { status: 'clarify', messages: [TEXT.clarify], suggestions: options, entryId: best.id, score: best.score };
+  if (best.score >= ANSWER_AT) return answerOf(kb, entry, asked, best.score, rng);
+  return { status: 'clarify', messages: [pick(TEXT.clarify, rng), ...answerText(entry, rng)], suggestions: [], entryId: best.id, score: best.score };
 }
 
 /** Телефоны, e-mail и ссылки — в [скрыто] перед записью в журнал */

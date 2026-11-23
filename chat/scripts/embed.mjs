@@ -34,6 +34,10 @@ for (const file of ['cashier', 'design-system']) {
   for (const entry of kb.entries) cases[kb.caseId][entry.id] = (await embed(entry.questions)).map(round);
   console.log(`${file}: ${kb.entries.length} записей`);
 }
+const common = {};
+const commonKb = JSON.parse(readFileSync(new URL('../kb/common.json', import.meta.url), 'utf8'));
+for (const entry of commonKb.entries) common[entry.id] = (await embed(entry.questions)).map(round);
+console.log(`common: ${commonKb.entries.length} записей`);
 const forbidden = (await embed(FORBIDDEN_EXAMPLES)).map(round);
-writeFileSync(new URL('../kb/vectors.json', import.meta.url), JSON.stringify({ model: MODEL, cases, forbidden }));
+writeFileSync(new URL('../kb/vectors.json', import.meta.url), JSON.stringify({ model: MODEL, cases, common, forbidden }));
 console.log('kb/vectors.json обновлён');

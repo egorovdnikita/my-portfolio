@@ -2,6 +2,7 @@
 // Модель bge-m3 только превращает вопрос в вектор — текст ответа она не пишет.
 import cashierKb from '../kb/cashier.json';
 import dsKb from '../kb/design-system.json';
+import commonKb from '../kb/common.json';
 import vectors from '../kb/vectors.json';
 import {
   type Kb,
@@ -30,10 +31,12 @@ interface Env {
   TG_CHAT_ID?: string;
 }
 
-type Vectors = { model: string; cases: Record<string, KbVectors>; forbidden: number[][] };
+type Vectors = { model: string; cases: Record<string, KbVectors>; common: KbVectors; forbidden: number[][] };
 
 const MODEL = '@cf/baai/bge-m3';
-const KBS: Record<string, Kb> = { [cashierKb.caseId]: cashierKb, [dsKb.caseId]: dsKb };
+// К базе кейса добавляются общие записи: привет, спасибо, «ты бот?» и т. п.
+const withCommon = (kb: Kb): Kb => ({ caseId: kb.caseId, entries: [...kb.entries, ...(commonKb as Kb).entries] });
+const KBS: Record<string, Kb> = { [cashierKb.caseId]: withCommon(cashierKb as Kb), [dsKb.caseId]: withCommon(dsKb as Kb) };
 const VECTORS = vectors as Vectors;
 
 const PER_MINUTE = 10;
@@ -110,7 +113,7 @@ async function ask(env: Env, body: { caseId?: unknown; text?: unknown; entryId?:
   // 3–5. Вектор вопроса: сначала запретные примеры, затем база кейса
   const vector = await embed(env, text);
   if (VECTORS.forbidden.some((v) => cosine(vector, v) >= FORBIDDEN_AT)) return { reply: personal(), caseId: kb.caseId, question: text };
-  const reply = decide(kb, rank(vector, VECTORS.cases[kb.caseId]), asked);
+  const reply = decide(kb, rank(vector, { ...VECTORS.cases[kb.caseId], ...VECTORS.common }), asked);
   return { reply, caseId: kb.caseId, question: text };
 }
 
