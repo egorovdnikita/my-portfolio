@@ -47,7 +47,7 @@ function dayTitle(daysAgo: number, today: Date) {
 
 const emojiAssets: Record<string, string> = { '🫡': 'salute', '🤖': 'robot', '👀': 'eyes', '🤝': 'handshake' };
 function AnimatedEmoji({ emoji }: { emoji: string }) {
-  return <img className="animated-emoji" src={`${import.meta.env.BASE_URL}assets/emoji-${emojiAssets[emoji]}.webp`} alt={emoji} width={20} height={20} />;
+  return <img className="animated-emoji" src={`${import.meta.env.BASE_URL}assets/emoji-${emojiAssets[emoji]}-sm.webp`} alt={emoji} width={20} height={20} loading="lazy" decoding="async" />;
 }
 
 /** Реакция на сообщение: синий кружок с эмодзи и два «пузырька мысли», как в макете. */
