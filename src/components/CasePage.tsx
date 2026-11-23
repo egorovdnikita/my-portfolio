@@ -113,12 +113,7 @@ function Section({ section }: { section: CaseSection }) {
     <div className="case-section">
       <span className="case-section-label">{section.label}</span>
       <h2 className="case-question">{section.question}</h2>
-      {media && section.mediaGap === 12 ? (
-        <>
-          {media}
-          {answers}
-        </>
-      ) : media ? (
+      {media ? (
         <div className="case-content">
           {media}
           {answers}
