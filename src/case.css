@@ -413,3 +413,111 @@ html.is-locked body { background: var(--bg-page-case); }
 @media (max-width: 767px) {
   .case-group { padding-left: 16px; padding-right: 16px; }
 }
+
+/* ---------- Вопросы к кейсу: та же переписка, подсказки-чипы и поле как кнопка «Написать» ---------- */
+
+.case-chat { position: relative; }
+.case-chat-turn { display: flex; flex-direction: column; gap: 12px; }
+.case-chat .case-answers a { color: var(--accent-base); text-decoration: underline; text-underline-position: from-font; }
+.case-chat .case-answers li { animation: case-chat-in 0.25s cubic-bezier(0.22, 1, 0.36, 1); }
+@keyframes case-chat-in { from { opacity: 0; transform: translateY(6px) scale(0.98); } }
+
+/* Индикатор печати: серый пузырь с тремя точками */
+.case-chat-typing {
+  display: flex;
+  gap: 4px;
+  width: fit-content;
+  padding: 19px 16px;
+  border-radius: 20px;
+  background: var(--bg-bubble);
+}
+.case-chat-typing i {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--text-muted);
+  animation: case-chat-dot 1.2s ease-in-out infinite;
+}
+.case-chat-typing i:nth-child(2) { animation-delay: 0.15s; }
+.case-chat-typing i:nth-child(3) { animation-delay: 0.3s; }
+@keyframes case-chat-dot { 0%, 60%, 100% { opacity: 0.4; transform: none; } 30% { opacity: 1; transform: translateY(-3px); } }
+
+/* Подсказки — справа, как будущие вопросы */
+.case-chat-chips { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+.case-chat-chip {
+  max-width: 100%;
+  padding: 10px 16px;
+  border: 1px solid var(--accent-base);
+  border-radius: 20px;
+  background: none;
+  color: var(--accent-base);
+  font: inherit;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 22px;
+  letter-spacing: -0.04em;
+  text-align: right;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+@media (hover: hover) {
+  .case-chat-chip:hover { background: color-mix(in srgb, var(--accent-base) 12%, transparent); }
+}
+
+/* Поле прилипает к низу панели, пока раздел «Вопросы» в зоне видимости */
+.case-chat-dock {
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 12px -24px -24px;
+  padding: 12px 24px 16px;
+  background: var(--bg-panel);
+}
+.case-chat-form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 56px;
+  padding: 0 8px 0 20px;
+  border-radius: 42px;
+  background: var(--bg-bubble);
+  box-shadow: inset 0 0 0 1.5px var(--border-nav);
+}
+.case-chat-form:focus-within { box-shadow: inset 0 0 0 1.5px var(--accent-base); }
+.case-chat-input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: none;
+  background: none;
+  color: var(--text-primary);
+  font: inherit;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 22px;
+}
+.case-chat-input::placeholder { color: var(--text-muted); }
+.case-chat-send {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--accent-base);
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.case-chat-send:disabled { opacity: 0.4; cursor: default; }
+.case-chat-note { margin: 0; color: var(--text-muted); font-size: 13px; line-height: 16px; text-align: center; }
+@media (max-width: 767px) {
+  .case-chat-dock { margin-left: -16px; margin-right: -16px; padding-left: 16px; padding-right: 16px; padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .case-chat .case-answers li, .case-chat-typing i { animation: none; }
+}

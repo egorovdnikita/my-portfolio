@@ -2,6 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { type CaseMedia, type CaseSection, type CaseStudy } from '../cases';
 import { icons } from '../content';
 import { Icon } from './Cards';
+import { CaseChat } from './CaseChat';
 
 type Props = {
   study: CaseStudy;
@@ -90,6 +91,7 @@ export function CasePage({ study, closing, onClose }: Props) {
               {study.sections.map((s) => (
                 <Section key={s.label} section={s} />
               ))}
+              <CaseChat key={study.id} caseId={study.id} />
             </section>
           </article>
         </div>
