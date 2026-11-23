@@ -9,8 +9,7 @@ binding = "AI"
 [[d1_databases]]
 binding = "DB"
 database_name = "case_chat_log"
-# Заполнить после `npx wrangler d1 create case_chat_log`
-database_id = "00000000-0000-0000-0000-000000000000"
+database_id = "f261848b-d30f-4479-9868-1abeab392d1b"
 
 # Понедельник, 10:00 по Москве — сводка в Telegram и очистка журнала старше 90 дней
 [triggers]
