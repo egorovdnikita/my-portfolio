@@ -28,6 +28,11 @@ export function CaseChat({ caseId }: { caseId: string }) {
   const asked = useRef<string[]>([]);
   const endRef = useRef<HTMLDivElement>(null);
 
+  // Прогрев: при открытии кейса будим воркер и открываем соединение, чтобы первый ответ пришёл быстро
+  useEffect(() => {
+    fetch(`${API}/starters?caseId=${encodeURIComponent(caseId)}`).catch(() => {});
+  }, [caseId]);
+
   useEffect(() => {
     // Чат — последний раздел кейса: прокручиваем панель до конца, чтобы новое не пряталось под полем
     const scroller = endRef.current?.closest('.case-scroll');
