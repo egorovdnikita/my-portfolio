@@ -64,8 +64,8 @@ html.is-locked body { background: var(--bg-page-case); }
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 92px; /* крестик 48 в 22px от краёв обложки, как в макете */
-  margin-bottom: -92px;
+  height: 80px; /* крестик 48 в 16px от краёв: сверху и снизу по 16, заголовок по центру крестика */
+  margin-bottom: -80px;
   padding: 0 92px;
   pointer-events: none;
   isolation: isolate;
