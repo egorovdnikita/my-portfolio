@@ -1,6 +1,6 @@
 # my-portfolio
 
-Портфолио в виде холста: карточки со связями, перемещение и масштаб, режим ленты.
+Портфолио продуктового дизайнера в виде переписки в iMessage: главная — чат с рассказом об опыте, карточками проектов и календарём коммитов на GitHub. Кейсы открываются панелью справа и тоже построены как переписка: вопрос — ответы, картинки, галереи и сравнение «до/после» с перетаскиваемым разделителем.
 
 ## Запуск
 
@@ -9,16 +9,27 @@ npm install
 npm run dev
 ```
 
-## Управление холстом
+## Где что лежит
 
-- Рука (H) — двигать холст, стрелка (V) — перетаскивать карточки, пробел — временно рука.
-- Колесо / трекпад — прокрутка, Ctrl/⌘ + колесо или щипок — масштаб, ⌘ + / ⌘ − / ⌘ 0.
-- ↻ возвращает карточки и камеру на места.
+- `src/content.ts` — тексты и ссылки главной: опыт, инструменты, карточки проектов.
+- `src/cases.ts` — кейсы: заголовок, мета, секции с вопросами, ответами и картинками.
+- `src/App.tsx` — чат главной, `src/components/CasePage.tsx` — панель кейса.
+- `public/assets` — картинки и анимации.
 
-Тексты и ссылки главной — в `src/content.ts`, тексты кейсов — в `src/cases.ts`. Шрифт Inter (SIL OFL 1.1) подключается из пакета `@fontsource/inter`, только начертания 500 и 600 для латиницы и кириллицы; Iosevka Bold — только для ярлыка NDA.
+Шрифт Inter (SIL OFL 1.1) подключается из пакета `@fontsource/inter`, только начертания 500 и 600 для латиницы и кириллицы.
 
-Публикация: GitHub Actions собирает сайт и выкладывает на GitHub Pages при пуше в `main`. Основной адрес — https://egorovdnikita.ru/.
+## Календарь коммитов
 
-Анимированные emoji — [Telegram Animated Emojis](https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis), из пака [Animated TeleEmojis](https://telegram-emojis.vercel.app/). Права на изображения принадлежат Telegram. Файлы хранятся локально в `public/assets/emoji-*.webp`.
+`npm run contributions` забирает вклады с GitHub за последние полгода в `src/data/contributions.json`. При публикации скрипт запускается сам; если GitHub недоступен, остаются прежние данные.
 
-Аватар — клип Thinking для 18 маскотов Agent Pals из Agent Pulse. Готовые WebP хранятся в `public/assets/mascots`; исходный платный Lottie-пак не включён. При обновлении страницы выбирается маскот, отличный от предыдущего в этой вкладке.
+## Публикация
+
+GitHub Actions собирает сайт и выкладывает на GitHub Pages при пуше в `main`. Адрес — https://egorovdnikita.ru/.
+
+## Эмодзи
+
+Анимированные эмодзи — [Telegram Animated Emojis](https://github.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis) из пака [Animated TeleEmojis](https://telegram-emojis.vercel.app/). Права на изображения принадлежат Telegram. Файлы хранятся локально в `public/assets/emoji-*.webp`, уменьшенные под размер на странице.
+
+## presence
+
+`presence/` — Cloudflare Worker для показа посетителей сайта в реальном времени. Сейчас сайт его не использует.
