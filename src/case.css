@@ -310,6 +310,21 @@ html.is-locked body { background: var(--bg-page-case); }
     animation: case-sheet-in 0.45s cubic-bezier(0.22, 1, 0.36, 1);
   }
   .case.is-closing { animation: case-sheet-out 0.2s ease-in forwards; }
+  /* Под листом — тот же цвет панели на высоту экрана: когда открывается клавиатура и iPhone сдвигает страницу,
+     под листом не проступает чёрный фон страницы и не видно границы цветов */
+  .case::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    height: 100vh;
+    background: var(--bg-panel);
+    pointer-events: none;
+  }
+  /* Пока набирают вопрос, фон страницы — цвета панели: его видно вокруг клавиатуры при прокрутке */
+  html.is-locked:has(.case-chat-input:focus),
+  html.is-locked:has(.case-chat-input:focus) body { background: var(--bg-panel); }
   /* Лист: поле вопроса лежит поверх низа карточки, переписка уходит под него и растворяется — как под «Написать» на главной */
   .case-card {
     border-radius: 32px 32px 0 0;
@@ -332,7 +347,8 @@ html.is-locked body { background: var(--bg-page-case); }
     background: linear-gradient(to bottom, color-mix(in srgb, var(--bg-panel) 0%, transparent), var(--bg-panel) 55%);
     pointer-events: none;
   }
-  .case-scroll { padding-bottom: calc(88px + env(safe-area-inset-bottom)); }
+  /* Поле 64 + 16 снизу и 40 градиента над ним; ещё 24 даёт отступ группы — последнее сообщение встаёт ровно над затемнением */
+  .case-scroll { padding-bottom: calc(96px + env(safe-area-inset-bottom)); }
   .has-case .chat-head,
   .has-case .chat,
   .has-case .compose { opacity: 1; }
