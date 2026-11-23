@@ -29,7 +29,10 @@ html.is-locked body { background: var(--bg-page-case); }
   bottom: 0;
   z-index: 30;
   width: min(616px, calc(50% + 8px));
-  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* под карточкой — поле вопроса, как в макете: отступ 8, снизу 20 */
+  padding: 8px 8px 20px;
   animation: case-in 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .case.is-closing { animation: case-out 0.2s ease-in forwards; }
@@ -39,7 +42,8 @@ html.is-locked body { background: var(--bg-page-case); }
 
 .case-card {
   position: relative;
-  height: 100%;
+  flex: 1;
+  min-height: 0;
   overflow: hidden;
   border-radius: 32px;
   background: var(--bg-panel);
@@ -306,10 +310,12 @@ html.is-locked body { background: var(--bg-page-case); }
     animation: case-sheet-in 0.45s cubic-bezier(0.22, 1, 0.36, 1);
   }
   .case.is-closing { animation: case-sheet-out 0.2s ease-in forwards; }
+  /* Лист: карточка и поле вопроса на общей подложке панели, поле — та же плашка, что на десктопе */
+  .case { gap: 0; border-radius: 32px 32px 0 0; background: var(--bg-panel); }
   .case-card {
     border-radius: 32px 32px 0 0;
   }
-  .case-scroll { padding-bottom: env(safe-area-inset-bottom); }
+  .case-dock { padding: 8px 16px calc(16px + env(safe-area-inset-bottom)); }
   .has-case .chat-head,
   .has-case .chat,
   .has-case .compose { opacity: 1; }
@@ -464,29 +470,19 @@ html.is-locked body { background: var(--bg-page-case); }
   .case-chat-chip:hover { background: color-mix(in srgb, var(--accent-base) 12%, transparent); }
 }
 
-/* Поле прилипает к низу панели, пока раздел «Вопросы» в зоне видимости */
-.case-chat-dock {
-  position: sticky;
-  bottom: 0;
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin: 12px -24px -24px;
-  padding: 12px 24px 16px;
-  background: var(--bg-panel);
-}
+/* Поле ввода — отдельная плашка 64px под карточкой кейса, в 8px от неё и в 20px от низа экрана */
+.case-dock:empty { display: none; }
 .case-chat-form {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 8px;
-  height: 56px;
-  padding: 0 8px 0 20px;
-  border-radius: 42px;
-  background: var(--bg-bubble);
-  box-shadow: inset 0 0 0 1.5px var(--border-nav);
+  height: 64px;
+  padding: 0 8px 0 24px;
+  border-radius: 999px;
+  background: var(--bg-panel);
+  box-shadow: 0 0 0 1px var(--border-nav);
 }
-.case-chat-form:focus-within { box-shadow: inset 0 0 0 1.5px var(--accent-base); }
 .case-chat-input {
   flex: 1;
   min-width: 0;
@@ -498,25 +494,25 @@ html.is-locked body { background: var(--bg-page-case); }
   font-size: 16px;
   font-weight: 500;
   line-height: 22px;
+  letter-spacing: -0.04em;
 }
 .case-chat-input::placeholder { color: var(--text-muted); }
 .case-chat-send {
-  display: flex;
+  display: block;
   flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 48px;
+  height: 48px;
+  padding: 0;
   border: 0;
   border-radius: 999px;
-  background: var(--accent-base);
+  background: none;
   cursor: pointer;
-  transition: opacity 0.15s;
+  transition: opacity 0.15s, filter 0.15s;
 }
-.case-chat-send:disabled { opacity: 0.4; cursor: default; }
-.case-chat-note { margin: 0; color: var(--text-muted); font-size: 13px; line-height: 16px; text-align: center; }
-@media (max-width: 767px) {
-  .case-chat-dock { margin-left: -16px; margin-right: -16px; padding-left: 16px; padding-right: 16px; padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
+.case-chat-send img { display: block; }
+.case-chat-send:disabled { cursor: default; }
+@media (hover: hover) {
+  .case-chat-send:not(:disabled):hover { filter: brightness(1.1); }
 }
 @media (prefers-reduced-motion: reduce) {
   .case-chat .case-answers li, .case-chat-typing i { animation: none; }

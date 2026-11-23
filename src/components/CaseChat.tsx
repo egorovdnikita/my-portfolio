@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import cashierKb from '../../chat/kb/cashier.json';
 import dsKb from '../../chat/kb/design-system.json';
-import { icons, profile } from '../content';
+import { profile } from '../content';
 
 // Вопросы к кейсу: ответы — готовые тексты из базы chat/kb, бот ничего не генерирует.
 const API = 'https://case-chat.promminer-pool.workers.dev';
 const MAX_LEN = 200;
 const PAUSE = 400;
+const SEND_ICON = `${import.meta.env.BASE_URL}assets/chat-send-up.svg`;
 
 type Suggestion = { id: string; text: string };
 type Status = 'answer' | 'clarify' | 'personal' | 'blocked' | 'limited';
@@ -20,7 +22,8 @@ const STARTERS: Record<string, Suggestion[]> = Object.fromEntries(
 
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-export function CaseChat({ caseId }: { caseId: string }) {
+/** Переписка — в конце кейса, поле ввода — отдельной плашкой под карточкой (dock), как в макете */
+export function CaseChat({ caseId, dock }: { caseId: string; dock: HTMLElement | null }) {
   const [turns, setTurns] = useState<Turn[]>([]);
   const [chips, setChips] = useState<Suggestion[]>(STARTERS[caseId] ?? []);
   const [text, setText] = useState('');
@@ -131,27 +134,24 @@ export function CaseChat({ caseId }: { caseId: string }) {
       )}
       <div ref={endRef} />
 
-      <div className="case-chat-dock">
-        <form className="case-chat-form" onSubmit={onSubmit}>
-          <input
-            className="case-chat-input"
-            value={text}
-            onChange={(e) => setText(e.target.value.slice(0, MAX_LEN))}
-            placeholder="Спросите про этот кейс"
-            maxLength={MAX_LEN}
-            enterKeyHint="send"
-            aria-label="Вопрос про кейс"
-          />
-          <button type="submit" className="case-chat-send" disabled={busy || !text.trim()} aria-label="Отправить">
-            <img src={icons.send} alt="" width={20} height={20} draggable={false} />
-          </button>
-        </form>
-        <p className="case-chat-note">
-          Отвечает AI по моим текстам. Если не знает — напишите мне.
-          <br />
-          Вопросы сохраняются анонимно, чтобы я улучшал ответы.
-        </p>
-      </div>
+      {dock &&
+        createPortal(
+          <form className="case-chat-form" onSubmit={onSubmit}>
+            <input
+              className="case-chat-input"
+              value={text}
+              onChange={(e) => setText(e.target.value.slice(0, MAX_LEN))}
+              placeholder="Спросите про этот кейс"
+              maxLength={MAX_LEN}
+              enterKeyHint="send"
+              aria-label="Вопрос про кейс"
+            />
+            <button type="submit" className="case-chat-send" disabled={busy || !text.trim()} aria-label="Отправить">
+              <img src={SEND_ICON} alt="" width={48} height={48} draggable={false} />
+            </button>
+          </form>,
+          dock,
+        )}
     </div>
   );
 }

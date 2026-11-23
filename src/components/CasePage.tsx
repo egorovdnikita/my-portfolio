@@ -19,6 +19,7 @@ export function CasePage({ study, closing, onClose }: Props) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const barRef = useRef<HTMLDivElement>(null);
+  const [dock, setDock] = useState<HTMLDivElement | null>(null);
 
   // Новый кейс — с начала
   useEffect(() => {
@@ -91,11 +92,12 @@ export function CasePage({ study, closing, onClose }: Props) {
               {study.sections.map((s) => (
                 <Section key={s.label} section={s} />
               ))}
-              <CaseChat key={study.id} caseId={study.id} />
+              <CaseChat key={study.id} caseId={study.id} dock={dock} />
             </section>
           </article>
         </div>
       </div>
+      <div ref={setDock} className="case-dock" />
     </aside>
     </>
   );
