@@ -310,12 +310,29 @@ html.is-locked body { background: var(--bg-page-case); }
     animation: case-sheet-in 0.45s cubic-bezier(0.22, 1, 0.36, 1);
   }
   .case.is-closing { animation: case-sheet-out 0.2s ease-in forwards; }
-  /* Лист: карточка и поле вопроса на общей подложке панели, поле — та же плашка, что на десктопе */
-  .case { gap: 0; border-radius: 32px 32px 0 0; background: var(--bg-panel); }
+  /* Лист: поле вопроса лежит поверх низа карточки, переписка уходит под него и растворяется — как под «Написать» на главной */
   .case-card {
     border-radius: 32px 32px 0 0;
   }
-  .case-dock { padding: 8px 16px calc(16px + env(safe-area-inset-bottom)); }
+  .case-dock {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 4;
+    padding: 0 16px calc(16px + env(safe-area-inset-bottom));
+    isolation: isolate;
+  }
+  /* Затемнение под полем: переписка темнеет к низу, заходя под поле */
+  .case-dock::before {
+    content: '';
+    position: absolute;
+    inset: -40px 0 0;
+    z-index: -1;
+    background: linear-gradient(to bottom, color-mix(in srgb, var(--bg-panel) 0%, transparent), var(--bg-panel) 55%);
+    pointer-events: none;
+  }
+  .case-scroll { padding-bottom: calc(88px + env(safe-area-inset-bottom)); }
   .has-case .chat-head,
   .has-case .chat,
   .has-case .compose { opacity: 1; }
@@ -516,4 +533,25 @@ html.is-locked body { background: var(--bg-page-case); }
 }
 @media (prefers-reduced-motion: reduce) {
   .case-chat .case-answers li, .case-chat-typing i { animation: none; }
+}
+
+/* Телефон: сообщения кейса проявляются из-под поля вопроса так же, как сообщения главной из-под «Написать» */
+@media (max-width: 767px) {
+  @supports (animation-timeline: view()) {
+    .case-section-label,
+    .case-question,
+    .case-answers li,
+    .case-media,
+    .case-gallery,
+    .case-compare,
+    .case-chat-typing,
+    .case-chat-chip {
+      animation: edge-in linear backwards;
+      animation-timeline: view(block 0px calc(80px + env(safe-area-inset-bottom)));
+      animation-range: entry 0% entry calc(100% + 40px);
+    }
+    .case-media,
+    .case-gallery,
+    .case-compare { animation-name: edge-in-fade; }
+  }
 }

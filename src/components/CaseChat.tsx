@@ -1,7 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import cashierKb from '../../chat/kb/cashier.json';
-import dsKb from '../../chat/kb/design-system.json';
 import { profile } from '../content';
 
 // Вопросы к кейсу: ответы — готовые тексты из базы chat/kb, бот ничего не генерирует.
@@ -13,19 +11,22 @@ const SEND_ICON = `${import.meta.env.BASE_URL}assets/chat-send-up.svg`;
 type Suggestion = { id: string; text: string };
 type Status = 'answer' | 'clarify' | 'personal' | 'blocked' | 'limited';
 type Reply = { status: Status; messages: string[]; suggestions: Suggestion[] };
-type Turn = { question: string; messages: string[]; telegram: boolean; typing: boolean };
+type Turn = {
+  question: string;
+  messages: string[];
+  telegram: boolean;
+  typing: boolean;
+};
 
-// Стартовые подсказки — из статики, чтобы появлялись без запроса
-const STARTERS: Record<string, Suggestion[]> = Object.fromEntries(
-  [cashierKb, dsKb].map((kb) => [kb.caseId, kb.entries.filter((e) => e.starter).slice(0, 3).map((e) => ({ id: e.id, text: e.questions[0] }))]),
-);
+// Кейсы, для которых есть база ответов (chat/kb)
+const CASES = ['1win-product', '1win'];
 
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 /** Переписка — в конце кейса, поле ввода — отдельной плашкой под карточкой (dock), как в макете */
 export function CaseChat({ caseId, dock }: { caseId: string; dock: HTMLElement | null }) {
   const [turns, setTurns] = useState<Turn[]>([]);
-  const [chips, setChips] = useState<Suggestion[]>(STARTERS[caseId] ?? []);
+  const [chips, setChips] = useState<Suggestion[]>([]);
   const [text, setText] = useState('');
   const [busy, setBusy] = useState(false);
   const asked = useRef<string[]>([]);
@@ -42,7 +43,7 @@ export function CaseChat({ caseId, dock }: { caseId: string; dock: HTMLElement |
     if (turns.length && scroller) scroller.scrollTo({ top: scroller.scrollHeight, behavior: 'smooth' });
   }, [turns, chips]);
 
-  if (!STARTERS[caseId]) return null;
+  if (!CASES.includes(caseId)) return null;
 
   const patchLast = (fn: (t: Turn) => Turn) => setTurns((list) => list.map((t, i) => (i === list.length - 1 ? fn(t) : t)));
 
@@ -65,7 +66,11 @@ export function CaseChat({ caseId, dock }: { caseId: string; dock: HTMLElement |
       });
       reply = await res.json();
     } catch {
-      reply = { status: 'limited', messages: ['Чат сейчас недоступен'], suggestions: [] };
+      reply = {
+        status: 'limited',
+        messages: ['Чат сейчас недоступен'],
+        suggestions: [],
+      };
     }
     await wait(Math.max(0, 600 - (Date.now() - started)));
 
@@ -73,14 +78,19 @@ export function CaseChat({ caseId, dock }: { caseId: string; dock: HTMLElement |
     for (let i = 0; i < reply.messages.length; i++) {
       if (i) await wait(PAUSE);
       const last = i === reply.messages.length - 1;
-      patchLast((t) => ({ ...t, messages: [...t.messages, reply.messages[i]], typing: !last }));
+      patchLast((t) => ({
+        ...t,
+        messages: [...t.messages, reply.messages[i]],
+        typing: !last,
+      }));
     }
     if (reply.status === 'personal' || reply.status === 'limited') {
       await wait(PAUSE);
       patchLast((t) => ({ ...t, telegram: true, typing: false }));
     }
     if (!reply.messages.length) patchLast((t) => ({ ...t, typing: false }));
-    setChips(reply.suggestions.filter((s) => !asked.current.includes(s.id)));
+    // Готовых вопросов не предлагаем — только варианты, когда бот не уверен, про что спросили
+    setChips(reply.status === 'clarify' ? reply.suggestions.filter((s) => !asked.current.includes(s.id)) : []);
     setBusy(false);
   }
 
@@ -93,46 +103,50 @@ export function CaseChat({ caseId, dock }: { caseId: string; dock: HTMLElement |
   };
 
   return (
-    <div className="case-section case-chat">
-      <span className="case-section-label">Вопросы</span>
+    <>
+      {turns.length > 0 && (
+        <div className="case-section case-chat">
+          <span className="case-section-label">Вопросы</span>
 
-      {turns.map((t, i) => (
-        <div key={i} className="case-chat-turn">
-          <p className="case-question">{t.question}</p>
-          {(t.messages.length > 0 || t.telegram) && (
-            <ul className="case-answers">
-              {t.messages.map((m, j) => (
-                <li key={j}>{m}</li>
-              ))}
-              {t.telegram && (
-                <li>
-                  <a href={profile.telegramUrl} target="_blank" rel="noreferrer">
-                    Написать в Telegram
-                  </a>
-                </li>
+          {turns.map((t, i) => (
+            <div key={i} className="case-chat-turn">
+              <p className="case-question">{t.question}</p>
+              {(t.messages.length > 0 || t.telegram) && (
+                <ul className="case-answers">
+                  {t.messages.map((m, j) => (
+                    <li key={j}>{m}</li>
+                  ))}
+                  {t.telegram && (
+                    <li>
+                      <a href={profile.telegramUrl} target="_blank" rel="noreferrer">
+                        Написать в Telegram
+                      </a>
+                    </li>
+                  )}
+                </ul>
               )}
-            </ul>
-          )}
-          {t.typing && (
-            <span className="case-chat-typing" aria-label="Печатает">
-              <i />
-              <i />
-              <i />
-            </span>
-          )}
-        </div>
-      ))}
-
-      {chips.length > 0 && !busy && (
-        <div className="case-chat-chips">
-          {chips.map((c) => (
-            <button key={c.id} type="button" className="case-chat-chip" onClick={() => ask(c.text, c.id)}>
-              {c.text}
-            </button>
+              {t.typing && (
+                <span className="case-chat-typing" aria-label="Печатает">
+                  <i />
+                  <i />
+                  <i />
+                </span>
+              )}
+            </div>
           ))}
+
+          {chips.length > 0 && !busy && (
+            <div className="case-chat-chips">
+              {chips.map((c) => (
+                <button key={c.id} type="button" className="case-chat-chip" onClick={() => ask(c.text, c.id)}>
+                  {c.text}
+                </button>
+              ))}
+            </div>
+          )}
+          <div ref={endRef} />
         </div>
       )}
-      <div ref={endRef} />
 
       {dock &&
         createPortal(
@@ -152,6 +166,6 @@ export function CaseChat({ caseId, dock }: { caseId: string; dock: HTMLElement |
           </form>,
           dock,
         )}
-    </div>
+    </>
   );
 }
