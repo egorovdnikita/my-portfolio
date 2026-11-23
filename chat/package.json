@@ -1,0 +1,15 @@
+{
+  "name": "case-chat",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test test/logic.test.ts",
+    "embed": "node scripts/embed.mjs",
+    "types": "wrangler types",
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev"
+  },
+  "devDependencies": {
+    "wrangler": "^4.162.0"
+  }
+}
