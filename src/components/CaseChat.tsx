@@ -26,7 +26,6 @@ const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
 /** Переписка — в конце кейса, поле ввода — отдельной плашкой под карточкой (dock), как в макете */
 export function CaseChat({ caseId, dock }: { caseId: string; dock: HTMLElement | null }) {
   const [turns, setTurns] = useState<Turn[]>([]);
-  const [chips, setChips] = useState<Suggestion[]>([]);
   const [text, setText] = useState('');
   const [busy, setBusy] = useState(false);
   const asked = useRef<string[]>([]);
@@ -41,7 +40,7 @@ export function CaseChat({ caseId, dock }: { caseId: string; dock: HTMLElement |
     // Чат — последний раздел кейса: прокручиваем панель до конца, чтобы новое не пряталось под полем
     const scroller = endRef.current?.closest('.case-scroll');
     if (turns.length && scroller) scroller.scrollTo({ top: scroller.scrollHeight, behavior: 'smooth' });
-  }, [turns, chips]);
+  }, [turns]);
 
   if (!CASES.includes(caseId)) return null;
 
@@ -52,7 +51,6 @@ export function CaseChat({ caseId, dock }: { caseId: string; dock: HTMLElement |
     const q = question.trim().slice(0, MAX_LEN);
     if (!q) return;
     setBusy(true);
-    setChips([]);
     setTurns((list) => [...list, { question: q, messages: [], telegram: false, typing: true }]);
     if (entryId) asked.current.push(entryId);
 
@@ -89,8 +87,6 @@ export function CaseChat({ caseId, dock }: { caseId: string; dock: HTMLElement |
       patchLast((t) => ({ ...t, telegram: true, typing: false }));
     }
     if (!reply.messages.length) patchLast((t) => ({ ...t, typing: false }));
-    // Готовых вопросов не предлагаем — только когда бот не уверен или ответа нет: тогда ближайшие темы кейса
-    setChips(reply.status === 'clarify' || reply.status === 'personal' ? reply.suggestions.filter((s) => !asked.current.includes(s.id)) : []);
     setBusy(false);
   }
 
@@ -135,15 +131,6 @@ export function CaseChat({ caseId, dock }: { caseId: string; dock: HTMLElement |
             </div>
           ))}
 
-          {chips.length > 0 && !busy && (
-            <div className="case-chat-chips">
-              {chips.map((c) => (
-                <button key={c.id} type="button" className="case-chat-chip" onClick={() => ask(c.text, c.id)}>
-                  {c.text}
-                </button>
-              ))}
-            </div>
-          )}
           <div ref={endRef} />
         </div>
       )}

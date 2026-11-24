@@ -482,27 +482,6 @@ html.is-locked body { background: var(--bg-page-case); }
 .case-chat-typing i:nth-child(3) { animation-delay: 0.3s; }
 @keyframes case-chat-dot { 0%, 60%, 100% { opacity: 0.4; transform: none; } 30% { opacity: 1; transform: translateY(-3px); } }
 
-/* Подсказки — справа, как будущие вопросы */
-.case-chat-chips { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
-.case-chat-chip {
-  max-width: 100%;
-  padding: 7px 16px;
-  border: 1px solid var(--accent-base);
-  border-radius: 20px;
-  background: none;
-  color: var(--accent-base);
-  font: inherit;
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 22px;
-  letter-spacing: -0.04em;
-  text-align: right;
-  cursor: pointer;
-  transition: background-color 0.15s;
-}
-@media (hover: hover) {
-  .case-chat-chip:hover { background: color-mix(in srgb, var(--accent-base) 12%, transparent); }
-}
 
 /* Поле ввода — отдельная плашка 64px под карточкой кейса, в 8px от неё и в 20px от низа экрана */
 .case-dock:empty { display: none; }
@@ -561,8 +540,7 @@ html.is-locked body { background: var(--bg-page-case); }
     .case-media,
     .case-gallery,
     .case-compare,
-    .case-chat-typing,
-    .case-chat-chip {
+    .case-chat-typing {
       animation: edge-in linear backwards;
       animation-timeline: view(block 0px calc(80px + env(safe-area-inset-bottom)));
       animation-range: entry 0% entry calc(100% + 40px);
