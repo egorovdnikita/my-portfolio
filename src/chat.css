@@ -127,7 +127,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  width: 270px;
+  width: fit-content;
   padding: 7px 16px;
 }
 .job-logo,
@@ -137,7 +137,7 @@
   object-fit: cover;
 }
 .job-logo { width: 24px; height: 24px; border-radius: 16px; }
-.job-name { flex: 1 0 0; min-width: 1px; }
+.job-name { white-space: nowrap; }
 .job-period { color: var(--text-muted); font-size: 14px; white-space: nowrap; }
 
 /* Календарь вкладов за 6 месяцев и инструменты — одно сообщение: без заливки, обводка 1.5px внутрь,
