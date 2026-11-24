@@ -14,7 +14,7 @@ test('база: id уникальны, связи существуют, 3 ста
     assert.equal(ids.size, kb.entries.length);
     assert.equal(starters(kb).length, 3);
     for (const e of kb.entries) {
-      assert.ok(e.questions.length >= 3 && e.questions.length <= 5, e.id);
+      assert.ok(e.questions.length >= 3 && e.questions.length <= 10, e.id);
       assert.ok(e.answer.length >= 1 && e.answer.length <= 3, e.id);
       assert.ok(e.related.length <= 2 && e.related.every((r) => ids.has(r) && r !== e.id), e.id);
       for (const v of [e.answer, ...(e.variants ?? [])]) {

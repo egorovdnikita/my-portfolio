@@ -3,7 +3,9 @@
 import cashierKb from '../kb/cashier.json';
 import dsKb from '../kb/design-system.json';
 import commonKb from '../kb/common.json';
-import vectors from '../kb/vectors.json';
+import vectorsBin from '../kb/vectors.bin';
+import vectorsIndex from '../kb/vectors.index.json';
+import { loadVectors, type VectorIndex } from './vectors';
 import {
   type Kb,
   type KbVectors,
@@ -31,13 +33,11 @@ interface Env {
   TG_CHAT_ID?: string;
 }
 
-type Vectors = { model: string; cases: Record<string, KbVectors>; common: KbVectors; forbidden: number[][] };
-
 const MODEL = '@cf/baai/bge-m3';
 // К базе кейса добавляются общие записи: привет, спасибо, «ты бот?» и т. п.
 const withCommon = (kb: Kb): Kb => ({ caseId: kb.caseId, entries: [...kb.entries, ...(commonKb as Kb).entries.map((e) => ({ ...e, common: true }))] });
 const KBS: Record<string, Kb> = { [cashierKb.caseId]: withCommon(cashierKb as Kb), [dsKb.caseId]: withCommon(dsKb as Kb) };
-const VECTORS = vectors as Vectors;
+const VECTORS = loadVectors(vectorsBin, vectorsIndex as VectorIndex);
 
 const PER_MINUTE = 10;
 const PER_DAY = 50;

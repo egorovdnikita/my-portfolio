@@ -5,7 +5,7 @@
 export type Entry = { id: string; questions: string[]; answer: string[]; variants?: string[][]; related: string[]; starter: boolean; draft?: boolean; common?: boolean };
 export type Kb = { caseId: string; entries: Entry[] };
 /** Векторы формулировок: для каждой записи — по вектору на вопрос, в том же порядке */
-export type KbVectors = Record<string, number[][]>;
+export type KbVectors = Record<string, ArrayLike<number>[]>;
 
 export type Status = 'answer' | 'clarify' | 'personal' | 'blocked' | 'limited';
 export type Suggestion = { id: string; text: string };
@@ -79,7 +79,7 @@ export const FORBIDDEN_EXAMPLES = [
   'Это этично — помогать людям проигрывать деньги?',
 ];
 
-export function cosine(a: number[], b: number[]): number {
+export function cosine(a: ArrayLike<number>, b: ArrayLike<number>): number {
   let dot = 0, na = 0, nb = 0;
   for (let i = 0; i < a.length; i++) {
     dot += a[i] * b[i];
@@ -90,7 +90,7 @@ export function cosine(a: number[], b: number[]): number {
 }
 
 /** Лучшая близость вопроса к каждой записи, по убыванию */
-export function rank(vector: number[], vectors: KbVectors): { id: string; score: number }[] {
+export function rank(vector: ArrayLike<number>, vectors: KbVectors): { id: string; score: number }[] {
   return Object.entries(vectors)
     .map(([id, list]) => ({ id, score: Math.max(...list.map((v) => cosine(vector, v))) }))
     .sort((a, b) => b.score - a.score);
@@ -126,6 +126,8 @@ export function decide(kb: Kb, ranked: { id: string; score: number }[], asked: s
   if (!best || best.score < CLARIFY_AT) return personal(best?.score, rng);
   const entry = kb.entries.find((e) => e.id === best.id)!;
   if (best.score >= ANSWER_AT) return answerOf(kb, entry, asked, best.score, rng);
+  // Болтовня и общие вопросы (возраст, город, привет) — только при уверенном совпадении: «если я правильно понял: 26 лет» на вопрос о росте звучит нелепо
+  if (entry.common) return personal(best.score, rng);
   return { status: 'clarify', messages: [pick(TEXT.clarify, rng), ...answerText(entry, rng)], suggestions: [], entryId: best.id, score: best.score };
 }
 

@@ -2,13 +2,25 @@
 // Нужны CLOUDFLARE_ACCOUNT_ID и CLOUDFLARE_API_TOKEN, как для npm run embed.
 import { readFileSync } from 'node:fs';
 import { clean, cosine, decide, FORBIDDEN_AT, forbiddenByWords, rank } from '../src/logic.ts';
+import { loadVectors } from '../src/vectors.ts';
+// FLOAT=1 — сверка на векторах без квантования (kb/vectors.float.json от FLOAT=1 npm run embed)
+function readVectors() {
+  const index = JSON.parse(readFileSync(new URL('../kb/vectors.index.json', import.meta.url), 'utf8'));
+  if (!process.env.FLOAT) return loadVectors(readFileSync(new URL('../kb/vectors.bin', import.meta.url)), index);
+  const flat = JSON.parse(readFileSync(new URL('../kb/vectors.float.json', import.meta.url), 'utf8'));
+  let at = 0;
+  const take = (n) => flat.slice(at, (at += n));
+  const group = (c) => Object.fromEntries(Object.entries(c).map(([id, n]) => [id, take(n)]));
+  const cases = Object.fromEntries(Object.entries(index.cases).map(([k, c]) => [k, group(c)]));
+  return { cases, common: group(index.common), forbidden: take(index.forbidden) };
+}
 
 const MODEL = '@cf/baai/bge-m3';
 const { CLOUDFLARE_ACCOUNT_ID: account, CLOUDFLARE_API_TOKEN: token } = process.env;
 const read = (p) => JSON.parse(readFileSync(new URL(p, import.meta.url), 'utf8'));
-const vectors = read('../kb/vectors.json');
+const vectors = readVectors();
 const common = read('../kb/common.json');
-const kbs = Object.fromEntries(['cashier', 'design-system'].map((f) => read(`../kb/${f}.json`)).map((kb) => [kb.caseId, { caseId: kb.caseId, entries: [...kb.entries, ...common.entries] }]));
+const kbs = Object.fromEntries(['cashier', 'design-system'].map((f) => read(`../kb/${f}.json`)).map((kb) => [kb.caseId, { caseId: kb.caseId, entries: [...kb.entries, ...common.entries.map((e) => ({ ...e, common: true }))] }]));
 const set = read('../test/questions.json');
 
 async function embed(texts) {
