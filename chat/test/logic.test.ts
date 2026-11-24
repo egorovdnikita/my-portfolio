@@ -58,6 +58,12 @@ test('пороги: ≥0.75 ответ, 0.60–0.75 уточнение, ниже
 
   assert.equal(decide(kb, [{ id: 'goal', score: 0.69 }], []).status, 'personal');
 
+  // нет ответа — две ближайшие темы кейса, без болтовни и уже заданных; далеко — стартовые вопросы
+  const far = decide({ caseId: kb.caseId, entries: [...kb.entries, { ...common.entries[0], common: true }] }, [{ id: common.entries[0].id, score: 0.68 }, { id: 'goal', score: 0.66 }, { id: 'role', score: 0.6 }, { id: 'team', score: 0.58 }], ['role']);
+  assert.equal(far.status, 'personal');
+  assert.deepEqual(far.suggestions.map((s) => s.id), ['goal', 'team']);
+  assert.deepEqual(decide(kb, [{ id: 'goal', score: 0.4 }], []).suggestions.map((s) => s.id), starters(kb).slice(0, 2).map((s) => s.id));
+
   // варианты ответа выбираются случайно, но только из базы
   const e = kb.entries.find((x) => x.id === 'unique-amount')!;
   assert.deepEqual(decide(kb, [{ id: e.id, score: 0.9 }], [], () => 0.99).messages, e.variants!.at(-1));

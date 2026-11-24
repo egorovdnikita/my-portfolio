@@ -35,7 +35,7 @@ type Vectors = { model: string; cases: Record<string, KbVectors>; common: KbVect
 
 const MODEL = '@cf/baai/bge-m3';
 // К базе кейса добавляются общие записи: привет, спасибо, «ты бот?» и т. п.
-const withCommon = (kb: Kb): Kb => ({ caseId: kb.caseId, entries: [...kb.entries, ...(commonKb as Kb).entries] });
+const withCommon = (kb: Kb): Kb => ({ caseId: kb.caseId, entries: [...kb.entries, ...(commonKb as Kb).entries.map((e) => ({ ...e, common: true }))] });
 const KBS: Record<string, Kb> = { [cashierKb.caseId]: withCommon(cashierKb as Kb), [dsKb.caseId]: withCommon(dsKb as Kb) };
 const VECTORS = vectors as Vectors;
 

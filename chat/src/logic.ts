@@ -2,7 +2,7 @@
 // Бот ничего не генерирует — только отдаёт готовые ответы из базы.
 
 /** answer и variants — разные формулировки одного ответа, бот берёт случайную; draft — додумано, ждёт проверки Никиты */
-export type Entry = { id: string; questions: string[]; answer: string[]; variants?: string[][]; related: string[]; starter: boolean; draft?: boolean };
+export type Entry = { id: string; questions: string[]; answer: string[]; variants?: string[][]; related: string[]; starter: boolean; draft?: boolean; common?: boolean };
 export type Kb = { caseId: string; entries: Entry[] };
 /** Векторы формулировок: для каждой записи — по вектору на вопрос, в том же порядке */
 export type KbVectors = Record<string, number[][]>;
@@ -17,9 +17,13 @@ export const ANSWER_AT = 0.75;
 export const CLARIFY_AT = 0.7;
 /** Похожесть на пример запретной темы, с которой вопрос уходит в «спросите лично» */
 export const FORBIDDEN_AT = 0.72;
+/** Не нашёл ответа — предлагает темы кейса не дальше этой близости, иначе стартовые вопросы */
+export const SUGGEST_AT = 0.55;
 
 export const TEXT = {
   personal: ['Это лучше спросить меня лично', 'Тут лучше напишите мне — отвечу подробно', 'Об этом расскажу лично'],
+  /** Нет ответа, но есть что предложить: ниже — кнопки с темами кейса */
+  nearby: ['Точно не скажу, но могу рассказать про близкое', 'Об этом лучше лично, а пока — похожие темы', 'Прямого ответа нет — вот что могу рассказать'],
   /** Вступление, когда вопрос близок к записи, но не уверенно: бот отвечает по ближайшей теме */
   clarify: ['Если я правильно понял:', 'Расскажу, что знаю об этом:', 'Близко к этому могу сказать так:'],
   limited: ['Чат сейчас недоступен'],
@@ -120,10 +124,20 @@ export const personal = (score?: number, rng: Rng = Math.random): Reply => ({ st
 export const limited = (): Reply => ({ status: 'limited', messages: [TEXT.limited[0]], suggestions: [] });
 export const blocked = (rng: Rng = Math.random): Reply => ({ status: 'blocked', messages: [pick(TEXT.blocked, rng)], suggestions: [] });
 
+/** Две ближайшие темы кейса (не болтовня), а если близких нет — стартовые вопросы; без уже заданных */
+export function nearby(kb: Kb, ranked: { id: string; score: number }[], asked: string[]): Suggestion[] {
+  const fresh = (e: Entry | undefined): e is Entry => !!e && !e.common && !asked.includes(e.id);
+  const close = ranked.filter((r) => r.score >= SUGGEST_AT).map((r) => kb.entries.find((e) => e.id === r.id)).filter(fresh);
+  return (close.length ? close : kb.entries.filter((e) => e.starter).filter(fresh)).slice(0, 2).map(suggestion);
+}
+
 /** Решение по близости: уверенно — ответ; близко — ответ по ближайшей теме со вступлением; иначе — «спросите лично» */
 export function decide(kb: Kb, ranked: { id: string; score: number }[], asked: string[], rng: Rng = Math.random): Reply {
   const best = ranked[0];
-  if (!best || best.score < CLARIFY_AT) return personal(best?.score, rng);
+  if (!best || best.score < CLARIFY_AT) {
+    const offer = nearby(kb, ranked, asked);
+    return offer.length ? { status: 'personal', messages: [pick(TEXT.nearby, rng)], suggestions: offer, score: best?.score } : personal(best?.score, rng);
+  }
   const entry = kb.entries.find((e) => e.id === best.id)!;
   if (best.score >= ANSWER_AT) return answerOf(kb, entry, asked, best.score, rng);
   return { status: 'clarify', messages: [pick(TEXT.clarify, rng), ...answerText(entry, rng)], suggestions: [], entryId: best.id, score: best.score };

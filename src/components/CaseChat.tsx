@@ -89,8 +89,8 @@ export function CaseChat({ caseId, dock }: { caseId: string; dock: HTMLElement |
       patchLast((t) => ({ ...t, telegram: true, typing: false }));
     }
     if (!reply.messages.length) patchLast((t) => ({ ...t, typing: false }));
-    // Готовых вопросов не предлагаем — только варианты, когда бот не уверен, про что спросили
-    setChips(reply.status === 'clarify' ? reply.suggestions.filter((s) => !asked.current.includes(s.id)) : []);
+    // Готовых вопросов не предлагаем — только когда бот не уверен или ответа нет: тогда ближайшие темы кейса
+    setChips(reply.status === 'clarify' || reply.status === 'personal' ? reply.suggestions.filter((s) => !asked.current.includes(s.id)) : []);
     setBusy(false);
   }
 
